@@ -327,8 +327,7 @@ class QcController extends Controller
 
 			// 停售
 			try {
-				$drop2 = $html->find('div[id=drop2]');
-				$div = $drop2[0];
+				$div = $html->find('div[id=drop2]',0);
 				if ($div) {
 			        $ajaxurl = 'https://www.autohome.com.cn/ashx/series_allspec.ashx?s='.$row->oid.'&l='.rand(1,20).'&y=';
 			        foreach ($div->find('li') as $li) {
