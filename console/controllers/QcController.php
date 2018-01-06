@@ -266,8 +266,8 @@ class QcController extends Controller
 			$html = SimpleHTMLDom::str_get_html($this->get_html($url,$headerArr,$referer));
 			
 			// 颜色
-			$carColor = $html->find('div[id=carColor]');
 			try {
+				$carColor = $html->find('div[id=carColor]');
 				$div = count($carColor) > 0 ? $carColor[0] : $html->find('.car-color-con',0);
 				if ($div) {
 			        foreach ($div->find('a') as $a) {
@@ -287,11 +287,11 @@ class QcController extends Controller
 
 
 			// 在售
-			$speclist20 = $html->find('div[id=speclist20]');
 			//即将销售
 			// $speclist10 = $html->find('div[id=speclist10]');
 
 			try {
+				$speclist20 = $html->find('div[id=speclist20]');
 				$div = $speclist20[0];
 				if ($div) {
 			        $num = count($div->find('.interval01-title'));
@@ -327,8 +327,8 @@ class QcController extends Controller
 			// break;
 
 			// 停售
-			$drop2 = $html->find('div[id=drop2]');
 			try {
+				$drop2 = $html->find('div[id=drop2]');
 				$div = $drop2[0];
 				if ($div) {
 			        $ajaxurl = 'https://www.autohome.com.cn/ashx/series_allspec.ashx?s='.$row->oid.'&l='.rand(1,20).'&y=';
