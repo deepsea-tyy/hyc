@@ -291,8 +291,7 @@ class QcController extends Controller
 			// $speclist10 = $html->find('div[id=speclist10]');
 
 			try {
-				$speclist20 = $html->find('div[id=speclist20]');
-				$div = $speclist20[0];
+				$div = $html->find('div[id=speclist20]',0);
 				if ($div) {
 			        $num = count($div->find('.interval01-title'));
 			        for ($i=0; $i < $num; $i++) {
