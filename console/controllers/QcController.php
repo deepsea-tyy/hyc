@@ -21,20 +21,13 @@ class QcController extends Controller
 {
 	public function actionIndex()
 	{
-		// echo "string";
-		// * * * * * /Applications/XAMPP/htdocs/hyc/yii qc/spider 1
-		// echo file_get_contents('https://www.baidu.com');
-		// echo $this->get_html('www.baidu.com',$this->setHeader(),'www.baidu.com');
-		// var_dump($a) ;
-		file_put_contents(__DIR__.'/test.html', date('Y-m-d H:i:s',time()) . ' | ');
+		echo 'index';
 	}
 
 	public function actionSpider($n=0)
 	{
 		$spider = ['actionError','spider1','spider2','spider3','spider4','spider5'];
 		$s = $spider[$n];
-		file_put_contents(__DIR__.'/test.html', date('Y-m-d H:i:s',time()) . ' | ',FILE_APPEND);
-		// echo $s;exit();
 		$this->$s();
 	}
 
