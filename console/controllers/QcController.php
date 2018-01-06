@@ -268,16 +268,22 @@ class QcController extends Controller
 			// 颜色
 			$carColor = $html->find('div[id=carColor]');
 			$div = count($carColor) > 0 ? $carColor[0] : $html->find('.car-color-con',0);
-	        foreach ($div->find('a') as $a) {
-	            $color = trim( str_replace('background: ', '',  $a->find('span',0)->style),';');//color
-	            $name =  $a->find('.tip-content',0)->innertext;//品牌名
+			try {
+				if ($div) {
+			        foreach ($div->find('a') as $a) {
+			            $color = trim( str_replace('background: ', '',  $a->find('span',0)->style),';');//color
+			            $name =  $a->find('.tip-content',0)->innertext;//品牌名
 
-            	$data_series_color[$color] = [
-            			'color'=>$color,
-            			'name'=>mb_convert_encoding($name, 'utf-8', 'gb2312,gbk'),
-            			's_id'=>$row->oid
-            		];
-	        }
+		            	$data_series_color[$color] = [
+		            			'color'=>$color,
+		            			'name'=>mb_convert_encoding($name, 'utf-8', 'gb2312,gbk'),
+		            			's_id'=>$row->oid
+		            		];
+			        }
+				}
+			} catch (Exception $e) {
+				
+			}
 
 
 			// 在售
@@ -286,56 +292,69 @@ class QcController extends Controller
 			// $speclist10 = $html->find('div[id=speclist10]');
 
 			$div = $speclist20[0];
+			try {
+				if ($div) {
+			        $num = count($div->find('.interval01-title'));
+			        for ($i=0; $i < $num; $i++) {
 
-	        $num = count($div->find('.interval01-title'));
-	        for ($i=0; $i < $num; $i++) {
+			            $group_name = $div->find('.interval01-title',$i)->find('span',0)->innertext;//分组  
+			            foreach ($div->find('.interval01-list',$i)->find('li') as $li) {
+			                if (!$li->find('a',0)) {
+			                    continue;
+			                }
+			                $oid = str_replace('spec_','', $li->find('p',0)->id);
+			                $name = $li->find('a',0)->innertext; //款项
+			                $price = trim( $li->find('.interval01-list-guidance div',0)->plaintext);//参考价格
 
-	            $group_name = $div->find('.interval01-title',$i)->find('span',0)->innertext;//分组  
-	            foreach ($div->find('.interval01-list',$i)->find('li') as $li) {
-	                if (!$li->find('a',0)) {
-	                    continue;
-	                }
-	                $oid = str_replace('spec_','', $li->find('p',0)->id);
-	                $name = $li->find('a',0)->innertext; //款项
-	                $price = trim( $li->find('.interval01-list-guidance div',0)->plaintext);//参考价格
-
-	            	$data_series_styling[$oid] = [
-	            			'group_name'=>mb_convert_encoding($group_name, 'utf-8', 'gb2312,gbk'),
-	            			'name'=>mb_convert_encoding($name, 'utf-8', 'gb2312,gbk'),
-	            			'oid'=>$oid,
-	            			'status'=>1,
-	            			'price'=> mb_convert_encoding($price, 'utf-8', 'gb2312,gbk'),
-	            			'price2Sc'=>'',
-	            			's_id'=>$row->oid,
-	            		];
-	            }
-	        }
+			            	$data_series_styling[$oid] = [
+			            			'group_name'=>mb_convert_encoding($group_name, 'utf-8', 'gb2312,gbk'),
+			            			'name'=>mb_convert_encoding($name, 'utf-8', 'gb2312,gbk'),
+			            			'oid'=>$oid,
+			            			'status'=>1,
+			            			'price'=> mb_convert_encoding($price, 'utf-8', 'gb2312,gbk'),
+			            			'price2Sc'=>'',
+			            			's_id'=>$row->oid,
+			            		];
+			            }
+			        }
+				}
 			// var_dump($data_series_styling);
 			// exit;
+				
+			} catch (Exception $e) {
+				
+			}
 			// break;
 
 			// 停售
 			$drop2 = $html->find('div[id=drop2]');
 			$div = $drop2[0];
-	        $ajaxurl = 'https://www.autohome.com.cn/ashx/series_allspec.ashx?s='.$row->oid.'&l='.rand(1,20).'&y=';
-	        foreach ($div->find('li') as $li) {
+			try {
+				if ($div) {
+			        $ajaxurl = 'https://www.autohome.com.cn/ashx/series_allspec.ashx?s='.$row->oid.'&l='.rand(1,20).'&y=';
+			        foreach ($div->find('li') as $li) {
 
-	            $url2 = $ajaxurl . $li->find('a',0)->data;
-	            $str = mb_convert_encoding(file_get_contents($url2), 'utf-8', 'gb2312,gbk');
+			            $url2 = $ajaxurl . $li->find('a',0)->data;
+			            $str = mb_convert_encoding(file_get_contents($url2), 'utf-8', 'gb2312,gbk');
 
-	            $data = json_decode($str ,true);
-	            foreach ($data['Spec'] as $v) {
-	            	$data_series_styling[$v['Id']] = [
-	            			'group_name'=>$v['GroupName'],
-	            			'name'=>$v['Name'],
-	            			'oid'=>$v['Id'],
-	            			'status'=>0,
-	            			'price'=>$v['Price'],
-	            			'price2Sc'=>$v['Price2Sc'],
-	            			's_id'=>$row->oid
-            			];
-	            }
-	        }
+			            $data = json_decode($str ,true);
+			            foreach ($data['Spec'] as $v) {
+			            	$data_series_styling[$v['Id']] = [
+			            			'group_name'=>$v['GroupName'],
+			            			'name'=>$v['Name'],
+			            			'oid'=>$v['Id'],
+			            			'status'=>0,
+			            			'price'=>$v['Price'],
+			            			'price2Sc'=>$v['Price2Sc'],
+			            			's_id'=>$row->oid
+		            			];
+			            }
+			        }
+				}
+				
+			} catch (Exception $e) {
+				
+			}
 
 			// var_dump($data_series_styling);
 			// exit;
