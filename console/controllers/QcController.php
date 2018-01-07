@@ -66,17 +66,19 @@ class QcController extends Controller
 		$html =  json_decode( SimpleHTMLDom::str_get_html($this->get_html($url,$headerArr,$referer)) , true);
 
 		$val = $html['result']['list'];
+			
+		if ($val) {
+			$key = array_column($val, 'SpecId');
+			$b = array_combine($key, $val);
 
-		$key = array_column($val, 'SpecId');
-		$b = array_combine($key, $val);
-
-		foreach ($sResult as $row) {
-			$row->price = ($b[$row->oid]['MinOriginalPrice'] / 10000) . ' 万';
-			$row->offer = ($b[$row->oid]['MinPrice'] / 10000) . ' 万';
-			$row->updated_at = time();
-			$row->update();
-			// var_dump($row->update());
-			// $row->errors;
+			foreach ($sResult as $row) {
+				$row->price = ($b[$row->oid]['MinOriginalPrice'] / 10000) . ' 万';
+				$row->offer = ($b[$row->oid]['MinPrice'] / 10000) . ' 万';
+				$row->updated_at = time();
+				$row->update();
+				// var_dump($row->update());
+				// $row->errors;
+			}
 		}
 
 		//更新设置
@@ -102,6 +104,10 @@ class QcController extends Controller
 		$configResult = SystemConfig::find()->where(['name'=>'SPIDER_4'])->one();
 		$config = json_decode($configResult->content,true);
 
+		if ($config['starting'] == '-1') {
+			return;
+		}
+
 		$row = Area::find()->select('codeid')->where('codeid>'.$config['starting'])->orderBy(['codeid' => SORT_ASC])->one();
 		$sResult = Area::find()->select('codeid')->where('codeid>'.$config['destination'])->orderBy(['codeid' => SORT_ASC])->limit($config['limit'])->all();
 
@@ -123,15 +129,18 @@ class QcController extends Controller
 			}
 		}
 		
-
 		$max = Area::find()->max('codeid');
 		if (end($sResult)->codeid>=$max) {
 			$config['destination'] = 0;
-			$config['starting'] = $row->codeid;
+			if ($row->codeid>=$max) {
+				$config['starting'] = '-1'; //爬完不再跟新
+			}else{
+				$config['starting'] = $row->codeid;
+			}
 		}else{
 			$config['destination'] = end($sResult)->codeid;
 		}
-		// var_dump($sResult);
+
 		$content = json_encode($config);
 		$configResult->content = $content;
 		$configResult->save();
@@ -182,7 +191,7 @@ class QcController extends Controller
 					$arr[$key] = $str;
 				}
 			}
-			if ($arr) {
+			if (!empty($arr)) {
 				
 				array_pop($arr);
 				// reset($arr);
