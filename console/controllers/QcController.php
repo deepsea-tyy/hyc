@@ -66,18 +66,17 @@ class QcController extends Controller
 		$html =  json_decode( SimpleHTMLDom::str_get_html($this->get_html($url,$headerArr,$referer)) , true);
 
 		$val = $html['result']['list'];
-			
 		if ($val) {
 			$key = array_column($val, 'SpecId');
-			$b = array_combine($key, $val);
+			$sResult2 = array_combine($s, $sResult);
+			$price = array_combine($key, $val);
 
-			foreach ($sResult as $row) {
-				if (isset($b[$row->oid])) {
-					$row->price = ($b[$row->oid]['MinOriginalPrice'] / 10000) . ' 万';
-					$row->offer = ($b[$row->oid]['MinPrice'] / 10000) . ' 万';
-					$row->updated_at = time();
-					$row->update();
-				}
+			foreach ($key as $k) {
+				$row = $sResult2[$k];
+				$row->price = ($price[$k]['MinOriginalPrice'] / 10000) . ' 万';
+				$row->offer = ($price[$k]['MinPrice'] / 10000) . ' 万';
+				$row->updated_at = time();
+				$row->update();
 				// var_dump($row->update());
 				// $row->errors;
 			}
