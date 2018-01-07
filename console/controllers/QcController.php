@@ -172,7 +172,7 @@ class QcController extends Controller
 			$data = explode('var', $html);
 			array_shift($data);
 			$data = array_splice($data, 0,5);
-			$arr;
+			$arr = [];
 
 			foreach ($data as $v) {
 				$sn = strpos($v, '{');
