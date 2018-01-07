@@ -182,31 +182,33 @@ class QcController extends Controller
 					$arr[$key] = $str;
 				}
 			}
-			array_pop($arr);
-			// reset($arr);
-			$str_config = current($arr);
-			$a = json_decode($str_config,true);
-			// dump($a['result']['paramtypeitems'][0]['paramitems']);
-			// echo json_encode($a['result']['paramtypeitems'][0]['paramitems']);exit;
-			$list = $a['result']['paramtypeitems'][0]['paramitems'];//配置列表
-			$data_jbcs = array_column($list,'valueitems' , 'name');//基本参数	
-			// echo json_encode($data);
-			// dump($data_jbcs);
-			// exit;
+			if ($arr) {
+				
+				array_pop($arr);
+				// reset($arr);
+				$str_config = current($arr);
+				$a = json_decode($str_config,true);
+				// dump($a['result']['paramtypeitems'][0]['paramitems']);
+				// echo json_encode($a['result']['paramtypeitems'][0]['paramitems']);exit;
+				$list = $a['result']['paramtypeitems'][0]['paramitems'];//配置列表
+				$data_jbcs = array_column($list,'valueitems' , 'name');//基本参数	
+				// echo json_encode($data);
+				// dump($data_jbcs);
+				// exit;
 
-			foreach ($data_jbcs as $key => $v) {
-				if (strpos($key, '长')!==false && strpos($key, '宽') !== false ) {
-					
-					foreach ($v as $v2) {
-						$data_car_config[$v2['specid']] = [
-							'st_id' => $v2['specid'],
-							'ckg' => $v2['value'],
-						];
+				foreach ($data_jbcs as $key => $v) {
+					if (strpos($key, '长')!==false && strpos($key, '宽') !== false ) {
+						
+						foreach ($v as $v2) {
+							$data_car_config[$v2['specid']] = [
+								'st_id' => $v2['specid'],
+								'ckg' => $v2['value'],
+							];
+						}
 					}
 				}
 			}
-
-			break;
+			// break;
 		}
 
 
