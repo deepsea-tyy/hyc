@@ -72,10 +72,12 @@ class QcController extends Controller
 			$b = array_combine($key, $val);
 
 			foreach ($sResult as $row) {
-				$row->price = ($b[$row->oid]['MinOriginalPrice'] / 10000) . ' 万';
-				$row->offer = ($b[$row->oid]['MinPrice'] / 10000) . ' 万';
-				$row->updated_at = time();
-				$row->update();
+				if (isset($b[$row->oid])) {
+					$row->price = ($b[$row->oid]['MinOriginalPrice'] / 10000) . ' 万';
+					$row->offer = ($b[$row->oid]['MinPrice'] / 10000) . ' 万';
+					$row->updated_at = time();
+					$row->update();
+				}
 				// var_dump($row->update());
 				// $row->errors;
 			}
