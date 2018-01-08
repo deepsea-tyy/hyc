@@ -278,7 +278,6 @@ class QcController extends Controller
 			$html = SimpleHTMLDom::str_get_html($this->get_html($url,$headerArr,$referer));
 			
 			// 颜色
-			try {
 				$carColor = $html->find('div[id=carColor]');
 				$div = count($carColor) > 0 ? $carColor[0] : $html->find('.car-color-con',0);
 				if ($div) {
@@ -293,16 +292,12 @@ class QcController extends Controller
 		            		];
 			        }
 				}
-			} catch (Exception $e) {
-				
-			}
 
 
 			// 在售
 			//即将销售
 			// $speclist10 = $html->find('div[id=speclist10]');
 
-			try {
 				$div = $html->find('div[id=speclist20]',0);
 				if ($div) {
 			        $num = count($div->find('.interval01-title'));
@@ -329,22 +324,19 @@ class QcController extends Controller
 			            }
 			        }
 				}
-			// var_dump($data_series_styling);
-			// exit;
-				
-			} catch (Exception $e) {
-				
-			}
+
 			// break;
 
 			// 停售
-			try {
 				$div = $html->find('div[id=drop2]',0);
 				if ($div) {
 			        $ajaxurl = 'https://www.autohome.com.cn/ashx/series_allspec.ashx?s='.$row->oid.'&l='.rand(1,20).'&y=';
 			        foreach ($div->find('li') as $li) {
-
-			            $url2 = $ajaxurl . $li->find('a',0)->data;
+			        	$year = $li->find('a',0)->data;
+			            if (empty($year)) {
+			            	continue;
+			            }
+			            $url2 = $ajaxurl . $year;
 			            $str = mb_convert_encoding(file_get_contents($url2), 'utf-8', 'gb2312,gbk');
 
 			            $data = json_decode($str ,true);
@@ -362,10 +354,6 @@ class QcController extends Controller
 			        }
 				}
 				
-			} catch (Exception $e) {
-				
-			}
-
 			// var_dump($data_series_styling);
 			// exit;
 			// break;
