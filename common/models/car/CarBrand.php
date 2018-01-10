@@ -22,7 +22,7 @@ class CarBrand extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'car_brand';
+        return 'sys_brand';
     }
 
     public function behaviors()

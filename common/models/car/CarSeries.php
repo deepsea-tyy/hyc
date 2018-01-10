@@ -25,7 +25,7 @@ class CarSeries extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'car_series';
+        return 'sys_series';
     }
 
     /**

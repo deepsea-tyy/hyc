@@ -20,7 +20,7 @@ class LinePrice extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'line_price';
+        return 'sys_line_price';
     }
 
     /**

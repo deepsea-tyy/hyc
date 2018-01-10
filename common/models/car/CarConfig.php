@@ -18,7 +18,7 @@ class CarConfig extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'car_config';
+        return 'sys_styling_config';
     }
 
     /**

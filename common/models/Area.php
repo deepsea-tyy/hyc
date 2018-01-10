@@ -5,7 +5,7 @@ namespace common\models;
 use Yii;
 
 /**
- * This is the model class for table "{{%area}}".
+ * This is the model class for table "sys_area".
  *
  * @property integer $codeid
  * @property integer $parentid
@@ -18,7 +18,7 @@ class Area extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%area}}';
+        return 'sys_area';
     }
 
     /**

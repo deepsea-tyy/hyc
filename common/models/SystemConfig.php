@@ -18,7 +18,7 @@ class SystemConfig extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%system_config}}';
+        return 'sys_system_config';
     }
 
     /**

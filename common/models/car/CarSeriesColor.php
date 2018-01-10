@@ -19,7 +19,7 @@ class CarSeriesColor extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'car_series_color';
+        return 'sys_series_color';
     }
 
     /**
