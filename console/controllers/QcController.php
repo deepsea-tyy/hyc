@@ -175,7 +175,6 @@ class QcController extends Controller
 		$configResult->content = $content;
 		$configResult->save();
 
-		// exit();
 		Yii::$app->db->createCommand()
        	->batchInsert(LinePrice::tableName(),['starting','destination','startingshow','destinationshow','price','create_at'],$data_line_price)
        	->execute();
