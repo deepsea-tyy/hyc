@@ -109,28 +109,57 @@ class QcController extends Controller
 			return;
 		}
 
-		$row = Area::find()->select('codeid')->where('codeid>'.$config['starting'])->orderBy(['codeid' => SORT_ASC])->one();
+		$row = Area::find()/*->select('codeid')*/->where('codeid>'.$config['starting'])->orderBy(['codeid' => SORT_ASC])->one();
+		$config['destination'] = $config['destination'] < 999 ? 999 : $config['destination'];
 		$sResult = Area::find()->select('codeid')->where('codeid>'.$config['destination'])->orderBy(['codeid' => SORT_ASC])->limit($config['limit'])->all();
 
-		$a = str_pad( $row->codeid, 6, 0, STR_PAD_RIGHT);
+		$municipality = [ //直辖市
+				11,
+				12,
+				50,
+				81,
+				91,
+			];
+
+		$max = 9101;
+
+		$idmuni1 = substr($row->codeid, 0,2);
+		$ismuni1 = in_array($idmuni1, $municipality);
+		if ($ismuni1) {
+			$row = Area::find()->where(['parentid'=>$row->parentid])->orderBy(['codeid' => SORT_DESC])->one();
+			$a = str_pad( $idmuni1, 6, 0, STR_PAD_RIGHT);
+		}else{
+			$a = str_pad( $row->codeid, 6, 0, STR_PAD_RIGHT);
+		}
+
 		foreach ($sResult as $v) {
-			// break;
-			$b = str_pad( $v->codeid, 6, 0, STR_PAD_RIGHT);
+
+			$idmuni2 = substr($v->codeid, 0,2);
+			$ismuni2 = in_array($idmuni2, $municipality);
+			if ($ismuni2) {
+				$b = str_pad( $idmuni2, 6, 0, STR_PAD_RIGHT);
+			}else{
+				$b = str_pad( $v->codeid, 6, 0, STR_PAD_RIGHT);
+			}
+
 			$url = 'http://www.ehuoyun.com/rest/quote/calculate/'.$a.'/'.$b;
 			$price = json_decode($this->get_html($url,$headerArr,$referer),true);
 			if ($price) {
 				$data_line_price[] = [
-						'starting' => $row->codeid,
-						'destination' => $v->codeid,
+						'starting' => $ismuni1 ? $idmuni1 : $row->codeid,
+						'destination' => $ismuni2 ? $idmuni2 : $v->codeid,
 						'startingshow' => $a,
 						'destinationshow' => $b,
 						'price' => $price['value'],
 						'created_at' => time(),
 					];
 			}
+			if ($v->codeid >= $max) {
+				break;
+			}
 		}
-		
-		$max = Area::find()->max('codeid');
+		// array_unique($data_line_price);
+		// $max = Area::find()->max('codeid');
 		if (end($sResult)->codeid>=$max) {
 			$config['destination'] = 0;
 			if ($row->codeid>=$max) {
@@ -145,6 +174,7 @@ class QcController extends Controller
 		$content = json_encode($config);
 		$configResult->content = $content;
 		$configResult->save();
+
 		// exit();
 		Yii::$app->db->createCommand()
        	->batchInsert(LinePrice::tableName(),['starting','destination','startingshow','destinationshow','price','create_at'],$data_line_price)
