@@ -51,7 +51,6 @@ function http_code($code=0,$msg='') {
 
 	    	m47_sa({title:$code,text:'未设置响应码' + $code,type:'error',showConfirmButton:false});
 	        break;
-	        
 	}
 }
 function m47_sa($setting={}) {
@@ -88,13 +87,12 @@ function m47_sa($setting={}) {
 	}
 	$setting = $.extend({}, $default, $setting);
 
-	swal($setting,
-		function(isConfirm){
-	        if (isConfirm){
-	        	swal(popupTitleSuccess, popupMessageSuccess, "success");
-	        } else {
-				swal(popupTitleCancel, popupMessageCancel, "error");
-	        }
-		});
+	swal($setting,function(isConfirm){
+        if (isConfirm){
+        	swal(popupTitleSuccess, popupMessageSuccess, "success");
+        } else {
+			swal(popupTitleCancel, popupMessageCancel, "error");
+        }
+	});
 }
 

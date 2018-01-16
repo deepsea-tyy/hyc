@@ -90,7 +90,7 @@ class CompanyController extends CommonController
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->c_id]);
+            return $this->actionView($model->c_id);
         } else {
             return $this->render('update', [
                 'model' => $model,
@@ -108,7 +108,7 @@ class CompanyController extends CommonController
     {
         $this->findModel($id)->delete();
 
-        return $this->redirect(['index']);
+        return $this->actionIndex();
     }
 
     /**

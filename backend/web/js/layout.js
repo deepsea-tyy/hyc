@@ -278,7 +278,7 @@ var Layout = function () {
             if (url=="#") {
                 return ;
             }
-            Layout.loadAjaxContent(url, $(this));
+            Layout.loadAjaxContent(url,"GET", $(this));
         });
 
         // handle ajax link within main content
@@ -287,15 +287,38 @@ var Layout = function () {
             App.scrollTop();
 
             var url = $(this).attr("href");
-
+            var method = $(this).attr("method");
             if (App.getViewPort().width < resBreakpointMd && $('.page-sidebar').hasClass("in")) { // close the menu on mobile view while laoding a page 
                 $('.page-header .responsive-toggler').click();
             }
             if (url=="#") {
                 return ;
             }
-
-            Layout.loadAjaxContent(url);
+            var sa = $(this).data('sa');
+            if (sa == '1') {
+                var $setting = {
+                  title: $(this).data('title'),
+                  text: $(this).data('message'),
+                  type: $(this).data('type'),
+                  allowOutsideClick: $(this).data('allow-outside-click'),
+                  showConfirmButton: $(this).data('show-confirm-button'),
+                  showCancelButton: $(this).data('show-cancel-button'),
+                  confirmButtonClass: $(this).data('confirm-button-class'),
+                  cancelButtonClass: $(this).data('cancel-button-class'),
+                  closeOnConfirm: $(this).data('close-on-confirm'),
+                  closeOnCancel: $(this).data('close-on-cancel'),
+                  confirmButtonText: $(this).data('confirm-button-text'),
+                  cancelButtonText: $(this).data('cancel-button-text'),
+                };
+                swal($setting,function(isConfirm){
+                    if (isConfirm){
+                        Layout.loadAjaxContent(url,method);
+                        swal('', '操作成功', "success");
+                    } 
+                });
+            }else{
+                Layout.loadAjaxContent(url,method);
+            }
         });
 
         // handle scrolling to top on responsive menu toggler click when header is fixed for mobile view
@@ -609,36 +632,31 @@ var Layout = function () {
             this.initFooter();
         },
 
-        loadAjaxContent: function(url, sidebarMenuLink) {
+        loadAjaxContent: function(url, method="GET", sidebarMenuLink) {
             // var pageContent = $('.page-content .page-content-body');    
             var pageContent = $('#container');    
 
             App.startPageLoading({animate: true});
             
             $.ajax({
-                type: "GET",
+                type: method,
                 cache: false,
                 url: url,
                 dataType: "html"
             }).then(function (res) {    
-                    App.stopPageLoading();
-                    pageContent.html(res);
+                App.stopPageLoading();
+                pageContent.html(res);
 
-                    for (var i = 0; i < ajaxContentSuccessCallbacks.length; i++) {
-                        ajaxContentSuccessCallbacks[i].call(res);
-                    }
-
-
-                    if (!$.isEmptyObject(sidebarMenuLink) && sidebarMenuLink.size() > 0 && sidebarMenuLink.parents('li.open').size() === 0) {
-                        $('.page-sidebar-menu > li.open > a').click();
-                    }
-                    
-                    Layout.fixContentHeight(); // fix content height
-                    App.initAjax(); // initialize core stuff
-                },function (res, ajaxOptions, thrownError) {
-                    App.stopPageLoading();
-                    http_code(res.status,res.responseText);
-                });
+                if (!$.isEmptyObject(sidebarMenuLink) && sidebarMenuLink.size() > 0 && sidebarMenuLink.parents('li.open').size() === 0) {
+                    $('.page-sidebar-menu > li.open > a').click();
+                }
+                
+                Layout.fixContentHeight(); // fix content height
+                App.initAjax(); // initialize core stuff
+            },function (res, ajaxOptions, thrownError) {
+                App.stopPageLoading();
+                http_code(res.status,res.responseText);
+            });
         },
 
         addAjaxContentSuccessCallback: function(callback) {
