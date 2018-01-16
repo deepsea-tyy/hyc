@@ -619,8 +619,8 @@ var Layout = function () {
                 type: "GET",
                 cache: false,
                 url: url,
-                dataType: "html",
-                success: function (res) {    
+                dataType: "html"
+            }).then(function (res) {    
                     App.stopPageLoading();
                     pageContent.html(res);
 
@@ -635,18 +635,10 @@ var Layout = function () {
                     
                     Layout.fixContentHeight(); // fix content height
                     App.initAjax(); // initialize core stuff
-                },
-                error: function (res, ajaxOptions, thrownError) {
+                },function (res, ajaxOptions, thrownError) {
                     App.stopPageLoading();
-                    // http_code();
-                    console.log(res.status);
-                    pageContent.html('<h4>Could not load the requested content.</h4>');
-
-                    for (var i = 0; i < ajaxContentErrorCallbacks.length; i++) {
-                        ajaxContentErrorCallbacks[i].call(res);
-                    }                    
-                }
-            });
+                    http_code(res.status,res.responseText);
+                });
         },
 
         addAjaxContentSuccessCallback: function(callback) {
