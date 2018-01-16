@@ -26,6 +26,7 @@ class M47Asset extends AssetBundle
         'global/plugins/simple-line-icons/simple-line-icons.min.css',
         'global/plugins/bootstrap/css/bootstrap.min.css',
         'global/plugins/bootstrap-switch/css/bootstrap-switch.min.css',
+        'global/plugins/bootstrap-sweetalert/sweetalert.css',
         // END GLOBAL MANDATORY STYLES
         
         // BEGIN THEME GLOBAL STYLES
@@ -42,6 +43,7 @@ class M47Asset extends AssetBundle
         'global/plugins/jquery-slimscroll/jquery.slimscroll.min.js',
         'global/plugins/jquery.blockui.min.js',
         'global/plugins/bootstrap-switch/js/bootstrap-switch.min.js',
+        'global/plugins/bootstrap-sweetalert/sweetalert.min.js',
         // END CORE PLUGINS
         
         // BEGIN THEME GLOBAL SCRIPTS

@@ -40,8 +40,6 @@ class AdminLayoutAsset extends AssetBundle
         // END PAGE LEVEL PLUGINS
         
         // BEGIN THEME LAYOUT SCRIPTS
-        'layouts/layout/scripts/layout.js',
-        // 'layouts/layout/scripts/demo.min.js',
         'layouts/global/scripts/quick-sidebar.min.js',
         'layouts/global/scripts/quick-nav.min.js',
         // END THEME LAYOUT SCRIPTS 

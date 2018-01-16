@@ -9,10 +9,12 @@ use yii\web\AssetBundle;
  */
 class CommonAsset extends AssetBundle
 {
+    // public $sourcePath = '';
     public $baseUrl = '@web';
 
     public $js = [
-      'js/common.js',
+    	'js/layout.js',
+      	'js/common.js',
 
     ];
     public $depends = [
