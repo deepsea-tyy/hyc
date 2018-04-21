@@ -3,6 +3,8 @@
 namespace common\models;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
+use common\components\behaviors\model\GetIdBehavior;
 
 /**
  * This is the model class for table "{{%company}}".
@@ -68,14 +70,26 @@ class Company extends \yii\db\ActiveRecord
         return '{{%company}}';
     }
 
+    public function behaviors()
+    {
+        return [
+            TimestampBehavior::className(),
+            [
+                'class' => GetIdBehavior::className(),
+                'attribute' => 'c_id',
+                'value' => self::find()->max('c_id') + 1,
+            ],
+        ];
+    }
+
     /**
      * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['c_id', 'created_at', 'updated_at','remark'], 'required'],
-            [['c_id', 'codeid', 'pid', 'reg_time', 'c_level', 'review', 'review_user', 'review_log_id', 'review_time', 'zdjj_id', 'zdjj_ks', 'zdjj_js', 'zdjj_mod', 'cj', 'fw', 'hp', 'cp', 'xl', 'is_bidding', 'bidding', 'bidding_num', 'bidding_back', 'bidding_modify', 'created_at', 'updated_at', 'status'], 'integer'],
+            [['remark'], 'required'],
+            [['codeid', 'pid', 'reg_time', 'c_level', 'review', 'review_user', 'review_log_id', 'review_time', 'zdjj_id', 'zdjj_ks', 'zdjj_js', 'zdjj_mod', 'cj', 'fw', 'hp', 'cp', 'xl', 'is_bidding', 'bidding', 'bidding_num', 'bidding_back', 'bidding_modify', 'status'], 'integer'],
             [['code_city', 'c_gps', 'c_area', 'reg_ip', 'invoice_name', 'invoice_taxcode', 'invoice_add', 'invoice_tel', 'invoice_bank', 'invoice_bank_account', 'xlr', 'xldh'], 'string', 'max' => 50],
             [['c_name', 'c_website', 'c_logo', 'c_add', 'remark'], 'string', 'max' => 255],
             [['remark'],'string','min'=>2]

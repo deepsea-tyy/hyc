@@ -13,19 +13,34 @@
 	        data: $form.serialize() + extData,
 	        dataType: data.settings.ajaxDataType,
 	    });*/
-
-       $form.find(":submit").addClass("disabled");
-	   $.ajax({
-	        url: $form.attr('action'),
-	        type: $form.attr('method'),
-	        data: $form.serialize(),
-	        // dataType: data.settings.ajaxDataType,
-	    }).then(function (html) {
-	    	$('#container').html(html);
-	    },function (res,status) {
-	      $form.find(":submit").removeClass("disabled");
-	    });
-	
+	    
+       	$form.find(":submit").addClass("disabled");
+		if ($form.attr('enctype')) {
+	    	var fmData = new FormData($form[0]);
+	        $form.find(":submit").addClass("disabled");
+		   	$.ajax({
+		        url: $form.attr('action'),
+		        type: $form.attr('method'),
+		        data: fmData,
+		        cache:false,
+				processData: false, 
+		        contentType: false,
+		    }).then(function (html) {
+		    	$('#container').html(html);
+		    },function (res,status) {
+		      $form.find(":submit").removeClass("disabled");
+		    });
+		}else{
+		   $.ajax({
+		        url: $form.attr('action'),
+		        type: $form.attr('method'),
+		        data: $form.serialize(),
+		    }).then(function (html) {
+		    	$('#container').html(html);
+		    },function (res,status) {
+		      $form.find(":submit").removeClass("disabled");
+		    });
+		}
 	    return false;
 	});
 })($);

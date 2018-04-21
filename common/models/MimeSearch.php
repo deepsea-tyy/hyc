@@ -1,16 +1,16 @@
 <?php
 
-namespace backend\models;
+namespace common\models;
 
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use common\models\SystemConfig;
+use common\models\Mime;
 
 /**
- * SystemConfigSearch represents the model behind the search form about `common\models\SystemConfig`.
+ * MimeSearch represents the model behind the search form of `common\models\Mime`.
  */
-class SystemConfigSearch extends SystemConfig
+class MimeSearch extends Mime
 {
     /**
      * @inheritdoc
@@ -18,8 +18,8 @@ class SystemConfigSearch extends SystemConfig
     public function rules()
     {
         return [
-            [['id'], 'integer'],
-            [['name', 'content', 'introduction'], 'safe'],
+            [['mime_id', 'created_by', 'updated_by', 'created_at', 'updated_at', 'file_total_count', 'file_total_size', 'status'], 'integer'],
+            [['type_name', 'suffix'], 'safe'],
         ];
     }
 
@@ -41,7 +41,7 @@ class SystemConfigSearch extends SystemConfig
      */
     public function search($params)
     {
-        $query = SystemConfig::find();
+        $query = Mime::find();
 
         // add conditions that should always apply here
 
@@ -59,12 +59,18 @@ class SystemConfigSearch extends SystemConfig
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'id' => $this->id,
+            'mime_id' => $this->mime_id,
+            'created_by' => $this->created_by,
+            'updated_by' => $this->updated_by,
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
+            'file_total_count' => $this->file_total_count,
+            'file_total_size' => $this->file_total_size,
+            'status' => $this->status,
         ]);
 
-        $query->andFilterWhere(['like', 'name', $this->name])
-            ->andFilterWhere(['like', 'content', $this->content])
-            ->andFilterWhere(['like', 'introduction', $this->introduction]);
+        $query->andFilterWhere(['like', 'type_name', $this->type_name])
+            ->andFilterWhere(['like', 'suffix', $this->suffix]);
 
         return $dataProvider;
     }

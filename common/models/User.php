@@ -23,9 +23,9 @@ use yii\web\IdentityInterface;
  */
 class User extends ActiveRecord implements IdentityInterface
 {
-    const STATUS_DELETED = 0;
-    const STATUS_ACTIVE = 10;
-
+    const STATUS_DELETED = 0; //注销
+    const STATUS_ACTIVE = 1; //正常
+    public $api_token = null;
 
     /**
      * @inheritdoc
@@ -69,8 +69,41 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public static function findIdentityByAccessToken($token, $type = null)
     {
-        throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
+        // throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
+
+        // 如果token无效的话，
+        if(!static::apiTokenIsValid($token)) {
+            throw new \yii\web\UnauthorizedHttpException("token is invalid.");
+        }
+
+        return static::findOne(['id' => 1, 'status' => self::STATUS_ACTIVE]);
     }
+
+
+    /**
+     * 生成 api_token
+     */
+    public function generateApiToken()
+    {
+        $t = Yii::$app->params['user.token_time'];
+        $this->api_token = Yii::$app->security->generateRandomString() . '_' . (time()+$t);
+    }
+
+    /**
+     * 校验api_token是否有效
+     */
+    public static function apiTokenIsValid($token)
+    {
+        if (empty($token)) {
+            return false;
+        }
+
+        $timestamp = (int) substr($token, strrpos($token, '_') + 1);
+        
+        // return true;
+        return time() < $timestamp;
+    }
+
 
     /**
      * Finds user by username

@@ -41,7 +41,6 @@ class AdminLoginAsset extends AssetBundle
         'global/plugins/jquery-validation/js/jquery.validate.min.js',
         'global/plugins/jquery-validation/js/additional-methods.min.js',
         'global/plugins/select2/js/select2.full.min.js',
-        'pages/scripts/login.min.js',
         // END PAGE LEVEL PLUGINS
         
 

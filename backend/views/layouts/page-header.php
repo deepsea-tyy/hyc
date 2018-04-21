@@ -1,6 +1,7 @@
 <?php
 
 $assets_url=$this->assetBundles[common\assets\M47Asset::className()]->baseUrl;
+// $assets_url=$this->assetBundles[dlds\metronic\bundles\ThemeAsset::className()]->baseUrl;
 ?>
             <div class="page-header navbar navbar-fixed-top">
                 <!-- BEGIN HEADER INNER -->
@@ -346,7 +347,7 @@ $assets_url=$this->assetBundles[common\assets\M47Asset::className()]->baseUrl;
                                             <i class="icon-lock"></i> Lock Screen </a>
                                     </li>
                                     <li>
-                                        <a href="<?=\yii\helpers\Url::to(['/admin/user/logout'])?>">
+                                        <a href="<?=\yii\helpers\Url::to(['/admin/user/logout'])?>" >
                                             <i class="icon-key"></i> Log Out </a>
                                     </li>
                                 </ul>

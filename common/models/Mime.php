@@ -3,20 +3,26 @@
 namespace common\models;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
+use common\components\behaviors\model\GetIdBehavior;
 
 /**
  * This is the model class for table "{{%mime}}".
  *
- * @property integer $mime_id
+ * @property int $mime_id
  * @property string $type_name
  * @property string $suffix
- * @property integer $created_by
- * @property integer $updated_by
- * @property integer $created_at
- * @property integer $updated_at
- * @property integer $file_total_count
- * @property integer $file_total_size
- * @property integer $status
+ * @property int $created_by
+ * @property int $updated_by
+ * @property int $created_at
+ * @property int $updated_at
+ * @property int $file_total_count
+ * @property int $file_total_size
+ * @property int $status 1 启用
+             0 禁用
+             
+             10 公司照片?
+             20 客户照片?
  *
  * @property File[] $files
  */
@@ -30,14 +36,25 @@ class Mime extends \yii\db\ActiveRecord
         return '{{%mime}}';
     }
 
+    public function behaviors()
+    {
+        return [
+            TimestampBehavior::className(),
+            [
+                'class' => GetIdBehavior::className(),
+                'attribute' => 'mime_id',
+                'value' => self::find()->max('mime_id') + 1,
+            ],
+        ];
+    }
+
     /**
      * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['mime_id', 'created_at', 'updated_at'], 'required'],
-            [['mime_id', 'created_by', 'updated_by', 'created_at', 'updated_at', 'file_total_count', 'file_total_size', 'status'], 'integer'],
+            [['created_by', 'updated_by', 'file_total_count', 'file_total_size', 'status'], 'integer'],
             [['type_name', 'suffix'], 'string', 'max' => 255],
         ];
     }

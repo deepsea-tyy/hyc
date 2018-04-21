@@ -18,7 +18,19 @@
         "yiisoft/yii2": "~2.0.6",
         "yiisoft/yii2-bootstrap": "~2.0.0",
         "yiisoft/yii2-swiftmailer": "~2.0.0 || ~2.1.0",
-        "serhatozles/yii2-simplehtmldom": "dev-master"
+        "serhatozles/yii2-simplehtmldom": "dev-master",
+        "yiisoft/yii2-queue": "^2.0",
+        "yiisoft/yii2-httpclient": "*",
+        "mdmsoft/yii2-captcha": "~1.0",
+        "yiisoft/yii2-redis": "^2.0",
+        "yiisoft/yii2-imagine": "^2.1",
+        "yiisoft/yii2-apidoc": "^2.1",
+        "2amigos/yii2-file-upload-widget": "~1.0",
+        "mdmsoft/yii2-upload-file": "~2.0",
+        "bailangzhan/yii2-webuploader": "dev-master",
+        "rowe/yii2-region": "^1.0",
+        "kartik-v/yii2-widget-select2": "@dev",
+        "dlds/yii2-metronic": "dev-master"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

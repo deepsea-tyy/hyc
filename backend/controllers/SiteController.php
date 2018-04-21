@@ -40,7 +40,7 @@ class SiteController extends Controller
             ],
             'islogin' => [
                 'class' => \backend\common\behaviors\IsLogin::className(),
-                'actions' => '*',
+                'actions' => ['index'],
             ],
         ];
     }
@@ -66,28 +66,6 @@ class SiteController extends Controller
     {
         
         return $this->render('index');
-    }
-
-    /**
-     * Displays homepage.
-     *
-     * @return string
-     */
-    public function actionTest11()
-    {
-        
-        return $this->render('test');
-    }
-
-    /**
-     * Displays homepage.
-     *
-     * @return string
-     */
-    public function actionTest22()
-    {
-        echo "222";exit;
-        return $this->render('test');
     }
 
     /**

@@ -26,6 +26,7 @@ use yii\widgets\ActiveFormAsset;
  */
 class ActiveForm extends \yii\widgets\ActiveForm
 {
+    public $fieldClass = 'common\widgets\ActiveField';
 
     public function registerClientScript()
     {

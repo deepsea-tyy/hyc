@@ -30,6 +30,12 @@ return [
                 ],
             ],
         ],
+        'queue' => [
+            'class' => \yii\queue\file\Queue::class,
+            'as log' => \yii\queue\LogBehavior::class,
+            'path' => '@backend/runtime/queue'
+            // Other driver options
+        ],
     ],
     'params' => $params,
 ];

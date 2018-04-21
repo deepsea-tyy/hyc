@@ -2,18 +2,47 @@
 
 use yii\helpers\Html;
 use common\widgets\ActiveForm;
+use yii\base\DynamicModel;
+use yii\helpers\Url;
 /* @var $this yii\web\View */
 /* @var $model common\models\Company */
 /* @var $form yii\widgets\ActiveForm */
+    $dynamicModel = new DynamicModel([
+        'test','t1','t2'
+    ]);
+$dynamicModel->t1=211003;
+$data = [1,2,3,4];
 ?>
 
 <div class="company-form">
 
-<?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin([
+            // 'options' => [ 'enctype' => 'multipart/form-data']
+    ]); ?>
+    <?=$form->field($model, 'c_logo')->widget('manks\FileInput', ['clientOptions'=>['server'=>Url::to(['mime/upload'])]
+]); ?>
+    <?= $form->field($dynamicModel, 'test',['options'=>['class'=>'form-group col1-md-4']])->widget('kartik\select2\Select2',[
+        // 'theme'=>'default',
+        // 'size' => 'sm',
+        // 'data' => $data,
+        'options' => ['placeholder' => 'Select a state ...'],
+        'pluginOptions' => [
+            'allowClear' => true,
+            'ajax' => [
+                'url' => Url::to(['public/index']),
+                'dataType' => 'json',
+                'processResults'=> 'function (data) { return { results: data.items  }; }',
+            ],
+        ],
+        'pluginEvents' => [
+            'change' => 'function(a) {
+                console.log(a);
+            }',
+        ]
+]) ?>
 
-    <?= $form->field($model, 'c_id')->textInput() ?>
 
-    <?= $form->field($model, 'codeid')->textInput() ?>
+    <?= $form->field($dynamicModel, 't1')->widget('sh\cxselect\Cxselect',['url'=>Url::to(['public/area']),'options'=>['data-first-title'=>'请选择','data-first-value'=>'0','data-json-value'=>'id','data-json-name'=>'name','data-json-sub'=>'_child']]) ?>
 
     <?= $form->field($model, 'code_city')->textInput(['maxlength' => true]) ?>
 
@@ -90,10 +119,6 @@ use common\widgets\ActiveForm;
     <?= $form->field($model, 'bidding_back')->textInput() ?>
 
     <?= $form->field($model, 'bidding_modify')->textInput() ?>
-
-    <?= $form->field($model, 'created_at')->textInput() ?>
-
-    <?= $form->field($model, 'updated_at')->textInput() ?>
 
     <?= $form->field($model, 'status')->textInput() ?>
 

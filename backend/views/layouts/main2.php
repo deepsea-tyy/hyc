@@ -1,60 +1,42 @@
 <?php
 
-/* @var $this \yii\web\View */
-/* @var $content string */
-
+/** @var $this \yii\web\View */
 use yii\helpers\Html;
-use yii\bootstrap\Nav;
-use yii\bootstrap\NavBar;
-use yii\widgets\Breadcrumbs;
-use common\assets\IeAsset;
-use common\assets\M47Asset;
-use common\assets\AdminLayoutAsset;
-use common\widgets\Alert;
+use dlds\metronic\helpers\Layout;
+use dlds\metronic\widgets\Menu;
+use dlds\metronic\widgets\NavBar;
+use dlds\metronic\widgets\Nav;
+use dlds\metronic\widgets\Breadcrumbs;
+use dlds\metronic\widgets\Button;
+use dlds\metronic\widgets\HorizontalMenu;
+use dlds\metronic\Metronic;
+use dlds\metronic\widgets\Badge;
 
-
-
-IeAsset::register($this);
-M47Asset::register($this);
-AdminLayoutAsset::register($this);
-
-/*$this->registerjs(" $(document).ready(function()
-            {
-                $('#clickmewow').click(function()
-                {
-                    $('#radio1003').attr('checked', 'checked');
-                });
-            })",$this::POS_END);*/
+$this->beginPage();
+Metronic::registerThemeAsset($this);
 ?>
-
-<?php $this->beginPage() ?>
-
 <!DOCTYPE html>
-
-<!--[if IE 8]> <html lang="en" class="ie8 no-js"> <![endif]-->
-<!--[if IE 9]> <html lang="en" class="ie9 no-js"> <![endif]-->
+<!--[if IE 8]>
+<html lang="en" class="ie8 no-js"> <![endif]-->
+<!--[if IE 9]>
+<html lang="en" class="ie9 no-js"> <![endif]-->
 <!--[if !IE]><!-->
-<html lang="en">
+<html lang="en" class="no-js">
     <!--<![endif]-->
     <!-- BEGIN HEAD -->
-
     <head>
-        <meta charset="utf-8" />
+        <meta charset="<?= Yii::$app->charset ?>"/>
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta content="width=device-width, initial-scale=1" name="viewport" />
-
-        <!-- <meta content="" name="author" /> -->
-
-        <?= Html::csrfMetaTags() ?>
+        <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+        <meta name="MobileOptimized" content="320">
+        <link rel="shortcut icon" href="/favicon.ico"/>
         <title><?= Html::encode($this->title) ?></title>
         <?php $this->head() ?>
-
-        <link rel="shortcut icon" href="/favicon.ico" /> 
     </head>
     <!-- END HEAD -->
-
-<?php $this->beginBody() ?>
-    <body class="page-header-fixed page-sidebar-closed-hide-logo page-content-white">
+    <!-- BEGIN BODY -->
+    <body <?= Layout::getHtmlOptions('body',[],true) ?> >
+        <?php $this->beginBody() ?>
         <div class="page-wrapper">
             <!-- BEGIN HEADER -->
             <?=$this->render('page-header');?>
@@ -66,22 +48,16 @@ AdminLayoutAsset::register($this);
             <div class="page-container">
                 <!-- BEGIN SIDEBAR -->
                 <div class="page-sidebar-wrapper">
-                    <!-- BEGIN SIDEBAR -->
-                        <!-- BEGIN SIDEBAR MENU -->
-
                         <?=$this->render('page-menu');?>
-
-                        <!-- END SIDEBAR MENU -->
-                    <!-- END SIDEBAR -->
                 </div>
                 <!-- END SIDEBAR -->
                 <!-- BEGIN CONTENT -->
                 <div class="page-content-wrapper">
                     <!-- BEGIN CONTENT BODY -->
-                    <div class="page-content" id="content">
-                        
+                    <div class="page-content" id="container">
+                        <!-- BEGIN PAGE HEADER-->
                         <!-- BEGIN THEME PANEL -->
-                        <div class="theme-panel hidden-xs hidden-sm">
+                        <!-- <div class="theme-panel hidden-xs hidden-sm">
                             <div class="toggler"> </div>
                             <div class="toggler-close"> </div>
                             <div class="theme-options">
@@ -160,61 +136,38 @@ AdminLayoutAsset::register($this);
                                     </select>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
                         <!-- END THEME PANEL -->
                         <!-- BEGIN PAGE BAR -->
-                        <div class="page-bar">
+                        <!-- <div class="page-bar">
                             <ul class="page-breadcrumb">
                                 <li>
                                     <a href="index.html">Home</a>
                                     <i class="fa fa-circle"></i>
                                 </li>
+                                <li>
+                                    <span>Dashboard</span>
+                                </li>
                             </ul>
                             <div class="page-toolbar">
-                                <div class="btn-group pull-right">
-                                    <button type="button" class="btn green btn-sm btn-outline dropdown-toggle" data-toggle="dropdown"> Actions
-                                        <i class="fa fa-angle-down"></i>
-                                    </button>
-                                    <ul class="dropdown-menu pull-right" role="menu">
-                                        <li>
-                                            <a href="#">
-                                                <i class="icon-bell"></i> Action</a>
-                                        </li>
-                                        <li>
-                                            <a href="#">
-                                                <i class="icon-shield"></i> Another action</a>
-                                        </li>
-                                        <li>
-                                            <a href="#">
-                                                <i class="icon-user"></i> Something else here</a>
-                                        </li>
-                                        <li class="divider"> </li>
-                                        <li>
-                                            <a href="#">
-                                                <i class="icon-bag"></i> Separated link</a>
-                                        </li>
-                                    </ul>
+                                <div id="dashboard-report-range" class="pull-right tooltips btn btn-sm" data-container="body" data-placement="bottom" data-original-title="Change dashboard date range">
+                                    <i class="icon-calendar"></i>&nbsp;
+                                    <span class="thin uppercase hidden-xs"></span>&nbsp;
+                                    <i class="fa fa-angle-down"></i>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
                         <!-- END PAGE BAR -->
                         <!-- BEGIN PAGE TITLE-->
-                        <h1 class="page-title"> Ajax Content Page
-                            <small>loading content via ajax</small>
-                        </h1>
-                        <!-- END PAGE TITLE-->
                         
-                        <div class="page-content-body">
-                            <?=$content?>
-                        </div>
+                        <!-- END PAGE TITLE-->
+                        <!-- END PAGE HEADER-->
+                        <div class="page-content-body"><?=$content ?></div>
                     </div>
                     <!-- END CONTENT BODY -->
                 </div>
                 <!-- END CONTENT -->
                 <!-- BEGIN QUICK SIDEBAR -->
-                <a href="javascript:;" class="page-quick-sidebar-toggler">
-                    <i class="icon-login"></i>
-                </a>
                 <?=$this->render('page-quick-sidebar');?>
                 <!-- END QUICK SIDEBAR -->
             </div>
@@ -233,11 +186,9 @@ AdminLayoutAsset::register($this);
         </div>
         <!-- BEGIN QUICK NAV -->
         <?=$this->render('page-quick-nav');?>
-        <div class="quick-nav-overlay"></div>
         <!-- END QUICK NAV -->
- 
+        <?php $this->endBody() ?>
     </body>
-<?php $this->endBody() ?>
-
+    <!-- END BODY -->
 </html>
 <?php $this->endPage() ?>

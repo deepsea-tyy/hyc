@@ -11,10 +11,15 @@ return [
     'basePath' => dirname(__DIR__),
     'controllerNamespace' => 'backend\controllers',
     'bootstrap' => ['log'],
-    'modules' => [],
     'components' => [
         'request' => [
             'csrfParam' => '_csrf-backend',
+        ],
+        'redis' => [
+            'class' => 'yii\redis\Connection',
+            'hostname' => 'localhost',
+            'port' => 6379,
+            'database' => 0,
         ],
         'user' => [
             // 'identityClass' => 'common\models\User',
@@ -24,10 +29,15 @@ return [
             'identityClass' => 'mdm\admin\models\User',
             'loginUrl' => ['admin/user/login'],
         ],
+        // 'session' => [
+        //     // this is the name of the session cookie used for login on the backend
+        //     'name' => 'advanced-backend',
+        // ],
         'session' => [
-            // this is the name of the session cookie used for login on the backend
-            'name' => 'advanced-backend',
+            'class' => 'yii\redis\Session',
+            
         ],
+        
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
             'targets' => [
@@ -44,6 +54,7 @@ return [
         'urlManager' => require('configure/urlManager.php'),
         'assetManager' => [
             'class' => 'yii\web\AssetManager',
+            'linkAssets' => true,
             'bundles'=>[
                 'yii\web\JqueryAsset' => [
                     'sourcePath' => '@m47',
@@ -51,7 +62,25 @@ return [
                         'global/plugins/jquery.min.js',
                     ],
                 ],
+                'kartik\base\WidgetAsset' => [
+                    'depends' => [],
+                ],
+                'kartik\select2\ThemeKrajeeAsset' => [
+                    'depends' => [],
+                ],
+                'kartik\select2\Select2Asset' => [
+                    'depends' => [],
+                ],
+                'yii\widgets\ActiveFormAsset' => [
+                    'depends' => [],
+                ],
+                'yii\bootstrap\BootstrapPluginAsset' => [
+                    'depends' => [],
+                ],
+
+
             ]
+
         ]
 
     ],
@@ -64,13 +93,24 @@ return [
         'spider' => [
             'class' => 'backend\modules\spider\Module',
 
-        ]
+        ],
+        'debug' => [
+            'class' => \yii\debug\Module::class,
+            'panels' => [
+                'queue' => \yii\queue\debug\Panel::class,
+            ],
+        ],
     ],
     'params' => $params,
     'as access' => [
         'class' => 'mdm\admin\components\AccessControl',
         'allowActions' => [
-            '*'
+            'admin/user/login',
+            'admin/user/request-password-reset',
+            'admin/user/signup',
+            'admin/user/captcha',
+            'mime/upload',
+            'public/*',
         ]
     ],
 ];

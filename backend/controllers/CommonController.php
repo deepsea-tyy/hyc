@@ -2,6 +2,8 @@
 
 namespace backend\controllers;
 
+use Yii;
+
 class CommonController extends \yii\web\Controller
 {
     // public $layout = false;
@@ -18,6 +20,15 @@ class CommonController extends \yii\web\Controller
         ];
     }
 
+    public function actions()
+    {
+        return [
+            'upload' => [
+                'class' => 'common\components\actions\upload',
+            ],
+        ];
+    }
+
     public function actionIndex()
     {
         return $this->render('index');
@@ -25,12 +36,11 @@ class CommonController extends \yii\web\Controller
 
     public function render($view, $params = [])
     {
-        return $this->renderAjax($view, $params, $this);
-    }
-
-    public function actionTest()
-    {
-        return $this->renderAjax('/site/test');
+        if (Yii::$app->request->getIsAjax()) {
+            return $this->renderAjax($view, $params, $this);
+        }else{
+            return parent::render($view, $params);
+        }
     }
 
 }

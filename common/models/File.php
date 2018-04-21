@@ -7,17 +7,17 @@ use Yii;
 /**
  * This is the model class for table "{{%file}}".
  *
- * @property integer $f_id
- * @property integer $mime_id
- * @property integer $id
- * @property integer $o_id
+ * @property int $f_id
+ * @property int $mime_id
+ * @property int $id
+ * @property int $o_id
  * @property string $file_url
- * @property integer $photo_width
- * @property integer $photo_hight
- * @property integer $created_by
- * @property integer $created_at
- * @property integer $file_size
- * @property integer $status
+ * @property int $photo_width
+ * @property int $photo_hight
+ * @property int $created_by
+ * @property int $created_at
+ * @property int $file_size
+ * @property int $status 1 有用             0 删除的
  *
  * @property Mime $mime
  * @property User $id0
@@ -43,6 +43,7 @@ class File extends \yii\db\ActiveRecord
             [['f_id', 'created_at'], 'required'],
             [['f_id', 'mime_id', 'id', 'o_id', 'photo_width', 'photo_hight', 'created_by', 'created_at', 'file_size', 'status'], 'integer'],
             [['file_url'], 'string', 'max' => 255],
+            [['f_id'], 'unique'],
             [['mime_id'], 'exist', 'skipOnError' => true, 'targetClass' => Mime::className(), 'targetAttribute' => ['mime_id' => 'mime_id']],
             [['id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['id' => 'id']],
             [['o_id'], 'exist', 'skipOnError' => true, 'targetClass' => Orderform::className(), 'targetAttribute' => ['o_id' => 'o_id']],

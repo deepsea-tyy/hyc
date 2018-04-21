@@ -272,9 +272,11 @@ var Layout = function () {
             });
             $(this).parents('li').addClass('active');
 
-            if (App.getViewPort().width < resBreakpointMd && $('.page-sidebar').hasClass("in")) { // close the menu on mobile view while laoding a page 
-                $('.page-header .responsive-toggler').click();
-            }
+            //移动端菜单点击bug
+            // if (App.getViewPort().width < resBreakpointMd && $('.page-sidebar').hasClass("in")) { // close the menu on mobile view while laoding a page 
+            //     $('.page-header .responsive-toggler').click();
+            // }
+
             if (url=="#") {
                 return ;
             }
@@ -284,7 +286,6 @@ var Layout = function () {
         // handle ajax link within main content
         $('.page-content').on('click', '.ajaxify', function (e) {
             e.preventDefault();
-            App.scrollTop();
 
             var url = $(this).attr("href");
             var method = $(this).attr("method");
@@ -312,11 +313,17 @@ var Layout = function () {
                 };
                 swal($setting,function(isConfirm){
                     if (isConfirm){
+                        Layout.addAjaxContentSuccessCallback(function (res) {
+                            swal('', '操作成功', "success");
+                        });
+                        Layout.addAjaxContentErrorCallback(function (res) {
+                            swal('', '操作失败', "error");
+                        });
                         Layout.loadAjaxContent(url,method);
-                        swal('', '操作成功', "success");
                     } 
                 });
             }else{
+                App.scrollTop();
                 Layout.loadAjaxContent(url,method);
             }
         });
@@ -643,19 +650,30 @@ var Layout = function () {
                 cache: false,
                 url: url,
                 dataType: "html"
-            }).then(function (res) {    
+            }).then(function (res) {
                 App.stopPageLoading();
                 pageContent.html(res);
 
                 if (!$.isEmptyObject(sidebarMenuLink) && sidebarMenuLink.size() > 0 && sidebarMenuLink.parents('li.open').size() === 0) {
                     $('.page-sidebar-menu > li.open > a').click();
                 }
-                
+                for (var i = 0; i < ajaxContentSuccessCallbacks.length; i++) {
+                    ajaxContentSuccessCallbacks[i].call(res);
+                }
+
                 Layout.fixContentHeight(); // fix content height
                 App.initAjax(); // initialize core stuff
+                ajaxContentSuccessCallbacks = [];
+                ajaxContentErrorCallbacks = [];
             },function (res, ajaxOptions, thrownError) {
                 App.stopPageLoading();
-                http_code(res.status,res.responseText);
+                for (var i = 0; i < ajaxContentErrorCallbacks.length; i++) {
+                    ajaxContentErrorCallbacks[i].call(res);
+                }
+
+                // http_code(res.status,res.responseText);
+                ajaxContentSuccessCallbacks = [];
+                ajaxContentErrorCallbacks = [];
             });
         },
 

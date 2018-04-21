@@ -1,6 +1,7 @@
 <?php
 
 $assets_url=$this->assetBundles[common\assets\M47Asset::className()]->baseUrl;
+// $assets_url=$this->assetBundles[dlds\metronic\bundles\ThemeAsset::className()]->baseUrl;
 ?>
                 <a href="javascript:;" class="page-quick-sidebar-toggler">
                     <i class="icon-login"></i>

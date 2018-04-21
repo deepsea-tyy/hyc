@@ -26,8 +26,8 @@ $menu =  MenuHelper::getAssignedMenu(\Yii::$app->user->id,null,function ($menu)
 });
 $item = [
             [
-                'itemOptions' => ['class'=>'sidebar-search-wrapper'],
-                'template' => '<form class="sidebar-search  " action="" method="POST">
+                'options' => ['class'=>'sidebar-search-wrapper'],
+                'template' => '<form class="sidebar-search sidebar-search-bordered" action="" method="POST">
                                     <a href="javascript:;" class="remove">
                                         <i class="icon-close"></i>
                                     </a>
@@ -60,9 +60,13 @@ $menu = array_merge($item,$menu);
             ],
         'itemOptions'=>['class'=>'nav-item'],
         //ajaxify ajax请求方法. nav-toggle 跳转
-        'linkTemplate'=>'<a href="{url}" class="nav-toggle nav-link ajaxify"><i class="{icon}"></i>{label}<span class="{arrow}"></span></a>',
+        'linkTemplate'=>'<a href="{url}" class="nav-toggle nav-link ajaxify">
+        <i class="{icon}"></i>
+        <span class="title">{label}</span>
+        <span class="selected"></span>
+        <span class="{arrow}"></span>
+        </a>',
         'items'=>$menu,
     ]);?>
 
-</div>  
-
+</div>

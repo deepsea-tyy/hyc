@@ -4,12 +4,10 @@ namespace backend\controllers;
 
 use Yii;
 use common\models\Company;
-use yii\data\ActiveDataProvider;
+use common\models\CompanySearch;
 use backend\controllers\CommonController;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use yii\helpers\ArrayHelper;
-
 
 /**
  * CompanyController implements the CRUD actions for Company model.
@@ -21,17 +19,14 @@ class CompanyController extends CommonController
      */
     public function behaviors()
     {
-        return ArrayHelper::merge(
-                parent::behaviors(),
-                [
-                    'verbs' => [
-                        'class' => VerbFilter::className(),
-                        'actions' => [
-                            'delete' => ['POST'],
-                        ],
-                    ]
-                ]
-        );
+        return [
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'delete' => ['POST'],
+                ],
+            ],
+        ];
     }
 
     /**
@@ -40,11 +35,11 @@ class CompanyController extends CommonController
      */
     public function actionIndex()
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => Company::find(),
-        ]);
+        $searchModel = new CompanySearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
+            'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
     }
@@ -53,6 +48,7 @@ class CompanyController extends CommonController
      * Displays a single Company model.
      * @param integer $id
      * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionView($id)
     {
@@ -71,12 +67,12 @@ class CompanyController extends CommonController
         $model = new Company();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->actionView($model->c_id);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
+            return $this->redirect(['view', 'id' => $model->c_id]);
         }
+
+        return $this->render('create', [
+            'model' => $model,
+        ]);
     }
 
     /**
@@ -84,18 +80,19 @@ class CompanyController extends CommonController
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->actionView($model->c_id);
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
+            return $this->redirect(['view', 'id' => $model->c_id]);
         }
+
+        return $this->render('update', [
+            'model' => $model,
+        ]);
     }
 
     /**
@@ -103,12 +100,13 @@ class CompanyController extends CommonController
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
 
-        return $this->actionIndex();
+        return $this->redirect(['index']);
     }
 
     /**
@@ -122,8 +120,8 @@ class CompanyController extends CommonController
     {
         if (($model = Company::findOne($id)) !== null) {
             return $model;
-        } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
         }
+
+        throw new NotFoundHttpException('The requested page does not exist.');
     }
 }

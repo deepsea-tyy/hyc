@@ -4,10 +4,11 @@ namespace backend\controllers;
 
 use Yii;
 use common\models\SystemConfig;
-use backend\models\SystemConfigSearch;
+use yii\data\ActiveDataProvider;
+use backend\controllers\CommonController;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use yii\helpers\ArrayHelper;
+use yii\base\DynamicModel;
 
 /**
  * SystemConfigController implements the CRUD actions for SystemConfig model.
@@ -19,17 +20,14 @@ class SystemConfigController extends CommonController
      */
     public function behaviors()
     {
-        return ArrayHelper::merge(
-                parent::behaviors(),
-                [
-                    'verbs' => [
-                        'class' => VerbFilter::className(),
-                        'actions' => [
-                            'delete' => ['POST'],
-                        ],
-                    ]
-                ]
-        );
+        return [
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'delete' => ['POST'],
+                ],
+            ],
+        ];
     }
 
     /**
@@ -38,11 +36,11 @@ class SystemConfigController extends CommonController
      */
     public function actionIndex()
     {
-        $searchModel = new SystemConfigSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider = new ActiveDataProvider([
+            'query' => SystemConfig::find(),
+        ]);
 
         return $this->render('index', [
-            'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
     }
@@ -68,13 +66,33 @@ class SystemConfigController extends CommonController
     {
         $model = new SystemConfig();
 
-        if ($model->load(Yii::$app->request->post()) /*&& $model->save()*/) {
-            echo "string";
-            exit;
+        $dynamicModel = new DynamicModel([
+            'f_id'
+        ]);
+ 
+        // $dynamicModel->attachBehavior('upload', [
+        //     'class' => 'mdm\upload\UploadBehavior',
+        //     'attribute' => 'file',
+        //     'savedAttribute' => 'f_id' // coresponding with $dynamicModel->f_id
+        // ]);
+     
+        // // rule untuk dynamicModel
+        // $dynamicModel->addRule('file','required')->addRule('file', 'file', ['extensions' => ['jpg','png']]);
+
+        // if ($dynamicModel->load(Yii::$app->request->post()) && $dynamicModel->validate()) {
+        //     if ($dynamicModel->saveUploadedFile() !== false) {
+
+        //         echo $dynamicModel->f_id;exit;
+                
+        //         // Yii::$app->session->setFlash('success', 'Upload Sukses');
+        //     }
+        // }
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->actionView($model->id);
         } else {
             return $this->render('create', [
                 'model' => $model,
+                'dynamicModel' => $dynamicModel,
             ]);
         }
     }
