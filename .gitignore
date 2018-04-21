@@ -6,3 +6,12 @@ composer.phar
 # composer.lock
 jsonp
 test.html
+codeception.yml
+composer.lock
+init.bat
+LICENSE.md
+readme.txt
+requirements.php
+Vagrantfile
+yii.bat
+yii_test.bat
