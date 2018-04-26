@@ -22,7 +22,7 @@ unset($rules[RouteRule::RULE_NAME]);
 <div class="role-index">
     <h1><?= Html::encode($this->title) ?></h1>
     <p>
-        <?= Html::a(Yii::t('rbac-admin', 'Create ' . $labels['Item']), ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(Yii::t('rbac-admin', 'Create ' . $labels['Item']), ['create'], ['class' => 'btn btn-success ajaxify']) ?>
     </p>
     <?=
     GridView::widget([
@@ -43,7 +43,7 @@ unset($rules[RouteRule::RULE_NAME]);
                 'attribute' => 'description',
                 'label' => Yii::t('rbac-admin', 'Description'),
             ],
-            ['class' => 'yii\grid\ActionColumn',],
+            ['class' => 'backend\common\grid\ActionColumn',],
         ],
     ])
     ?>

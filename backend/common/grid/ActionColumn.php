@@ -16,10 +16,7 @@ class ActionColumn extends \yii\grid\ActionColumn
     {
         $this->initDefaultButton('view', 'eye-open',['class'=>'ajaxify']);
         $this->initDefaultButton('update', 'pencil',['class'=>'ajaxify']);
-        $this->initDefaultButton('delete', 'trash', /*[
-            'data-confirm' => Yii::t('yii', 'Are you sure you want to delete this item?'),
-            'data-method' => 'post',
-        ],*/[
+        $this->initDefaultButton('delete', 'trash', [
             'title' => '删除',
             'class'=>'ajaxify',
             'method'=>'POST',
