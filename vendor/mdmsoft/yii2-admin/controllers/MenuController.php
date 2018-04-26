@@ -33,6 +33,15 @@ class MenuController extends Controller
             ],
         ];
     }
+    
+    public function render($view, $params = [])
+    {
+        if (Yii::$app->request->getIsAjax()) {
+            return $this->renderAjax($view, $params, $this);
+        }else{
+            return parent::render($view, $params);
+        }
+    }
 
     /**
      * Lists all Menu models.

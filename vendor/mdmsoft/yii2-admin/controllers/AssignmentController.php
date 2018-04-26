@@ -35,6 +35,15 @@ class AssignmentController extends Controller
             $this->userClassName = $this->userClassName ? : 'mdm\admin\models\User';
         }
     }
+    
+    public function render($view, $params = [])
+    {
+        if (Yii::$app->request->getIsAjax()) {
+            return $this->renderAjax($view, $params, $this);
+        }else{
+            return parent::render($view, $params);
+        }
+    }
 
     /**
      * @inheritdoc

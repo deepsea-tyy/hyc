@@ -21,7 +21,7 @@ if (!empty($extraColumns)) {
     $columns = array_merge($columns, $extraColumns);
 }
 $columns[] = [
-    'class' => 'yii\grid\ActionColumn',
+    'class' => 'backend\common\grid\ActionColumn',
     'template' => '{view}'
 ];
 ?>

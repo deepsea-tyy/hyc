@@ -60,6 +60,15 @@ class UserController extends Controller
                 ],
         ];
     }
+    
+    public function render($view, $params = [])
+    {
+        if (Yii::$app->request->getIsAjax()) {
+            return $this->renderAjax($view, $params, $this);
+        }else{
+            return parent::render($view, $params);
+        }
+    }
 
     /**
      * @inheritdoc
@@ -97,7 +106,7 @@ class UserController extends Controller
         $searchModel = new UserSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        return $this->renderAjax('index', [
+        return $this->render('index', [
                 'searchModel' => $searchModel,
                 'dataProvider' => $dataProvider,
         ]);
