@@ -16,6 +16,7 @@
 	    
        	$form.find(":submit").addClass("disabled");
 		if ($form.attr('enctype')) {
+			//表单提交图片
 	    	var fmData = new FormData($form[0]);
 	        $form.find(":submit").addClass("disabled");
 		   	$.ajax({
@@ -26,17 +27,25 @@
 				processData: false, 
 		        contentType: false,
 		    }).then(function (html) {
-		    	$('#container').html(html);
+	    		Layout.loadAjaxContent(res.url,"GET");
 		    },function (res,status) {
-		      $form.find(":submit").removeClass("disabled");
+		      	$form.find(":submit").removeClass("disabled");
+        		App.initAjax();
 		    });
 		}else{
 		   $.ajax({
 		        url: $form.attr('action'),
 		        type: $form.attr('method'),
 		        data: $form.serialize(),
-		    }).then(function (html) {
-		    	$('#container').html(html);
+		    }).then(function (res) {
+		    	if (!$.isEmptyObject(res.url)) {
+		    		// console.log(res.url);
+		    		Layout.loadAjaxContent(res.url,"GET");
+		    	}else{
+		    		// console.log(res);
+		    		$('#container').html(res);
+                	App.initAjax();
+		    	}
 		    },function (res,status) {
 		      $form.find(":submit").removeClass("disabled");
 		    });

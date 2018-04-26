@@ -8,6 +8,7 @@ use common\models\CompanySearch;
 use backend\controllers\CommonController;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\helpers\Url;
 
 /**
  * CompanyController implements the CRUD actions for Company model.
@@ -67,7 +68,7 @@ class CompanyController extends CommonController
         $model = new Company();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->c_id]);
+            return $this->asJson(['url'=>Url::to(['index'])]);
         }
 
         return $this->render('create', [

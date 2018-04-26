@@ -26,7 +26,8 @@ return [
             // 'enableAutoLogin' => true,
             // 'identityCookie' => ['name' => '_identity-backend', 'httpOnly' => true],
             
-            'identityClass' => 'mdm\admin\models\User',
+            // 'identityClass' => 'mdm\admin\models\User',
+            'identityClass' => 'common\models\User',
             'loginUrl' => ['admin/user/login'],
         ],
         // 'session' => [

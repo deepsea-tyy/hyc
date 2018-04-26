@@ -25,6 +25,7 @@ class User extends ActiveRecord implements IdentityInterface
 {
     const STATUS_DELETED = 0; //注销
     const STATUS_ACTIVE = 1; //正常
+    const STATUS_INACTIVE = 0;
     public $api_token = null;
 
     /**

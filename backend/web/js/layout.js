@@ -652,6 +652,8 @@ var Layout = function () {
                 dataType: "html"
             }).then(function (res) {
                 App.stopPageLoading();
+
+
                 pageContent.html(res);
 
                 if (!$.isEmptyObject(sidebarMenuLink) && sidebarMenuLink.size() > 0 && sidebarMenuLink.parents('li.open').size() === 0) {
@@ -671,7 +673,6 @@ var Layout = function () {
                     ajaxContentErrorCallbacks[i].call(res);
                 }
 
-                // http_code(res.status,res.responseText);
                 ajaxContentSuccessCallbacks = [];
                 ajaxContentErrorCallbacks = [];
             });
