@@ -100,6 +100,7 @@ class RuleController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             Helper::invalidate();
 
+            // return $this->asJson(['url'=>Url::to(['view'])]);
             return $this->redirect(['view', 'id' => $model->name]);
         }
 

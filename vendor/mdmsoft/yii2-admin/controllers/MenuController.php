@@ -9,6 +9,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use mdm\admin\components\Helper;
+use yii\helpers\Url;
 
 /**
  * MenuController implements the CRUD actions for Menu model.
@@ -81,7 +82,7 @@ class MenuController extends Controller
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             Helper::invalidate();
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->asJson(['url'=>Url::to(['index'])]);
         } else {
             return $this->render('create', [
                     'model' => $model,
@@ -103,7 +104,7 @@ class MenuController extends Controller
         }
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             Helper::invalidate();
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->asJson(['url'=>Url::to(['index'])]);
         } else {
             return $this->render('update', [
                     'model' => $model,
@@ -122,7 +123,7 @@ class MenuController extends Controller
         $this->findModel($id)->delete();
         Helper::invalidate();
 
-        return $this->redirect(['index']);
+        return $this->asJson(['url'=>Url::to(['index'])]);
     }
 
     /**

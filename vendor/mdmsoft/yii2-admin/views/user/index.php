@@ -34,36 +34,20 @@ $this->params['breadcrumbs'][] = $this->title;
                     10 => 'Active'
                 ]
             ],
+
             [
-                'class' => 'yii\grid\ActionColumn',
+                'class' => 'backend\common\grid\ActionColumn',
                 'template' => Helper::filterActionColumn(['view', 'activate', 'delete']),
                 'buttons' => [
-
-                     'view' => function ($url, $model, $key) {
-                      return  Html::a('<span class="glyphicon glyphicon-eye-open"></span>', $url, ['title' => '查看','class'=>'ajaxify'] ) ;
-                     },
                     'activate' => function($url, $model) {
-                        if ($model->status == 10) {
+                        if ($model->status == 1) {
                             return '';
                         }
                         $options = [
-                            'title' => Yii::t('rbac-admin', 'Activate'),
-                            'aria-label' => Yii::t('rbac-admin', 'Activate'),
-                            'data-confirm' => Yii::t('rbac-admin', 'Are you sure you want to activate this user?'),
-                            'data-method' => 'post',
-                            'data-pjax' => '0',
-                        ];
-                        return Html::a('<span class="glyphicon glyphicon-ok"></span>', $url, $options);
-                    },
-                     'delete' => function ($url, $model, $key) {
-                      return  Html::a('<span class="glyphicon glyphicon-trash"></span>', $url, 
-                        [
-                            'title' => '删除',
-                            'class'=>'ajaxify',
-                            'method'=>'POST',
-                            'data-sa'=>'1',
-                            'data-title'=>'删除',
-                            'data-message'=>'确定删除?',
+                            'title' => '启用',
+                            'class'=>'ajax-request',
+                            'data-title'=>'启用',
+                            'data-message'=>'确定启用?',
                             'data-type'=>'info',
                             'data-allow-outside-click'=>'false',
                             'data-show-confirm-button'=>'true',
@@ -74,8 +58,9 @@ $this->params['breadcrumbs'][] = $this->title;
                             'data-close-on-cancel'=>'true',
                             'data-confirm-button-text'=>'确定',
                             'data-cancel-button-text'=>'取消',
-                        ] ) ;
-                     }
+                        ];
+                        return Html::a('<span class="glyphicon glyphicon-ok"></span>', $url, $options);
+                    }
                     ]
                 ],
             ],

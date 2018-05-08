@@ -93,7 +93,7 @@ class ItemController extends Controller
     {
         $model = $this->findModel($id);
         if ($model->load(Yii::$app->getRequest()->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->name]);
+            return $this->asJson(['url'=>Url::to(['index'])]);
         }
 
         return $this->render('update', ['model' => $model]);

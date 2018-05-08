@@ -88,7 +88,7 @@ class CompanyController extends CommonController
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->c_id]);
+            return $this->asJson(['url'=>Url::to(['index'])]);
         }
 
         return $this->render('update', [
@@ -107,7 +107,7 @@ class CompanyController extends CommonController
     {
         $this->findModel($id)->delete();
 
-        return $this->redirect(['index']);
+        return $this->asJson(['url'=>Url::to(['index'])]);
     }
 
     /**

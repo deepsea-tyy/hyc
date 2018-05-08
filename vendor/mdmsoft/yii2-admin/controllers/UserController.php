@@ -17,6 +17,7 @@ use yii\filters\VerbFilter;
 use yii\web\NotFoundHttpException;
 use yii\base\UserException;
 use yii\mail\BaseMailer;
+use yii\helpers\Url;
 
 /**
  * User controller
@@ -106,6 +107,7 @@ class UserController extends Controller
         $searchModel = new UserSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
+        $this->layout = '@backend/views/layouts/main.php';
         return $this->render('index', [
                 'searchModel' => $searchModel,
                 'dataProvider' => $dataProvider,
@@ -134,7 +136,7 @@ class UserController extends Controller
     {
         $this->findModel($id)->delete();
 
-        return $this->redirect(['index']);
+        return $this->asJson(['url'=>Url::to(['index'])]);
     }
 
     /**
@@ -265,13 +267,13 @@ class UserController extends Controller
         if ($user->status == User::STATUS_INACTIVE) {
             $user->status = User::STATUS_ACTIVE;
             if ($user->save()) {
-                return $this->goHome();
+                return $this->asJson(['url'=>Url::to(['index'])]);
             } else {
                 $errors = $user->firstErrors;
                 throw new UserException(reset($errors));
             }
         }
-        return $this->goHome();
+        return $this->asJson(['url'=>Url::to(['index'])]);
     }
 
     /**

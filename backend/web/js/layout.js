@@ -277,7 +277,7 @@ var Layout = function () {
             //     $('.page-header .responsive-toggler').click();
             // }
 
-            if (url=="#") {
+            if (url=="#" || url == "") {
                 return ;
             }
             Layout.loadAjaxContent(url,"GET", $(this));
@@ -292,40 +292,12 @@ var Layout = function () {
             if (App.getViewPort().width < resBreakpointMd && $('.page-sidebar').hasClass("in")) { // close the menu on mobile view while laoding a page 
                 $('.page-header .responsive-toggler').click();
             }
-            if (url=="#") {
+            if (url=="#" || url == "") {
                 return ;
             }
-            var sa = $(this).data('sa');
-            if (sa == '1') {
-                var $setting = {
-                  title: $(this).data('title'),
-                  text: $(this).data('message'),
-                  type: $(this).data('type'),
-                  allowOutsideClick: $(this).data('allow-outside-click'),
-                  showConfirmButton: $(this).data('show-confirm-button'),
-                  showCancelButton: $(this).data('show-cancel-button'),
-                  confirmButtonClass: $(this).data('confirm-button-class'),
-                  cancelButtonClass: $(this).data('cancel-button-class'),
-                  closeOnConfirm: $(this).data('close-on-confirm'),
-                  closeOnCancel: $(this).data('close-on-cancel'),
-                  confirmButtonText: $(this).data('confirm-button-text'),
-                  cancelButtonText: $(this).data('cancel-button-text'),
-                };
-                swal($setting,function(isConfirm){
-                    if (isConfirm){
-                        Layout.addAjaxContentSuccessCallback(function (res) {
-                            swal('', '操作成功', "success");
-                        });
-                        Layout.addAjaxContentErrorCallback(function (res) {
-                            swal('', '操作失败', "error");
-                        });
-                        Layout.loadAjaxContent(url,method);
-                    } 
-                });
-            }else{
-                App.scrollTop();
-                Layout.loadAjaxContent(url,method);
-            }
+            
+            App.scrollTop();
+            Layout.loadAjaxContent(url,method);
         });
 
         // handle scrolling to top on responsive menu toggler click when header is fixed for mobile view

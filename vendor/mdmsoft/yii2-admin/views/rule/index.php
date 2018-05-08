@@ -17,7 +17,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a(Yii::t('rbac-admin', 'Create Rule'), ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(Yii::t('rbac-admin', 'Create Rule'), ['create'], ['class' => 'btn btn-success ajaxify']) ?>
     </p>
 
     <?=
@@ -30,7 +30,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'name',
                 'label' => Yii::t('rbac-admin', 'Name'),
             ],
-            ['class' => 'yii\grid\ActionColumn',],
+            ['class' => 'backend\common\grid\ActionColumn']
         ],
     ]);
     ?>

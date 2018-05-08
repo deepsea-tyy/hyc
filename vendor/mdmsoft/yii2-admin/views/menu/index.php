@@ -17,10 +17,9 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]);  ?>
 
     <p>
-        <?= Html::a(Yii::t('rbac-admin', 'Create Menu'), ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(Yii::t('rbac-admin', 'Create Menu'), ['create'], ['class' => 'btn btn-success ajaxify']) ?>
     </p>
 
-    <?php Pjax::begin(); ?>
     <?=
     GridView::widget([
         'dataProvider' => $dataProvider,
@@ -37,10 +36,9 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'route',
             'order',
-            ['class' => 'yii\grid\ActionColumn'],
+            ['class' => 'backend\common\grid\ActionColumn']
         ],
     ]);
     ?>
-<?php Pjax::end(); ?>
 
 </div>
