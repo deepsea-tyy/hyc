@@ -101,6 +101,9 @@ return [
                 'queue' => \yii\queue\debug\Panel::class,
             ],
         ],
+        'gridview' =>  [
+            'class' => '\kartik\grid\Module'
+        ]
     ],
     'params' => $params,
     'as access' => [

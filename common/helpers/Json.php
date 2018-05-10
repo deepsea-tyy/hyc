@@ -23,4 +23,9 @@ class Json extends \yii\helpers\Json
 		];
 		return preg_replace($pattern, $subject, $str);
 	}
+
+	public static function htmlEncode($value)
+	{
+		return static::json_str_to_func(parent::htmlEncode($value));
+	}
 }

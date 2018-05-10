@@ -1,13 +1,51 @@
 <?php
 
 use yii\helpers\Html;
-use yii\grid\GridView;
-use yii\widgets\Pjax;
+use kartik\grid\GridView;
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = 'Car Brands';
 $this->params['breadcrumbs'][] = $this->title;
+$gridColumns = [
+    ['class' => 'kartik\grid\SerialColumn'],
+    [
+        'class' => 'kartik\grid\EditableColumn',
+        'attribute' => 'brand',
+        'pageSummary' => 'Page Total',
+        'vAlign'=>'middle',
+        'headerOptions'=>['class'=>'kv-sticky-column'],
+        'contentOptions'=>['class'=>'kv-sticky-column'],
+        'editableOptions'=>['header'=>'Name', 'size'=>'md']
+    ],
+    [
+        'attribute'=>'oid',
+        /*'value'=>function ($model, $key, $index, $widget) {
+            return "<span class='badge' style='background-color: {$model->color}'> </span>  <code>" . 
+                $model->color . '</code>';
+        },*/
+        'filterType'=>GridView::FILTER_COLOR,
+        'vAlign'=>'middle',
+        'format'=>'raw',
+        'width'=>'150px',
+        'noWrap'=>true
+    ],
+    [
+        'class'=>'kartik\grid\BooleanColumn',
+        'attribute'=>'id', 
+        'vAlign'=>'middle',
+    ],
+    [
+        'class' => 'kartik\grid\ActionColumn',
+        'dropdown' => false,
+        'vAlign'=>'middle',
+        'urlCreator' => function($action, $model, $key, $index) { return '#'; },
+        'viewOptions'=>['title'=>'$viewMsg', 'data-toggle'=>'tooltip'],
+        'updateOptions'=>['title'=>'$updateMsg', 'data-toggle'=>'tooltip'],
+        'deleteOptions'=>['title'=>'$deleteMsg', 'data-toggle'=>'tooltip'], 
+    ],
+    ['class' => 'kartik\grid\CheckboxColumn']
+];
 ?>
 <div class="car-brand-index">
 
@@ -16,7 +54,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <p>
         <?= Html::a('Create Car Brand', ['create'], ['class' => 'btn btn-success ajaxify']) ?>
     </p>
-    <?= GridView::widget([
+    <?= /*GridView::widget([
         'dataProvider' => $dataProvider,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
@@ -29,43 +67,47 @@ $this->params['breadcrumbs'][] = $this->title;
             // 'updated_at',
 
             [
-                'class' => 'yii\grid\ActionColumn',
+                'class' => 'backend\common\grid\ActionColumn',
                 'header'=>'操作',
-                'template' => '{test} {view} {update} {delete}',
-                'buttons' => [
-                    'test' => function ($url, $model, $key) {
-                      return  Html::a('<span class="icon-wallet"></span>', $url, ['title' => 'test','class'=>'ajaxify'] ) ;
-                     },
-                     'view' => function ($url, $model, $key) {
-                      return  Html::a('<span class="glyphicon glyphicon-eye-open"></span>', $url, ['title' => '查看','class'=>'ajaxify'] ) ;
-                     },
-                     'update' => function ($url, $model, $key) {
-                      return  Html::a('<span class="glyphicon glyphicon-pencil"></span>', $url, ['title' => '更新','class'=>'ajaxify'] ) ;
-                     },
-                     'delete' => function ($url, $model, $key) {
-                      return  Html::a('<span class="glyphicon glyphicon-trash"></span>', $url, 
-                        [
-                            'title' => '删除',
-                            'class'=>'ajaxify',
-                            'method'=>'POST',
-                            'data-sa'=>'1',
-                            'data-title'=>'删除',
-                            'data-message'=>'确定删除?',
-                            'data-type'=>'info',
-                            'data-allow-outside-click'=>'false',
-                            'data-show-confirm-button'=>'true',
-                            'data-show-cancel-button'=>'true',
-                            'data-confirm-button-class'=>'btn-danger',
-                            'data-cancel-button-class'=>'btn-default',
-                            'data-close-on-confirm'=>'false',
-                            'data-close-on-cancel'=>'true',
-                            'data-confirm-button-text'=>'确定',
-                            'data-cancel-button-text'=>'取消',
-                        ] ) ;
-                     }
-                ],
-
             ],
         ],
-    ]); ?>
+    ]); */
+ GridView::widget([
+    'dataProvider' => $dataProvider,
+    // 'filterModel' => $searchModel,
+    'columns' => $gridColumns,
+    'containerOptions' => ['style'=>'overflow: auto'], // only set when $responsive = false
+    'beforeHeader'=>[
+        [
+            'columns'=>[
+                ['content'=>'Header Before 1', 'options'=>['colspan'=>4, 'class'=>'text-center warning']], 
+                ['content'=>'Header Before 2', 'options'=>['colspan'=>4, 'class'=>'text-center warning']], 
+                ['content'=>'Header Before 3', 'options'=>['colspan'=>3, 'class'=>'text-center warning']], 
+            ],
+            'options'=>['class'=>'skip-export'] // remove this row from export
+        ]
+    ],
+    'toolbar' =>  [
+        ['content'=>
+            Html::button('&lt;i class="glyphicon glyphicon-plus">&lt;/i>', ['type'=>'button', 'title'=>'Add Book', 'class'=>'btn btn-success', 'onclick'=>'alert("This will launch the book creation form.\n\nDisabled for this demo!");']) . ' '.
+            Html::a('&lt;i class="glyphicon glyphicon-repeat">&lt;/i>', ['grid-demo'], ['data-pjax'=>0, 'class' => 'btn btn-default', 'title'=>'Reset Grid'])
+        ],
+        '{export}',
+        '{toggleData}'
+    ],
+    'pjax' => true,
+    'bordered' => true,
+    'striped' => false,
+    'condensed' => false,
+    'responsive' => true,
+    'hover' => true,
+    'floatHeader' => true,
+    'floatHeaderOptions' => ['scrollingTop' => 20],
+    'showPageSummary' => true,
+    'panel' => [
+        'type' => GridView::TYPE_PRIMARY
+    ],
+]);
+
+    ?>
 </div>

@@ -8,6 +8,7 @@ use yii\data\ActiveDataProvider;
 use backend\controllers\CommonController;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\helpers\Url;
 
 /**
  * CarBrandController implements the CRUD actions for CarBrand model.
@@ -103,8 +104,7 @@ class CarBrandController extends CommonController
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
-        $this->action->id = 'index';
-        return $this->actionIndex();
+        return $this->asJson(['url'=>Url::to(['index'])]);
     }
 
     /**

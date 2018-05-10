@@ -75,7 +75,7 @@
 
         swal($setting,function(isConfirm){
             if (isConfirm){
-		        $.post(url,function (res) {
+		        $.post(url).then(function (res) {
 	                Layout.addAjaxContentSuccessCallback(function (res) {
 	                    swal('', '操作成功', "success");
 	                });
@@ -83,8 +83,28 @@
 	                    swal('', '操作失败', "error");
 	                });
 	                Layout.loadAjaxContent(res.url);
+		        },function (res,b,c,d,e) {
+		        	request_error(res.status,res.responseText);
 		        });
             }
         });
 	});
 })($);
+
+
+function request_error($code=0,$msg='') {
+	switch($code)
+	{
+	    case 404:
+	    	swal('', $msg, "info");
+	        break;
+	    case 405:
+	    	swal('', $msg, "info");
+	        break;
+	    case 500:
+	    	swal('', '服务器错误', "info");
+	        break;
+	    default:
+	        break;
+	}
+}
