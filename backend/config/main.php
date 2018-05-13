@@ -53,36 +53,7 @@ return [
         ],
 
         'urlManager' => require('configure/urlManager.php'),
-        'assetManager' => [
-            'class' => 'yii\web\AssetManager',
-            'linkAssets' => true,
-            'bundles'=>[
-                'yii\web\JqueryAsset' => [
-                    'sourcePath' => '@m47',
-                    'js' => [
-                        'global/plugins/jquery.min.js',
-                    ],
-                ],
-                'kartik\base\WidgetAsset' => [
-                    'depends' => [],
-                ],
-                'kartik\select2\ThemeKrajeeAsset' => [
-                    'depends' => [],
-                ],
-                'kartik\select2\Select2Asset' => [
-                    'depends' => [],
-                ],
-                'yii\widgets\ActiveFormAsset' => [
-                    'depends' => [],
-                ],
-                'yii\bootstrap\BootstrapPluginAsset' => [
-                    'depends' => [],
-                ],
-
-
-            ]
-
-        ]
+        'assetManager' => require('configure/assetManager.php'),
 
     ],
     'modules' => [
