@@ -33,12 +33,4 @@ class RoleController extends ItemController
         return Item::TYPE_ROLE;
     }
     
-    public function render($view, $params = [])
-    {
-        if (Yii::$app->request->getIsAjax()) {
-            return $this->renderAjax($view, $params, $this);
-        }else{
-            return parent::render($view, $params);
-        }
-    }
 }

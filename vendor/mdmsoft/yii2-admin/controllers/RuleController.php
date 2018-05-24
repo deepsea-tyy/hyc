@@ -100,7 +100,6 @@ class RuleController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             Helper::invalidate();
 
-            // return $this->asJson(['url'=>Url::to(['view'])]);
             return $this->redirect(['view', 'id' => $model->name]);
         }
 
@@ -136,6 +135,15 @@ class RuleController extends Controller
             return new BizRule($item);
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+
+    public function redirect($url,$statusCode = 302 )
+    {
+        if (Yii::$app->request->getIsAjax()) {
+            return $this->asJson(['url'=>Url::to($url)]);
+        }else{
+            return redirect($url,$statusCode);
         }
     }
 }

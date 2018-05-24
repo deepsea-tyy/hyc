@@ -81,6 +81,7 @@ return [
         'class' => 'mdm\admin\components\AccessControl',
         'allowActions' => [
             'admin/user/login',
+            'admin/user/loginout',
             'admin/user/request-password-reset',
             'admin/user/signup',
             'admin/user/captcha',

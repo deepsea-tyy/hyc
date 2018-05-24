@@ -10,6 +10,8 @@ use yii\web\NotFoundHttpException;
 use yii\base\NotSupportedException;
 use yii\filters\VerbFilter;
 use yii\rbac\Item;
+use yii\helpers\Url;
+
 
 /**
  * AuthItemController implements the CRUD actions for AuthItem model.
@@ -185,6 +187,25 @@ class ItemController extends Controller
             return new AuthItem($item);
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+
+    
+    public function render($view, $params = [])
+    {
+        if (Yii::$app->request->getIsAjax()) {
+            return $this->renderAjax($view, $params, $this);
+        }else{
+            return parent::render($view, $params);
+        }
+    }
+
+    public function redirect($url,$statusCode = 302 )
+    {
+        if (Yii::$app->request->getIsAjax()) {
+            return $this->asJson(['url'=>Url::to($url)]);
+        }else{
+            return $this->redirect($url,$statusCode);
         }
     }
 }

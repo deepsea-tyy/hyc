@@ -34,12 +34,4 @@ class PermissionController extends ItemController
         return Item::TYPE_PERMISSION;
     }
     
-    public function render($view, $params = [])
-    {
-        if (Yii::$app->request->getIsAjax()) {
-            return $this->renderAjax($view, $params, $this);
-        }else{
-            return parent::render($view, $params);
-        }
-    }
 }
