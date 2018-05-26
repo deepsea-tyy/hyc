@@ -367,7 +367,7 @@ class QcController extends Controller
 			            	continue;
 			            }
 			            $url2 = $ajaxurl . $year;
-			            $str = mb_convert_encoding($this->get_html($url2), 'utf-8', 'gb2312,gbk');
+			            $str = mb_convert_encoding($this->get_html($url2,$headerArr,$referer), 'utf-8', 'gb2312,gbk');
 
 			            $data = json_decode($str ,true);
 			            foreach ($data['Spec'] as $v) {
