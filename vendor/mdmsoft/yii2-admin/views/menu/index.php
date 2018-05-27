@@ -1,8 +1,7 @@
 <?php
 
 use yii\helpers\Html;
-use yii\grid\GridView;
-use yii\widgets\Pjax;
+use kartik\grid\GridView;
 
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -25,7 +24,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
+            ['class' => 'kartik\grid\SerialColumn'],
             'name',
             [
                 'attribute' => 'menuParent.name',
@@ -36,7 +35,20 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'route',
             'order',
-            ['class' => 'backend\common\grid\ActionColumn']
+            ['class' => 'backend\common\grid\ActionColumn'],
+        ],
+        'pjax' => true,
+        'pjaxSettings'=>['options'=>['enablePushState'=>false,'enableReplaceState'=>false]],
+        'bordered' => true,
+        'striped' => false,
+        'condensed' => false,
+        'responsive' => true,
+        'hover' => true,
+        'floatHeader' => true,
+        'floatHeaderOptions' => ['scrollingTop' => 100],
+        // 'showPageSummary' => true,
+        'panel' => [
+            'type' => GridView::TYPE_PRIMARY
         ],
     ]);
     ?>

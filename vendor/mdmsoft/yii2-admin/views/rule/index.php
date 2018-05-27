@@ -1,8 +1,7 @@
 <?php
 
 use yii\helpers\Html;
-use yii\grid\GridView;
-use yii\widgets\Pjax;
+use kartik\grid\GridView;
 
 /* @var $this  yii\web\View */
 /* @var $model mdm\admin\models\BizRule */
@@ -25,12 +24,25 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
+            ['class' => 'kartik\grid\SerialColumn'],
             [
                 'attribute' => 'name',
                 'label' => Yii::t('rbac-admin', 'Name'),
             ],
             ['class' => 'backend\common\grid\ActionColumn']
+        ],
+        'pjax' => true,
+        'pjaxSettings'=>['options'=>['enablePushState'=>false,'enableReplaceState'=>false]],
+        'bordered' => true,
+        'striped' => false,
+        'condensed' => false,
+        'responsive' => true,
+        'hover' => true,
+        'floatHeader' => true,
+        'floatHeaderOptions' => ['scrollingTop' => 100],
+        // 'showPageSummary' => true,
+        'panel' => [
+            'type' => GridView::TYPE_PRIMARY
         ],
     ]);
     ?>
