@@ -66,17 +66,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'pjax' => true,
             'pjaxSettings'=>['options'=>['enablePushState'=>false,'enableReplaceState'=>false]],
-            'bordered' => true,
-            'striped' => false,
-            'condensed' => false,
-            'responsive' => true,
-            'hover' => true,
-            'floatHeader' => true,
-            'floatHeaderOptions' => ['scrollingTop' => 100],
-            // 'showPageSummary' => true,
-            'panel' => [
-                'type' => GridView::TYPE_PRIMARY
-            ],
+
         ]);
         ?>
 </div>

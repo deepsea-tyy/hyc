@@ -54,24 +54,7 @@ $gridColumns = [
     <p>
         <?= Html::a('Create Car Brand', ['create'], ['class' => 'btn btn-success ajaxify']) ?>
     </p>
-    <?= /*GridView::widget([
-        'dataProvider' => $dataProvider,
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
-            'id',
-            'brand',
-            'logo',
-            'oid',
-            // 'created_at',
-            // 'updated_at',
-
-            [
-                'class' => 'backend\common\grid\ActionColumn',
-                'header'=>'操作',
-            ],
-        ],
-    ]); */
+    <?=
  GridView::widget([
     'dataProvider' => $dataProvider,
     // 'filterModel' => $searchModel,
@@ -89,8 +72,8 @@ $gridColumns = [
     ],
     'toolbar' =>  [
         ['content'=>
-            Html::button('&lt;i class="glyphicon glyphicon-plus">&lt;/i>', ['type'=>'button', 'title'=>'Add Book', 'class'=>'btn btn-success', 'onclick'=>'alert("This will launch the book creation form.\n\nDisabled for this demo!");']) . ' '.
-            Html::a('&lt;i class="glyphicon glyphicon-repeat">&lt;/i>', ['grid-demo'], ['data-pjax'=>0, 'class' => 'btn btn-default', 'title'=>'Reset Grid'])
+            Html::button('<i class="glyphicon glyphicon-plus"></i>', ['type'=>'button', 'title'=>'Add Book', 'class'=>'btn btn-success', 'onclick'=>'alert("This will launch the book creation form.\n\nDisabled for this demo!");']) . ' '.
+            Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['grid-demo'], ['data-pjax'=>0, 'class' => 'btn btn-default', 'title'=>'Reset Grid'])
         ],
         '{export}',
         '{toggleData}'
