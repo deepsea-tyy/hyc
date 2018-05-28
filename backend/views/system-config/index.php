@@ -18,14 +18,16 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
+            ['class' => 'kartik\grid\SerialColumn'],
 
             'id',
             'name',
             'content:ntext',
             'introduction',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            ['class' => 'backend\common\grid\ActionColumn'],
         ],
+        'pjax' => true,
+        'pjaxSettings'=>['options'=>['enablePushState'=>false,'enableReplaceState'=>false]],
     ]); ?>
 </div>

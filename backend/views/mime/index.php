@@ -2,7 +2,6 @@
 
 use yii\helpers\Html;
 use kartik\grid\GridView;
-use yii\widgets\Pjax;
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\MimeSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -13,7 +12,6 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="mime-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
-    <?php Pjax::begin(); ?>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
@@ -39,6 +37,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
             ['class' => 'yii\grid\ActionColumn'],
         ],
+        'pjax' => true,
+        'pjaxSettings'=>['options'=>['enablePushState'=>false,'enableReplaceState'=>false]],
     ]); ?>
-    <?php Pjax::end(); ?>
 </div>

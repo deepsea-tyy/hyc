@@ -2,7 +2,6 @@
 
 use yii\helpers\Html;
 use kartik\grid\GridView;
-use yii\widgets\Pjax;
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\CompanySearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -10,11 +9,29 @@ use yii\widgets\Pjax;
 $this->title = 'Companies';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="index.html">公司管理</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <span>列表</span>
+        </li>
+    </ul>
+    <div class="page-toolbar">
+        <div id="dashboard-report-range" class="pull-right tooltips btn btn-sm" data-container="body" data-placement="bottom" data-original-title="Change dashboard date range">
+            <i class="icon-calendar"></i>&nbsp;
+            <span class="thin uppercase hidden-xs"></span>&nbsp;
+            <i class="fa fa-angle-down"></i>&nbsp;
+            <i class="fa fa-refresh"></i>
+        </div>
+    </div>
+</div>
+
 <div class="company-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
-    <?php //Pjax::begin(); ?>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
         <?= Html::a('Create Company', ['create'], ['class' => 'btn btn-success ajaxify']) ?>
@@ -72,6 +89,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
             ['class' => 'backend\common\grid\ActionColumn']
         ],
+        'pjax' => true,
+        'pjaxSettings'=>['options'=>['enablePushState'=>false,'enableReplaceState'=>false]],
     ]); ?>
-    <?php //Pjax::end(); ?>
 </div>
