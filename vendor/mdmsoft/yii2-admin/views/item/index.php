@@ -26,6 +26,14 @@ $columns = [
                 'label' => Yii::t('rbac-admin', 'Name'),
             ],
             [
+                'attribute' => 'data',
+                'label' => '中文名称',
+                'value' => function ($model, $key, $index, $column)
+                {
+                    return $model->data['title'];
+                },
+            ],
+            [
                 'attribute' => 'ruleName',
                 'label' => Yii::t('rbac-admin', 'Rule Name'),
                 'filter' => $rules

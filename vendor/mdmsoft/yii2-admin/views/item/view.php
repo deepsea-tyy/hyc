@@ -12,7 +12,8 @@ use yii\widgets\DetailView;
 
 $context = $this->context;
 $labels = $context->labels();
-$this->title = $model->name;
+// $this->title = $model->name;
+$this->title = json_decode($model->data)->title;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('rbac-admin', $labels['Items']), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 
@@ -28,13 +29,13 @@ $animateIcon = ' <i class="glyphicon glyphicon-refresh glyphicon-refresh-animate
 <div class="auth-item-view">
     <h1><?=Html::encode($this->title);?></h1>
     <p>
-        <?=Html::a(Yii::t('rbac-admin', 'Update'), ['update', 'id' => $model->name], ['class' => 'btn btn-primary']);?>
+        <?=Html::a(Yii::t('rbac-admin', 'Update'), ['update', 'id' => $model->name], ['class' => 'btn btn-primary ajaxify']);?>
         <?=Html::a(Yii::t('rbac-admin', 'Delete'), ['delete', 'id' => $model->name], [
     'class' => 'btn btn-danger',
     'data-confirm' => Yii::t('rbac-admin', 'Are you sure to delete this item?'),
     'data-method' => 'post',
 ]);?>
-        <?=Html::a(Yii::t('rbac-admin', 'Create'), ['create'], ['class' => 'btn btn-success']);?>
+        <?=Html::a(Yii::t('rbac-admin', 'Create'), ['create'], ['class' => 'btn btn-success ajaxify']);?>
     </p>
     <div class="row">
         <div class="col-sm-11">
@@ -45,7 +46,11 @@ DetailView::widget([
         'name',
         'description:ntext',
         'ruleName',
-        'data:ntext',
+        // 'data:ntext',
+        [                      
+            'label' => '中文名称',
+            'value' => json_decode($model->data)->title,
+        ],
     ],
     'template' => '<tr><th style="width:25%">{label}</th><td>{value}</td></tr>',
 ]);

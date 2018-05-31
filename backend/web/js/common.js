@@ -95,6 +95,9 @@
 function request_error($code=0,$msg='') {
 	switch($code)
 	{
+	    case 403:
+	    	swal('', $msg, "info");
+	        break;
 	    case 404:
 	    	swal('', $msg, "info");
 	        break;

@@ -25,7 +25,7 @@ return [
     'Update' => '更新',
     'Roles' => '角色列表',
     'Create Role' => '创建角色',
-    'Name' => '名称',
+    'Name' => '英文名称',
     'Type' => '类型',
     'Description' => '描述',
     'Rule Name' => '规则名称',
@@ -65,4 +65,6 @@ return [
     'Menu' => '菜单',
     'Help' => '帮助',
     'Application' => '应用',
+    'Search for available' => '搜索可用',
+    'Search for assigned' => '搜索已有',
 ];
