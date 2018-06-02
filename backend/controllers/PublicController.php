@@ -18,8 +18,7 @@ class PublicController extends \backend\controllers\CommonController
     public function actionArea()
     {
     	$parents = $arr = [];
-    	$list = Area::find()->select(['id'=>'codeid','name'=>'city','pid'=>'parentid'])->asArray()->all();
-    	
+    	$list = Area::find()->select(['id'=>'codeid','name'=>'city','pid'=>'parentid'])->asArray()->all();    	
     	$this->asJson($this->list_to_tree($list));
     }
 
