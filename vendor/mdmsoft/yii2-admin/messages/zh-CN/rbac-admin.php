@@ -67,4 +67,5 @@ return [
     'Application' => '应用',
     'Search for available' => '搜索可用',
     'Search for assigned' => '搜索已有',
+    'Name-zh' => '中文名称',
 ];

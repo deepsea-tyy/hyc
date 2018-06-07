@@ -27,7 +27,7 @@ $columns = [
             ],
             [
                 'attribute' => 'data',
-                'label' => '中文名称',
+                'label' => Yii::t('rbac-admin', 'Name-zh'),
                 'value' => function ($model, $key, $index, $column)
                 {
                     return $model->data['title'];

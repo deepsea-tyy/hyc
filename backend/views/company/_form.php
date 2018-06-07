@@ -4,6 +4,7 @@ use yii\helpers\Html;
 use common\widgets\ActiveForm;
 use yii\base\DynamicModel;
 use yii\helpers\Url;
+use yii\web\JsExpression;
 /* @var $this yii\web\View */
 /* @var $model common\models\Company */
 /* @var $form yii\widgets\ActiveForm */
@@ -31,13 +32,13 @@ $data = [1,2,3,4];
             'ajax' => [
                 'url' => Url::to(['public/index']),
                 'dataType' => 'json',
-                'processResults'=> 'function (data) { return { results: data.items  }; }',
+                'processResults'=> new JsExpression('function (data) { return { results: data.items  }; }'),
             ],
         ],
         'pluginEvents' => [
-            'change' => 'function(a) {
+            'change' => new JsExpression('function(a) {
                 console.log(a);
-            }',
+            }'),
         ]
 ]) ?>
 

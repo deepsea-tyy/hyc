@@ -48,7 +48,7 @@ DetailView::widget([
         'ruleName',
         // 'data:ntext',
         [                      
-            'label' => '中文名称',
+            'label' => Yii::t('rbac-admin', 'Name-zh'),
             'value' => json_decode($model->data)->title,
         ],
     ],
