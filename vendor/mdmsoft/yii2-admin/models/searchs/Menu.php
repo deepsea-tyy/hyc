@@ -23,7 +23,7 @@ class Menu extends MenuModel
     {
         return [
             [['id', 'parent', 'order'], 'integer'],
-            [['name', 'route', 'parent_name'], 'safe'],
+            [['name', 'route', 'parent_name','data'], 'safe'],
         ];
     }
 
@@ -77,7 +77,8 @@ class Menu extends MenuModel
 
         $query->andFilterWhere(['like', 'lower(t.name)', strtolower($this->name)])
             ->andFilterWhere(['like', 't.route', $this->route])
-            ->andFilterWhere(['like', 'lower(parent.name)', strtolower($this->parent_name)]);
+            ->andFilterWhere(['like', 'lower(parent.name)', strtolower($this->parent_name)])
+            ->andFilterWhere(['like', 't.data', strtolower($this->data)]);
 
         return $dataProvider;
     }

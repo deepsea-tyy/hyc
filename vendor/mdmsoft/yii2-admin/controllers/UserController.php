@@ -7,6 +7,7 @@ use mdm\admin\models\form\Login;
 use mdm\admin\models\form\PasswordResetRequest;
 use mdm\admin\models\form\ResetPassword;
 use mdm\admin\models\form\Signup;
+use mdm\admin\models\form\CreateUser;
 use mdm\admin\models\form\ChangePassword;
 use mdm\admin\models\User;
 use mdm\admin\models\searchs\User as UserSearch;
@@ -69,6 +70,25 @@ class UserController extends Controller
         }else{
             return parent::render($view, $params);
         }
+    }
+
+    public function actionCreate()
+    {
+        $model = new CreateUser;
+        $this->layout = '@backend/views/layouts/main.php';
+
+        if ($model->load(Yii::$app->getRequest()->post())) {
+            $row = Yii::$app->db->createCommand('SELECT id FROM hyc_user order by id desc')->queryOne();
+            $model->id = $row['id'] + 1;
+
+            if ($user = $model->signup()) {
+                return $this->asJson(['url'=>Url::to(['index'])]);
+            }
+        }
+
+        return $this->render('create', [
+                'model' => $model,
+        ]);
     }
 
     /**

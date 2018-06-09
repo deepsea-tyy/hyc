@@ -68,4 +68,5 @@ return [
     'Search for available' => '搜索可用',
     'Search for assigned' => '搜索已有',
     'Name-zh' => '中文名称',
+    'Create User' => '新增用户',
 ];

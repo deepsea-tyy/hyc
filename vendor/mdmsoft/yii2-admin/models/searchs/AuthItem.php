@@ -65,11 +65,11 @@ class AuthItem extends Model
             $items = array_filter($authManager->getPermissions(), function($item) {
                 return $this->type == Item::TYPE_PERMISSION xor strncmp($item->name, '/', 1) === 0;
             });
-            if (!empty($params[static::formName()]['data'])) {
-                $items = array_filter(array_map(function ($item) use ($params) {
-                    if (mb_stripos($item->data['title'], $params[static::formName()]['data']) !== false) return $item;
-                }, $items));
-            }
+        }
+        if (!empty($params[static::formName()]['data'])) {
+            $items = array_filter(array_map(function ($item) use ($params) {
+                if (mb_stripos($item->data['title'], $params[static::formName()]['data']) !== false) return $item;
+            }, $items));
         }
         $this->load($params);
         if ($this->validate()) {

@@ -14,6 +14,9 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="user-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
+    <p>
+        <?= Html::a(Yii::t('rbac-admin', 'Create User'), ['create'], ['class' => 'btn btn-success ajaxify']) ?>
+    </p>
 
     <?=
     GridView::widget([

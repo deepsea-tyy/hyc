@@ -27,6 +27,15 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'kartik\grid\SerialColumn'],
             'name',
             [
+                'attribute' => 'data',
+                'label' => Yii::t('rbac-admin', 'Name-zh'),
+                'value' => function ($model, $key, $index, $column)
+                {
+                    $data = json_decode($model->data,true);
+                    return $data['title'];
+                },
+            ],
+            [
                 'attribute' => 'menuParent.name',
                 'filter' => Html::activeTextInput($searchModel, 'parent_name', [
                     'class' => 'form-control', 'id' => null
