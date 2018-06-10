@@ -4,6 +4,7 @@ namespace mdm\admin\models\form;
 use Yii;
 use mdm\admin\models\User;
 use yii\base\Model;
+use mdm\admin\components\Configs;
 
 /**
  * Signup form
@@ -61,6 +62,9 @@ class Signup extends Model
             $user->setPassword($this->password);
             $user->generateAuthKey();
             if ($user->save()) {
+                $model = new Assignment($this->id);
+                $role = $this->role ? $this->role : Configs::DEFAULT_ROLE;
+                $success = $model->assign([$role]);
                 return $user;
             }
         }

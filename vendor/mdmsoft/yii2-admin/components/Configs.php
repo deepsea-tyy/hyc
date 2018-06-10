@@ -43,6 +43,8 @@ class Configs extends \yii\base\Object
 {
     const CACHE_TAG = 'mdm.admin';
 
+    const DEFAULT_ROLE = 'editor';
+
     /**
      * @var ManagerInterface .
      */

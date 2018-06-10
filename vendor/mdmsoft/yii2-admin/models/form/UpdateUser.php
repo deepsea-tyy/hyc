@@ -54,12 +54,9 @@ class UpdateUser extends CreateUser
             $user->wechar_id = $this->wechar_id;
             $user->blog_id = $this->blog_id;
             $user->qq_id = $this->qq_id;
-            $user->setPassword($this->password);
-            $user->generateAuthKey();
+            // $user->setPassword($this->password);
+            // $user->generateAuthKey();
             if ($user->save()) {
-                $model = new Assignment($this->id);
-                $role = $this->role ? $this->role : 'editor';
-                $success = $model->assign([$role]);
                 return $user;
             }
         }
