@@ -22,16 +22,16 @@ unset($rules[RouteRule::RULE_NAME]);
 $columns = [
             ['class' => 'kartik\grid\SerialColumn'],
             [
-                'attribute' => 'name',
-                'label' => Yii::t('rbac-admin', 'Name'),
-            ],
-            [
                 'attribute' => 'data',
                 'label' => Yii::t('rbac-admin', 'Name-zh'),
                 'value' => function ($model, $key, $index, $column)
                 {
                     return $model->data['title'];
                 },
+            ],
+            [
+                'attribute' => 'name',
+                'label' => Yii::t('rbac-admin', 'Name'),
             ],
             [
                 'attribute' => 'ruleName',

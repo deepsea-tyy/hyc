@@ -85,6 +85,8 @@ return [
             'admin/user/request-password-reset',
             'admin/user/signup',
             'admin/user/captcha',
+            'site/error',
+            'site/index',
             'public/*',
         ]
     ],

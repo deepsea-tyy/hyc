@@ -13,7 +13,8 @@ use yii\widgets\DetailView;
 $context = $this->context;
 $labels = $context->labels();
 // $this->title = $model->name;
-$this->title = json_decode($model->data)->title;
+$data = json_decode($model->data,true);
+$this->title = is_array($data) ? $data['title']:'';
 $this->params['breadcrumbs'][] = ['label' => Yii::t('rbac-admin', $labels['Items']), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 
@@ -49,7 +50,7 @@ DetailView::widget([
         // 'data:ntext',
         [                      
             'label' => Yii::t('rbac-admin', 'Name-zh'),
-            'value' => json_decode($model->data)->title,
+            'value' => is_array($data) ? $data['title']:'',
         ],
     ],
     'template' => '<tr><th style="width:25%">{label}</th><td>{value}</td></tr>',

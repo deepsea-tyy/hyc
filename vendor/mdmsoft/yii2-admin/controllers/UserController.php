@@ -8,6 +8,7 @@ use mdm\admin\models\form\PasswordResetRequest;
 use mdm\admin\models\form\ResetPassword;
 use mdm\admin\models\form\Signup;
 use mdm\admin\models\form\CreateUser;
+use mdm\admin\models\form\UpdateUser;
 use mdm\admin\models\form\ChangePassword;
 use mdm\admin\models\User;
 use mdm\admin\models\searchs\User as UserSearch;
@@ -49,17 +50,13 @@ class UserController extends Controller
     public function actions()
     {
         return [
-            // 'captcha' => [
-            //         'class' => 'mdm\captcha\CaptchaAction',
-            //         'level' => 1, // avaliable level are 1,2,3 :D
-            //     ],
             'captcha' => [
-                   'class' => 'yii\captcha\CaptchaAction',
+                'class' => 'yii\captcha\CaptchaAction',
                 'height' => 50,
                 'width' => 80,
                 'minLength' => 4,
                 'maxLength' => 4
-                ],
+            ],
         ];
     }
     
@@ -88,6 +85,27 @@ class UserController extends Controller
 
         return $this->render('create', [
                 'model' => $model,
+        ]);
+    }
+
+    /**
+     * Updates an existing CreateUser model.
+     * If update is successful, the browser will be redirected to the 'view' page.
+     * @param integer $id
+     * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionUpdate($id)
+    {
+        $model = UpdateUser::findOne($id);
+        if ($model === null) throw new NotFoundHttpException('The requested page does not exist.');
+        
+        if ($model->load(Yii::$app->request->post()) && $model->userUpdate()) {
+            return $this->asJson(['url'=>Url::to(['index'])]);
+        }
+
+        return $this->render('update', [
+            'model' => $model,
         ]);
     }
 

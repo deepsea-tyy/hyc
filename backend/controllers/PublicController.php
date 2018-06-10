@@ -7,6 +7,7 @@ use common\models\Area;
 
 class PublicController extends \backend\controllers\CommonController
 {
+    // 测试接口
     public function actionIndex()
     {
     	$list = CarBrand::find()->select(['id','text'=>'brand'])->asArray()->all();
@@ -14,7 +15,9 @@ class PublicController extends \backend\controllers\CommonController
         $this->asJson(['total_count'=>count($list),'items'=>$list]);
     }
 
-
+    /*
+     * 城市3级联动
+     */
     public function actionArea()
     {
     	$parents = $arr = [];

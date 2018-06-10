@@ -25,7 +25,6 @@ $this->params['breadcrumbs'][] = $this->title;
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'kartik\grid\SerialColumn'],
-            'name',
             [
                 'attribute' => 'data',
                 'label' => Yii::t('rbac-admin', 'Name-zh'),
@@ -35,6 +34,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     return $data['title'];
                 },
             ],
+            'name',
             [
                 'attribute' => 'menuParent.name',
                 'filter' => Html::activeTextInput($searchModel, 'parent_name', [

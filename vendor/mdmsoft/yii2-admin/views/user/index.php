@@ -40,7 +40,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
             [
                 'class' => 'backend\common\grid\ActionColumn',
-                'template' => Helper::filterActionColumn(['view', 'activate', 'delete']),
+                'template' => Helper::filterActionColumn(['view', 'update', 'activate', 'delete']),
                 'buttons' => [
                     'activate' => function($url, $model) {
                         if ($model->status == 1) {
