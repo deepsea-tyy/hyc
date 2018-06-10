@@ -14,7 +14,6 @@ class CreateUser extends ActiveRecord
 {
 
     public $password;
-    public $role;
 
      /**
      * @inheritdoc
@@ -105,7 +104,7 @@ class CreateUser extends ActiveRecord
             $user->generateAuthKey();
             if ($user->save()) {
                 $model = new Assignment($this->id);
-                $role = $this->role ? $this->role : Configs::DEFAULT_ROLE;
+                $role = Configs::DEFAULT_ROLE;
                 $success = $model->assign([$role]);
                 return $user;
             }

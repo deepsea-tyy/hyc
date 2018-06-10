@@ -10,10 +10,6 @@ use mdm\admin\models\Assignment;
  */
 class UpdateUser extends CreateUser
 {
-
-    public $password;
-    public $role;
-
     /**
      * @inheritdoc
      */
@@ -34,33 +30,5 @@ class UpdateUser extends CreateUser
             [['remark'], 'string', 'max' => 255],
             [['mobile', 'wechar_id', 'blog_id', 'qq_id', 'reg_area', 'location', 'money_crc'], 'string', 'max' => 50]
         ];
-    }
-
-    /**
-     * update user.
-     *
-     * @return User|null the saved model or null if saving fails
-     */
-    public function userUpdate()
-    {
-        if ($this->validate()) {
-            $user = new User();
-            $user->email = $this->email;
-            $user->id = $this->id;
-            $user->status = $this->status;
-            $user->u_type = $this->u_type;
-            $user->c_id = $this->c_id;
-            $user->mobile = $this->mobile;
-            $user->wechar_id = $this->wechar_id;
-            $user->blog_id = $this->blog_id;
-            $user->qq_id = $this->qq_id;
-            // $user->setPassword($this->password);
-            // $user->generateAuthKey();
-            if ($user->save()) {
-                return $user;
-            }
-        }
-
-        return null;
     }
 }

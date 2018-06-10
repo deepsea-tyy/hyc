@@ -100,7 +100,7 @@ class UserController extends Controller
         $model = UpdateUser::findOne($id);
         if ($model === null) throw new NotFoundHttpException('The requested page does not exist.');
         
-        if ($model->load(Yii::$app->request->post()) && $model->userUpdate()) {
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->asJson(['url'=>Url::to(['index'])]);
         }
 
