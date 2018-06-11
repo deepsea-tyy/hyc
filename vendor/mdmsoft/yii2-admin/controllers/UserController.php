@@ -99,8 +99,15 @@ class UserController extends Controller
     {
         $model = UpdateUser::findOne($id);
         if ($model === null) throw new NotFoundHttpException('The requested page does not exist.');
-        
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+
+        $param = Yii::$app->request->post();
+        if ($model->load($param) && $model->save()) {
+            $user = User::findOne($model->id);
+            $password = $param[$model->formName()]['password'];
+            if ($password) {
+                $user->setPassword($password); //重置密码
+                $user->save(false);
+            }
             return $this->asJson(['url'=>Url::to(['index'])]);
         }
 

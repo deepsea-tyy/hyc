@@ -23,7 +23,7 @@ class UpdateUser extends CreateUser
             ['email', 'unique', 'targetClass' => 'mdm\admin\models\User', 'message' => 'This email address has already been taken.'],
 
             // ['password', 'required'],
-            // ['password', 'string', 'min' => 6],
+            ['password', 'string', 'min' => 6],
             ['u_type', 'number'],
 
             [['status', 'u_type', 'c_id', 'task', 'deals', 'fails', 'revoke_times', 'money'], 'integer'],
