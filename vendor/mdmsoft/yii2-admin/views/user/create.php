@@ -24,10 +24,10 @@ $this->params['breadcrumbs'][] = $this->title;
 
 
     <?= $form->field($model, 'email')->textInput(['maxlength' => true]) ?>
+
     <?= $form->field($model, 'password')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'status')->textInput() ?>
-
 
     <?= $form->field($model, 'u_type')->textInput() ?>
 

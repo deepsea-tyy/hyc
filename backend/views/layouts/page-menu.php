@@ -7,7 +7,7 @@ $menu =  MenuHelper::getAssignedMenu(\Yii::$app->user->id,null,function ($menu)
     $data = json_decode($menu['data'],true);
 
     $item = [
-                'label' => $data['title'],
+                'label' => $data['label'],
                 // 'label' => $menu['data'],
                 'url' => MenuHelper::parseRoute($menu['route']),
             ];

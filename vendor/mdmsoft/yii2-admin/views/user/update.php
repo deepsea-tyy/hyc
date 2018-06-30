@@ -6,8 +6,8 @@ use yii\widgets\ActiveForm;
 /* @var $this  yii\web\View */
 /* @var $model mdm\admin\models\User */
 
-$this->title = Yii::t('rbac-admin', 'Create Rule');
-$this->params['breadcrumbs'][] = ['label' => Yii::t('rbac-admin', 'Create User'), 'url' => ['index']];
+$this->title = Yii::t('rbac-admin', 'Update User');
+$this->params['breadcrumbs'][] = ['label' => Yii::t('rbac-admin', 'Update User'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 

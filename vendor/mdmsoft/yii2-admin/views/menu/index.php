@@ -31,7 +31,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'value' => function ($model, $key, $index, $column)
                 {
                     $data = json_decode($model->data,true);
-                    return $data['title'];
+                    return $data['label'];
                 },
             ],
             'name',
