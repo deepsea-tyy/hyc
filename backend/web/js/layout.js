@@ -640,6 +640,7 @@ var Layout = function () {
                 ajaxContentSuccessCallbacks = [];
                 ajaxContentErrorCallbacks = [];
             },function (res, ajaxOptions, thrownError) {
+                request_error(res.status,thrownError);
                 App.stopPageLoading();
                 for (var i = 0; i < ajaxContentErrorCallbacks.length; i++) {
                     ajaxContentErrorCallbacks[i].call(res);
