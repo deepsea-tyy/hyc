@@ -19,6 +19,10 @@ return [
             'js'=>['global/plugins/bootstrap/js/bootstrap.min.js'],
             'depends' => [],
         ],
+        'yii\bootstrap\BootstrapAsset' => [
+            'css' => [],
+            'depends' => [],
+        ],
         'yii\widgets\ActiveFormAsset' => [
             'depends' => [],
         ],

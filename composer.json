@@ -15,7 +15,7 @@
     "minimum-stability": "stable",
     "require": {
         "php": ">=5.4.0",
-        "yiisoft/yii2": "~2.0.6",
+        "yiisoft/yii2": "~2.0.15.1",
         "yiisoft/yii2-bootstrap": "~2.0.0",
         "yiisoft/yii2-swiftmailer": "~2.0.0 || ~2.1.0",
         "serhatozles/yii2-simplehtmldom": "dev-master",
@@ -25,11 +25,13 @@
         "yiisoft/yii2-imagine": "^2.1",
         "2amigos/yii2-file-upload-widget": "~1.0",
         "bailangzhan/yii2-webuploader": "dev-master",
-        "mdmsoft/yii2-admin": "~2.0",
         "kartik-v/yii2-grid": "~3.1",
         "kartik-v/yii2-editable": "^1.7",
         "kartik-v/yii2-widgets": "^3.4",
-        "workerman/gateway-worker": "^3.0"
+        "workerman/gateway-worker": "^3.0",
+        "workerman/globaldata": "^1.0",
+        "workerman/channel": "^1.0",
+        "mdmsoft/yii2-admin": "~2.0"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",
