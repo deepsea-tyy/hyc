@@ -35,13 +35,8 @@ class TestController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new TestSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
+        
+        echo "string";
     }
 
     /**
