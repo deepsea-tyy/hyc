@@ -73,3 +73,15 @@ return [
 [**More...**](docs/guide/configuration.md)
 
 [screenshots](https://goo.gl/r8RizT)
+
+
+  'mdmsoft/yii2-admin' => 
+  array (
+    'name' => 'mdmsoft/yii2-admin',
+    'version' => '2.9.0.0',
+    'alias' => 
+    array (
+      '@mdm/admin' => $vendorDir . '/mdmsoft/yii2-admin',
+    ),
+  ),
+
