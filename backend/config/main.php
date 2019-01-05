@@ -21,6 +21,43 @@ return [
             'port' => 6379,
             'database' => 0,
         ],
+        'redis' => [
+            'class' => \yii\redis\Connection::class,
+            'hostname' => 'localhost',
+            'port' => 6379,
+            'database' => 0,
+        ],
+        'queue' => [
+            // 'class' => \yii\queue\file\Queue::class,
+            // 'path' => '@runtime/queue',
+            'class' => \yii\queue\redis\Queue::class,
+            'serializer' => \yii\queue\serializers\JsonSerializer::class,
+            'strictJobType' => false,
+            'redis' => [
+                'class' => \yii\redis\Connection::class,
+                'hostname' => 'localhost',
+                'port' => 6379,
+                'database' => 1,
+            ], // Redis connection component or its config
+            'channel' => 'queue', // Queue channel key
+        ],
+        'queue2' => [
+            // 'class' => \yii\queue\file\Queue::class,
+            // 'path' => '@runtime/queue',
+            'class' => \yii\queue\redis\Queue::class,
+            'serializer' => \yii\queue\serializers\JsonSerializer::class,
+            'strictJobType' => false,
+            'redis' => [
+                'class' => \yii\redis\Connection::class,
+                'hostname' => 'localhost',
+                'port' => 6379,
+                'database' => 2,
+                // retry connecting after connection has timed out
+                // yiisoft/yii2-redis >=2.0.7 is required for this.
+                'retries' => 1,
+            ], // Redis connection component or its config
+            'channel' => 'queue', // Queue channel key
+        ],
         'user' => [
             // 'identityClass' => 'common\models\User',
             // 'enableAutoLogin' => true,

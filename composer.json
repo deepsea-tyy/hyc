@@ -31,6 +31,7 @@
         "workerman/gateway-worker": "^3.0",
         "workerman/globaldata": "^1.0",
         "workerman/channel": "^1.0",
+        "shenhai1120/yii2-blockchain": "~1.1",
         "mdmsoft/yii2-admin": "~2.0"
     },
     "require-dev": {
