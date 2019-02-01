@@ -21,11 +21,11 @@ return [
             'port' => 6379,
             'database' => 0,
         ],
-        'redis' => [
+        'redis' => [ //session
             'class' => \yii\redis\Connection::class,
             'hostname' => 'localhost',
             'port' => 6379,
-            'database' => 0,
+            'database' => 1,
         ],
         'queue' => [
             // 'class' => \yii\queue\file\Queue::class,
@@ -37,7 +37,7 @@ return [
                 'class' => \yii\redis\Connection::class,
                 'hostname' => 'localhost',
                 'port' => 6379,
-                'database' => 1,
+                'database' => 2,
             ], // Redis connection component or its config
             'channel' => 'queue', // Queue channel key
         ],
@@ -54,7 +54,7 @@ return [
                 'database' => 2,
                 // retry connecting after connection has timed out
                 // yiisoft/yii2-redis >=2.0.7 is required for this.
-                'retries' => 1,
+                'retries' => 3,
             ], // Redis connection component or its config
             'channel' => 'queue', // Queue channel key
         ],
@@ -69,7 +69,7 @@ return [
         ],
         // 'session' => [
         //     // this is the name of the session cookie used for login on the backend
-        //     'name' => 'advanced-backend',
+        //     'name' => 'app-backend',
         // ],
         'session' => [
             'class' => 'yii\redis\Session',

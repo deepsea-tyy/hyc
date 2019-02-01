@@ -62,6 +62,32 @@ class LoginForm extends Model
         return false;
     }
 
+
+    /**
+     * Logs in a user using the provided username and password.
+     *
+     * @return bool whether the user is logged in successfully
+     */
+    public function apiLogin()
+    {
+        if ($this->validate()) {
+            $this->_user->access_token = $this->generateApiToken();
+            $this->_user->save();
+            return $this->_user;
+        }
+        
+        return false;
+    }
+
+    /**
+     * 生成 api_token
+     */
+    public function generateApiToken()
+    {
+        $t = Yii::$app->params['user.token_time'];
+        return Yii::$app->security->generateRandomString() . '_' . (time()+$t);
+    }
+
     /**
      * Finds user by [[username]]
      *
