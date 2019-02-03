@@ -8,61 +8,47 @@ use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use common\models\LoginForm;
+use common\models\BindForm;
 use worker\models\PasswordResetRequestForm;
 use worker\models\ResetPasswordForm;
 use worker\models\SignupForm;
-use worker\models\ContactForm;
+use GatewayClient\Gateway;
 
 /**
  * Site controller
  */
 class SiteController extends Controller
 {
-    /**
-     * @inheritdoc
-     */
+
     public function behaviors()
     {
         return [
-            'access' => [
-                'class' => AccessControl::className(),
-                'only' => ['logout', 'signup'],
-                'rules' => [
-                    [
-                        'actions' => ['signup'],
-                        'allow' => true,
-                        'roles' => ['?'],
-                    ],
-                    [
-                        'actions' => ['logout'],
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ],
-                ],
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'logout' => ['post'],
-                ],
-            ],
+            // 'access' => [
+            //     'class' => AccessControl::className(),
+            //     'only' => ['bind', 'login','loginout','signup','resetPassword'],
+            // ],
+            // 'verbs' => [
+            //     'class' => VerbFilter::className(),
+            //     'actions' => [
+            //         'logout' => ['post'],
+            //     ],
+            // ],
         ];
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function actions()
+    public function actionIndex()
     {
-        return [
-            'error' => [
-                'class' => 'yii\web\ErrorAction',
-            ],
-            'captcha' => [
-                'class' => 'yii\captcha\CaptchaAction',
-                'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
-            ],
+        $data = [
+          'type'=>'aa',
+          'data'=>1,
+          'msg'=>'测试发送',
         ];
+
+        Gateway::$registerAddress = Yii::$app->params['workerConfig']['registerAddress'];
+        Gateway::sendToUid(1, json_encode($data));
+
+        return Yii::$app->params['workerConfig']['registerAddress'];
+        return 'st';
     }
 
     /**
@@ -70,37 +56,35 @@ class SiteController extends Controller
      *
      * @return mixed
      */
-    public function actionIndex()
+    public function actionBind()
     {
+        // 设置GatewayWorker服务的Register服务ip和端口，请根据实际情况改成实际值(ip不能是0.0.0.0)
+        $model = new BindForm();
+        if ($model->load(Yii::$app->request->post(),'')) {
 
-        // var_dump(Yii::$app->getView()->render('/tmp/index'));
-        // echo Yii::getAlias('@cmf');
-        
-        // var_dump(Yii::getAlias('*'));
-        // exit();
+            // 假设用户已经登录，用户uid和群组id在session中
+            $uid      = Yii::$app->request->post('uid');
+            $client_id = Yii::$app->request->post('sid');
+            $group_id = 1;
 
-
-        return $this->render('index');
+            Gateway::$registerAddress = Yii::$app->params['workerConfig']['registerAddress'];
+            // client_id与uid绑定
+            Gateway::bindUid($client_id, $uid);
+            // 加入某个群组（可调用多次加入多个群组）
+            Gateway::joinGroup($client_id, $group_id);
+            return ['status'=>1,'data'=>$model,'msg'=>'绑定成功'];
+        }
+        return ['status'=>0,'data'=>$model,'msg'=>'绑定失败'];
     }
 
-    /**
-     * Logs in a user.
-     *
-     * @return mixed
-     */
+
     public function actionLogin()
     {
-        if (!Yii::$app->user->isGuest) {
-            return $this->goHome();
-        }
-
         $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
+        if ($model->load(Yii::$app->request->post(),'') && $model->login()) {
+            return ['status'=>1,'data'=>['uid'=>Yii::$app->user->id],'msg'=>'登录成功'];
         } else {
-            return $this->render('login', [
-                'model' => $model,
-            ]);
+            return ['status'=>0,'data'=>[],'msg'=>'账号或密码错误'];
         }
     }
 
@@ -113,40 +97,7 @@ class SiteController extends Controller
     {
         Yii::$app->user->logout();
 
-        return $this->goHome();
-    }
-
-    /**
-     * Displays contact page.
-     *
-     * @return mixed
-     */
-    public function actionContact()
-    {
-        $model = new ContactForm();
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            if ($model->sendEmail(Yii::$app->params['adminEmail'])) {
-                Yii::$app->session->setFlash('success', 'Thank you for contacting us. We will respond to you as soon as possible.');
-            } else {
-                Yii::$app->session->setFlash('error', 'There was an error sending your message.');
-            }
-
-            return $this->refresh();
-        } else {
-            return $this->render('contact', [
-                'model' => $model,
-            ]);
-        }
-    }
-
-    /**
-     * Displays about page.
-     *
-     * @return mixed
-     */
-    public function actionAbout()
-    {
-        return $this->render('about');
+        return ['status'=>1,'data'=>[],'msg'=>'成功退出'];
     }
 
     /**
@@ -170,36 +121,6 @@ class SiteController extends Controller
         ]);
     }
 
-    /**
-     * Requests password reset.
-     *
-     * @return mixed
-     */
-    public function actionRequestPasswordReset()
-    {
-        $model = new PasswordResetRequestForm();
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            if ($model->sendEmail()) {
-                Yii::$app->session->setFlash('success', 'Check your email for further instructions.');
-
-                return $this->goHome();
-            } else {
-                Yii::$app->session->setFlash('error', 'Sorry, we are unable to reset password for the provided email address.');
-            }
-        }
-
-        return $this->render('requestPasswordResetToken', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
-     * Resets password.
-     *
-     * @param string $token
-     * @return mixed
-     * @throws BadRequestHttpException
-     */
     public function actionResetPassword($token)
     {
         try {
@@ -218,4 +139,5 @@ class SiteController extends Controller
             'model' => $model,
         ]);
     }
+
 }

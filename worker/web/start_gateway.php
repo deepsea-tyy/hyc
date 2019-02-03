@@ -21,11 +21,11 @@ use \Workerman\Autoloader;
 require_once __DIR__ . '/common.php';
 
 // gateway 进程，这里使用Text协议，可以用telnet测试
-$gateway = new Gateway("tcp://0.0.0.0:8282");
+$gateway = new Gateway("websocket://0.0.0.0:8282");
 // gateway名称，status方便查看
-$gateway->name = 'YourAppGateway';
+$gateway->name = 'app_Gateway';
 // gateway进程数
-$gateway->count = 4;
+$gateway->count = 8;
 // 本机ip，分布式部署时使用内网ip
 $gateway->lanIp = '127.0.0.1';
 // 内部通讯起始端口，假如$gateway->count=4，起始端口为4000
@@ -36,6 +36,9 @@ $gateway->registerAddress = '127.0.0.1:1238';
 
 // 心跳间隔
 $gateway->pingInterval = 10;
+
+// $gateway->pingNotResponseLimit = 1;
+
 // 心跳数据
 $gateway->pingData = '{"type":"ping"}';
 
@@ -47,10 +50,10 @@ $gateway->onConnect = function($connection)
     {
         // 可以在这里判断连接来源是否合法，不合法就关掉连接
         // $_SERVER['HTTP_ORIGIN']标识来自哪个站点的页面发起的websocket链接
-        if($_SERVER['HTTP_ORIGIN'] != 'http://kedou.workerman.net')
-        {
-            $connection->close();
-        }
+        // if($_SERVER['HTTP_ORIGIN'] != 'http://kedou.workerman.net')
+        // {
+        //     $connection->close();
+        // }
         // onWebSocketConnect 里面$_GET $_SERVER是可用的
         // var_dump($_GET, $_SERVER);
     };

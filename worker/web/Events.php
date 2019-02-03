@@ -37,9 +37,14 @@ class Events
     public static function onConnect($client_id)
     {
         // 向当前client_id发送数据 
-        Gateway::sendToClient($client_id, "Hello $client_id\r\n");
+        $data = [
+          'type'=>'bind',
+          'data'=>$client_id,
+          'msg'=>'sockte建立成功',
+        ];
+        Gateway::sendToClient($client_id, json_encode($data));
         // 向所有人发送
-        Gateway::sendToAll("$client_id login\r\n");
+        // Gateway::sendToAll("$client_id login\r\n");
     }
     
    /**

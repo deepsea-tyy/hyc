@@ -14,20 +14,24 @@ return [
     'components' => [
         'request' => [
             'class' => 'common\components\web\Request',
-            '_key' => '111',
-            '_iv' => '222',
-            '_integration' => ['cmf'], //数组格式
-            '_enable3DES' => false, // 加密开关
-            'csrfParam' => '_csrf-frontend',
+            'csrfParam' => '_csrf-worker',
+            'enableCsrfValidation' => false,
+        ],
+        'redis' => [
+            'class' => 'yii\redis\Connection',
+            'hostname' => 'localhost',
+            'port' => 6379,
+            'database' => 0,
         ],
         'user' => [
             'identityClass' => 'common\models\User',
-            'enableAutoLogin' => true,
-            'identityCookie' => ['name' => '_identity-frontend', 'httpOnly' => true],
+            'enableAutoLogin' => false,
+            'enableSession' => false,
         ],
         'session' => [
-            // this is the name of the session cookie used for login on the frontend
-            'name' => 'advanced-frontend',
+            'class' => 'yii\redis\Session',
+            // this is the name of the session cookie used for login on the api
+            'name' => 'app-worker',
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
@@ -49,29 +53,17 @@ return [
             'rules' => [
             ],
         ],
-        
-       'assetManager' => [
-            'class' => 'yii\web\AssetManager',
-            'bundles'=>[
-                'yii\web\JqueryAsset' => [
-                    'sourcePath' => '@m47',
-                    'js' => [
-                        'global/plugins/jquery.min.js',
-                    ],
-                ],
-            ]
-        ],
         'response' => [
             'class' => 'yii\web\Response',
             'format' => yii\web\Response::FORMAT_JSON,
-            'on beforeSend' => function ($event) {
-                $response = $event->sender;
-                $response->data = [
-                    'code' => $response->getStatusCode(),
-                    'data' => $response->data,
-                    'message' => $response->statusText
-                ];
-            },
+            // 'on beforeSend' => function ($event) {
+            //     $response = $event->sender;
+            //     $response->data = [
+            //         'code' => $response->getStatusCode(),
+            //         'data' => $response->data,
+            //         'message' => $response->statusText
+            //     ];
+            // },
         ],
     ],
     'params' => $params,
