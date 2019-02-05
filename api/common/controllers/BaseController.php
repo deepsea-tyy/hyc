@@ -19,6 +19,7 @@ use yii\filters\auth\QueryParamAuth;
 class BaseController extends Controller
 {
     public $enableCsrfValidation = false;
+    public $user = null;
     /**
      * @inheritdoc
      */
@@ -28,8 +29,8 @@ class BaseController extends Controller
         $behaviors['authenticator'] = [
             'class' => CompositeAuth::className(),
             'authMethods' => [
-                HttpBasicAuth::className(),
-                HttpBearerAuth::className(),
+                // HttpBasicAuth::className(),
+                // HttpBearerAuth::className(),
                 QueryParamAuth::className(),
             ],
         ];
@@ -68,6 +69,7 @@ class BaseController extends Controller
     public function actionBind()
     {
         $model = new BindForm();
+
         if ($model->load(Yii::$app->request->post(),'') && $model->validate()) {
 
             // 假设用户已经登录，用户uid和群组id在session中

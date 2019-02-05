@@ -21,13 +21,13 @@ use \Workerman\Autoloader;
 require_once __DIR__ . '/common.php';
 
 // bussinessWorker 进程
-$worker = new BusinessWorker();
+$worker = new BusinessWorker(Yii::$app->params['workerConfig']['businessWorker']['protocols']);
 // worker名称
-$worker->name = 'app_BusinessWorker';
+$worker->name = Yii::$app->params['workerConfig']['businessWorker']['name'];
 // bussinessWorker进程数量
-$worker->count = 8;
+$worker->count = Yii::$app->params['workerConfig']['businessWorker']['count'];
 // 服务注册地址
-$worker->registerAddress = '127.0.0.1:1238';
+$worker->registerAddress = Yii::$app->params['workerConfig']['registerAddress'];
 
 // 如果不是在根目录启动，则运行runAll方法
 if(!defined('GLOBAL_START'))

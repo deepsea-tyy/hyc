@@ -17,3 +17,29 @@ $config = yii\helpers\ArrayHelper::merge(
 (new yii\web\Application($config))->init();
 
 
+/**
+ * web前段测试代码
+ var ws = new WebSocket("ws://127.0.0.1:8282");
+    ws.onopen = function(){
+		console.info("与服务端连接成功");
+		ws.send('test msg\n');//相当于发送一个初始化信息
+		console.info("向服务端发送心跳包字符串");
+		setInterval(show,3000);
+		}
+	
+	function show(){
+		ws.send('heart beat\n');
+		}	
+  
+  	ws.onConnect = function(e){
+
+		}
+	ws.onmessage = function(e){
+console.log(e.data);
+		}
+//心跳处理
+//获取会员id
+ws.onclose = function(e){
+	 console.log(e);
+	}
+ */

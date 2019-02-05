@@ -15,7 +15,8 @@ class TestController extends BaseController
 
     public function actionIndex()
     {
-        echo "string";
+
+    	return $this->success(Yii::$app->user->identity);
     }
 
 }

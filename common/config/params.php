@@ -23,4 +23,23 @@ return [
 			],
 		],
 	],
+	'workerConfig' =>[
+		//HTTP_ORIGIN 可访问地址
+		'allow' => [],
+		'registerAddress' => '127.0.0.1:1238',
+		'serverPing' => true,
+		'businessWorker'  => [
+			//进程名称
+			'name' => 'App_BusinessWorker',
+			//协议
+			'protocols' => null,
+			//进程数
+			'count' => 4,
+		],
+		'gateway'  => [
+			'name' => 'App_Gateway',
+			'protocols' => 'websocket://0.0.0.0:8282',
+			'count' => 4,
+		],
+	],
 ];
