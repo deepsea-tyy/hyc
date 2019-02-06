@@ -18,8 +18,6 @@ use yii\filters\auth\QueryParamAuth;
  */
 class BaseController extends Controller
 {
-    public $enableCsrfValidation = false;
-    public $user = null;
     /**
      * @inheritdoc
      */

@@ -28,6 +28,12 @@ return [
             },
         ],
         
+        'request' => [
+            'class' => 'common\components\web\Request',
+            'csrfParam' => '_csrf-api',
+            'enableCsrfValidation' => false,
+        ],
+        
         'redis' => [ //token
             'class' => 'yii\redis\Connection',
             'hostname' => 'localhost',

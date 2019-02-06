@@ -28,6 +28,15 @@ define('GLOBAL_START', 1);
 
 require_once __DIR__ . '/web/common.php';
 
+$logDir = Yii::$app->getRuntimePath() . '/worker';
+if(!file_exists($logDir)){
+    mkdir($logDir, 0777, true);
+}
+
+Worker::$stdoutFile = $logDir . '/debug.log';
+Worker::$pidFile = $logDir . '/workerman.pid';
+Worker::$logFile = $logDir . '/workerman.log';
+
 // 加载所有web/*/start.php，以便启动所有服务
 foreach(glob(__DIR__.'/web/start*.php') as $start_file)
 {

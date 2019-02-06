@@ -40,6 +40,10 @@ return [
 			'name' => 'App_Gateway',
 			'protocols' => 'websocket://0.0.0.0:8282',
 			'count' => 4,
+			// 本机ip，分布式部署时使用内网ip
+			'lanIp' => '127.0.0.1',
+			'startPort' => 2900,
+			'pingInterval' => 50,
 		],
 	],
 ];

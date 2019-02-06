@@ -16,9 +16,7 @@ use \Workerman\WebServer;
 use \GatewayWorker\Gateway;
 use \GatewayWorker\BusinessWorker;
 use \Workerman\Autoloader;
-
-// 自动加载类
-require_once __DIR__ . '/common.php';
+use \common\models\User;
 
 // gateway 进程，这里使用Text协议，可以用telnet测试
 $gateway = new Gateway(Yii::$app->params['workerConfig']['gateway']['protocols']);
@@ -27,15 +25,15 @@ $gateway->name = Yii::$app->params['workerConfig']['gateway']['name'];
 // gateway进程数
 $gateway->count = Yii::$app->params['workerConfig']['gateway']['count'];
 // 本机ip，分布式部署时使用内网ip
-$gateway->lanIp = '127.0.0.1';
+$gateway->lanIp = Yii::$app->params['workerConfig']['gateway']['lanIp'];
 // 内部通讯起始端口，假如$gateway->count=4，起始端口为4000
 // 则一般会使用4000 4001 4002 4003 4个端口作为内部通讯端口 
-$gateway->startPort = 2900;
+$gateway->startPort = Yii::$app->params['workerConfig']['gateway']['startPort'];
 // 服务注册地址
 $gateway->registerAddress = Yii::$app->params['workerConfig']['registerAddress'];
 
 // 心跳间隔
-$gateway->pingInterval = 50;
+$gateway->pingInterval = Yii::$app->params['workerConfig']['gateway']['pingInterval'];
 if (Yii::$app->params['workerConfig']['serverPing']) {
     $gateway->pingNotResponseLimit = 0;
     // 心跳数据
@@ -52,14 +50,15 @@ $gateway->onConnect = function($connection)
 {
     $connection->onWebSocketConnect = function($connection , $http_header)
     {
+        $user = User::findIdentityByAccessToken(Yii::$app->request->get('access-token'));
         // 可以在这里判断连接来源是否合法，不合法就关掉连接
         // $_SERVER['HTTP_ORIGIN']标识来自哪个站点的页面发起的websocket链接
-        if(!YII_DEBUG && !in_array($_SERVER['HTTP_ORIGIN'], Yii::$app->params['workerConfig']['allow']))
+        if(!YII_DEBUG && !in_array($_SERVER['HTTP_ORIGIN'], Yii::$app->params['workerConfig']['allow']) || empty($user))
         {
             $connection->close();
         }
         // onWebSocketConnect 里面$_GET $_SERVER是可用的
-        // var_dump($_GET, $_SERVER);
+        // var_dump(Yii::$app->request->get('access-token'),$user/*$_GET, $_SERVER*/);
     };
 }; 
 
