@@ -11,6 +11,8 @@ use Yii;
  * @property string $btoken
  * @property int $registrant 商户注册人关联manage表id
  * @property int $applet 0未接入1已接入
+ * @property string $access_token 后台接口调用凭据
+ * @property int $expires_in 后台接口调用凭据有效时间
  */
 class Business extends \yii\db\ActiveRecord
 {
@@ -36,8 +38,8 @@ class Business extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['registrant', 'applet'], 'integer'],
-            [['btoken'], 'string', 'max' => 255],
+            [['registrant', 'applet', 'expires_in'], 'integer'],
+            [['btoken', 'access_token'], 'string', 'max' => 255],
             [['btoken'], 'unique'],
             [['registrant'], 'unique'],
         ];
@@ -53,6 +55,8 @@ class Business extends \yii\db\ActiveRecord
             'btoken' => 'Btoken',
             'registrant' => 'Registrant',
             'applet' => 'Applet',
+            'access_token' => 'Access Token',
+            'expires_in' => 'Expires In',
         ];
     }
 

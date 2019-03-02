@@ -43,15 +43,15 @@ if ($signature && $nonce) {
 		$xmldata = '<xml>
     <ToUserName><![CDATA[gh_28b705fe713d]]></ToUserName>
     <FromUserName><![CDATA[oxE4g5aFAwfJ-Uo6fZGYPBoT-FnM]]></FromUserName>
-    <CreateTime>1551435853</CreateTime>
+    <CreateTime>1551515365</CreateTime>
     <MsgType><![CDATA[text]]></MsgType>
-    <Content><![CDATA[哈哈哈哈哈哈]]></Content>
-    <MsgId>22211218036310763</MsgId>
-    <Encrypt><![CDATA[YqzN4kFDoeDKJHoM/xaNg2psyVHboMzMfK+0jm5SzxKU9tqPnBtaF/v177HrMMDSyp2d70lKxkIIVnwoy/Mbx0+nOjf9JjMsWJXG37PqEpwX81/0gYm8DdrbvCwznQTHQHkdfEnQ0qTIYcTvTjdxkBTfqY5b5kN6h0XrvZg7J+y2lOCHKvWq1JaBwOwKtJkhhpKERTe2Prr5xe8taWGXrwpDy/NuNd4ei7WX6+8Ti9mrog14E8Bjei9/h8CC2YaoPBEmrLYrFw5Ry2UdoWPzGHDeuv9hWOOqt+3gk0eQRWPdhOzTIWSLokDjM8oa2HnAcyCHNuK08LeKQxxgISS8kvj6De2rRdU7O561V5rZmW2lF+BkHzanethRFVDvcwbVy13hNvYBaxrFtLwgfAsJnPJl39uoGx5VTnIxIbavfKgXpqoeEAqzp9pq1sBEvMlVKb3C3XEkQxDbBEelCSA1aw==]]></Encrypt>
+    <Content><![CDATA[测试一下]]></Content>
+    <MsgId>22212358231455240</MsgId>
+    <Encrypt><![CDATA[0Qxc8US38it1DFBXEXFp3KhTdEDbvuyRFK3zKo2KP7IVw3bdQrwsCkJe3aQNlH1cw9IW2WverONyoQOJg/3hx/uKl1Ci1nh7Lv0DnURmddtkBHTM3swKMejZhotcktJyR9jl8nzWSqPHKOMHmJaRwgCeIm5HA/3wd+8C7DRr0vsymHwE1QUcsscEoPGK72V9SOnHQlDTKlvlo3fXYWyRQo8HSkianYOJyRFiIvb1u3BW/N26/soM3O7cJ+en4ydspJnfXcAMpy44UYTonDU1sv2c4r6X9PCeKTn6YnlaCjneTAPlJENtkIy2PSX/NosUR9wEiCNWooj9KesKlHOtvW2npkOwr5yrOMnH7ud8Jp1ojBEJ00ty6JGg4oiPcTxlworOzjj+4JHypZLdnZPoXBNx85adp2xgsUZBesHpRbyJNy5IH+hEBdqEzhmUNOFKbgm2hxCUGFnRXPzWGBj+/Q==]]></Encrypt>
 </xml>';
 		$xmldata = Yii::$app->applet->decrypt($xmldata, $timestamp, $nonce, $msg_signature);
 	}
-	Yii::$app->runAction('index/test',['xml'=>$xmldata]);
+	Yii::$app->runAction('index/receive',['xml'=>$xmldata]);
 	die('success');
 	// 小程序操作
 }

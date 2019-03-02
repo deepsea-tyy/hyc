@@ -4,21 +4,21 @@ namespace common\components;
 use Yii;
 use yii\base\Component;
 use common\models\applet\Business;
+use yii\httpclient\Client;
 
 /**
  * 小程序组件
  */
 class Applet extends Component
 {
-	public $appId;
+	public $appid;
 	public $originalId;
 	public $appSecret;
 	public $encodingAesKey;
 	public $token;
-	// public $timestamp;
-	// public $nonce;
-	// public $msg_signature;
-	// public $echostr;
+	public $access_token;
+	public $expires_in;
+	public $bid;//商户id
 
 	/**
 	 * 请求签名验证
@@ -34,9 +34,9 @@ class Applet extends Component
 	/**
 	 * 设置小程序配置
 	 */
-	public function setConfig($appId='', $appSecret='', $encodingAesKey='', $token='')
+	public function setConfig($appid='', $appSecret='', $encodingAesKey='', $token='')
 	{
-		$this->appId = $appId;
+		$this->appid = $appid;
 		$this->appSecret = $appSecret;
 		$this->encodingAesKey = $encodingAesKey;
 		$this->token = $token;
@@ -47,12 +47,15 @@ class Applet extends Component
 	 */
 	public function setConfigBySignature($signature,$timestamp,$nonce)
 	{
-		$list = Business::find()->select('id,btoken')/*->asArray()*/->all();
+		$list = Business::find()->select('id,btoken,access_token,expires_in')/*->asArray()*/->all();
 		$prefix = Yii::$app->db_applet->tablePrefix;
 		$setting = [];
 		foreach ($list as $v) {
 			if ($this->checkSignature($signature,$timestamp,$nonce,$v->btoken)) {
 				$this->token = $v->btoken;
+				$this->bid = $v->id;
+				$this->access_token = $v->access_token;
+				$this->expires_in = $v->expires_in;
 				$setting = Yii::$app->db_applet->createCommand("SELECT 
 				b.skey,b.value
 				FROM
@@ -63,8 +66,6 @@ class Applet extends Component
 				AND FIND_IN_SET(b.id,a.items)
 				AND b.skey LIKE 'wx_applet%'")
 				->queryAll();
-				// echo "<pre>";
-				// return $setting;
 				break;
 			}
 		}
@@ -82,7 +83,7 @@ class Applet extends Component
 	/**
 	 * 通过原始设置对应商户
 	 */
-	public function setConfigByOriginalId($id)
+	public function setConfigByOriginalId($originalId='gh_28b705fe713d')
 	{
 		$prefix = Yii::$app->db_applet->tablePrefix;
 		$res = Yii::$app->db_applet->createCommand("SELECT 
@@ -91,7 +92,7 @@ class Applet extends Component
 		{$prefix}setting AS a,{$prefix}business_data AS b,{$prefix}business AS c
 		WHERE
 		a.skey='wx_applet_original_id' 
-		AND a.`value`='gh_28b705fe713d' 
+		AND a.`value`='$originalId' 
 		AND b.tab_name='setting' 
 		AND FIND_IN_SET(a.id,b.items)
 		AND b.bid=c.id")
@@ -115,15 +116,13 @@ class Applet extends Component
 		return $setting;
 	}
 
-
-
 	/**
 	 * 解密xml
 	 */
 	public function decrypt($xml, $timestamp, $nonce, $msgSignature)
 	{
 		require Yii::getAlias('@rootpath') . '/wxpush/wxBizMsgCrypt.php';
-		$pc = new \WXBizMsgCrypt($this->token, $this->encodingAesKey, $this->appId);
+		$pc = new \WXBizMsgCrypt($this->token, $this->encodingAesKey, $this->appid);
 		$msg = '';
 		$pc->decryptMsg($msgSignature, $timestamp, $nonce, $xml, $msg);
 		return $msg;
@@ -135,10 +134,56 @@ class Applet extends Component
 	public function encrypt($xml, $timestamp, $nonce)
 	{
 		require Yii::getAlias('@rootpath') . '/wxpush/wxBizMsgCrypt.php';
-		$pc = new \WXBizMsgCrypt($this->token, $this->encodingAesKey, $this->appId);
+		$pc = new \WXBizMsgCrypt($this->token, $this->encodingAesKey, $this->appid);
 		$encryptMsg = '';
 		$pc->encryptMsg($xml, $timeStamp, $nonce, $encryptMsg);
 		return $encryptMsg;
 	}
+
+	public function getAccessToken()
+	{
+		if (time() > $this->expires_in) {
+			$url = 'https://api.weixin.qq.com/cgi-bin/token';
+			$client = new Client();
+			$response = $client->createRequest()
+		    ->setMethod('GET')
+		    ->setUrl($url)
+		    ->setData(['grant_type' => 'client_credential', 'appid' => $this->appid,'secret'=>$this->appSecret])
+		    ->send();
+			if ($response->isOk) {
+			    $data = $response->data;
+			    if (isset($data['errcode']) && $data['errcode']) {
+			    	return false;
+			    }
+
+			    //更新access_token
+			    $b = Business::findOne($this->bid);
+			    $b->access_token = $data['access_token'];
+			    $b->expires_in = time() + $data['expires_in'];
+			    $a = $b->save();
+			    $this->access_token = $data['access_token'];
+			}
+		}
+		return $this->access_token;
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 }
