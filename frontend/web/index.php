@@ -37,23 +37,13 @@ if ($signature && $nonce) {
 
 	/*商户接收小程序回调*/
 	$xmldata=file_get_contents('php://input');
-	// if (empty($xmldata)) die('未接受到数据');
-	file_put_contents(\Yii::getAlias('@logpath') . '/info.log', $xmldata,FILE_APPEND);
+	if (empty($xmldata)) die('未接受到数据');
+	file_put_contents(\Yii::getAlias('@logpath') . '/info.log', $xmldata,FILE_APPEND);//记录xml
 	if ($encrypt_type) {
-		$xmldata = '<xml>
-    <ToUserName><![CDATA[gh_28b705fe713d]]></ToUserName>
-    <FromUserName><![CDATA[oxE4g5aFAwfJ-Uo6fZGYPBoT-FnM]]></FromUserName>
-    <CreateTime>1551515365</CreateTime>
-    <MsgType><![CDATA[text]]></MsgType>
-    <Content><![CDATA[测试一下]]></Content>
-    <MsgId>22212358231455240</MsgId>
-    <Encrypt><![CDATA[0Qxc8US38it1DFBXEXFp3KhTdEDbvuyRFK3zKo2KP7IVw3bdQrwsCkJe3aQNlH1cw9IW2WverONyoQOJg/3hx/uKl1Ci1nh7Lv0DnURmddtkBHTM3swKMejZhotcktJyR9jl8nzWSqPHKOMHmJaRwgCeIm5HA/3wd+8C7DRr0vsymHwE1QUcsscEoPGK72V9SOnHQlDTKlvlo3fXYWyRQo8HSkianYOJyRFiIvb1u3BW/N26/soM3O7cJ+en4ydspJnfXcAMpy44UYTonDU1sv2c4r6X9PCeKTn6YnlaCjneTAPlJENtkIy2PSX/NosUR9wEiCNWooj9KesKlHOtvW2npkOwr5yrOMnH7ud8Jp1ojBEJ00ty6JGg4oiPcTxlworOzjj+4JHypZLdnZPoXBNx85adp2xgsUZBesHpRbyJNy5IH+hEBdqEzhmUNOFKbgm2hxCUGFnRXPzWGBj+/Q==]]></Encrypt>
-</xml>';
 		$xmldata = Yii::$app->applet->decrypt($xmldata, $timestamp, $nonce, $msg_signature);
 	}
-	Yii::$app->runAction('index/receive',['xml'=>$xmldata]);
+	Yii::$app->runAction('applet/receive',['xml'=>$xmldata]);
 	die('success');
-	// 小程序操作
 }
 else
 $app->run();

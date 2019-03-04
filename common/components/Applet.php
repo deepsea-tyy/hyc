@@ -12,7 +12,6 @@ use yii\httpclient\Client;
 class Applet extends Component
 {
 	public $appid;
-	public $originalId;
 	public $appSecret;
 	public $encodingAesKey;
 	public $token;
@@ -61,7 +60,7 @@ class Applet extends Component
 				FROM
 				{$prefix}business_data AS a ,{$prefix}setting AS b
 				WHERE
-				a.bid=1
+				a.bid={$this->bid}
 				AND a.tab_name='setting'
 				AND FIND_IN_SET(b.id,a.items)
 				AND b.skey LIKE 'wx_applet%'")
@@ -81,39 +80,33 @@ class Applet extends Component
 
 
 	/**
-	 * 通过原始设置对应商户
+	 * 通过商户id设置
 	 */
-	public function setConfigByOriginalId($originalId='gh_28b705fe713d')
+	public function setConfigById($id=1)
 	{
 		$prefix = Yii::$app->db_applet->tablePrefix;
-		$res = Yii::$app->db_applet->createCommand("SELECT 
-		b.bid,c.btoken,b.items
-		FROM
-		{$prefix}setting AS a,{$prefix}business_data AS b,{$prefix}business AS c
-		WHERE
-		a.skey='wx_applet_original_id' 
-		AND a.`value`='$originalId' 
-		AND b.tab_name='setting' 
-		AND FIND_IN_SET(a.id,b.items)
-		AND b.bid=c.id")
-			->queryAll();
-		$in = $res[0]['items'];
+		$res = Business::find()->select('id,btoken,access_token,expires_in')->where(['id'=>$id])/*->asArray()*/->one();
+		if (empty($res)) return false;
+		$setting = [];
 		$setting = Yii::$app->db_applet->createCommand("SELECT 
-		* 
-		FROM
-		jshop_setting
-		WHERE 
-		FIND_IN_SET(id,'$in')")
+				b.skey,b.value
+				FROM
+				{$prefix}business_data AS a ,{$prefix}setting AS b
+				WHERE
+				a.bid={$id}
+				AND a.tab_name='setting'
+				AND FIND_IN_SET(b.id,a.items)
+				AND b.skey LIKE 'wx_applet%'")
 			->queryAll();
 
-		if (empty($in = $res[0]['btoken'])) return false;
-		$this->token = $res[0]['btoken'];
+		$this->bid = $res->id;
+		$this->access_token = $res->access_token;
+		$this->expires_in = $res->expires_in;
 		$k = array_column($setting, 'skey');
 		$v = array_column($setting, 'value');
 		$setting = array_combine($k, $v);
-		$this->setConfig($setting['wx_applet_appid'],$setting['wx_applet_app_secret'],$setting['wx_applet_encodingaeskey'],$this->token);
-
-		return $setting;
+		$this->setConfig($setting['wx_applet_appid'],$setting['wx_applet_app_secret'],$setting['wx_applet_encodingaeskey'],$res->btoken);
+		return true;
 	}
 
 	/**
@@ -140,6 +133,9 @@ class Applet extends Component
 		return $encryptMsg;
 	}
 
+	/**
+	 * 获取后端访问凭证
+	 */
 	public function getAccessToken()
 	{
 		if (time() > $this->expires_in) {
@@ -152,9 +148,7 @@ class Applet extends Component
 		    ->send();
 			if ($response->isOk) {
 			    $data = $response->data;
-			    if (isset($data['errcode']) && $data['errcode']) {
-			    	return false;
-			    }
+			    if (isset($data['errcode']) && $data['errcode']) return false;
 
 			    //更新access_token
 			    $b = Business::findOne($this->bid);
@@ -167,14 +161,79 @@ class Applet extends Component
 		return $this->access_token;
 	}
 
+	/**
+	 * 发送客服消息
+	 */
+	public function sendCustomerMessage($data=[])
+	{
+		$url = 'https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=' . $this->getAccessToken();
+    	$client = new Client(['formatters' => [
+		        Client::FORMAT_JSON => [
+		        	'class' => 'yii\httpclient\JsonFormatter',
+		        	'encodeOptions' => JSON_UNESCAPED_UNICODE
+		        ],
+		    ],
+		]);
+		$response = $client->createRequest()
+    		->setFormat(Client::FORMAT_JSON)
+		    ->setMethod('POST')
+		    ->setUrl($url)
+		    ->setData($data)
+		    ->send();
+		if ($response->isOk) {
+		    $data = $response->data;
+		    if (isset($data['errcode']) && $data['errcode'] != 0) return false;
+		}
+		return true;
+	}
 
+    /**
+     * 下载图片
+     */
+    public function getTempMedia($mediaId)
+    {
+    	$url = 'https://api.weixin.qq.com/cgi-bin/media/get';
+    	$data = [
+    		'access_token'=> $this->getAccessToken(),
+    		'media_id' => $mediaId
+    	];
+    	$client = new Client();
+		$response = $client->createRequest()
+		    ->setMethod('GET')
+		    ->setUrl($url)
+		    ->setData($data)
+		    ->send();
+	    $type = $response->headers['content-type'];
+	    $ext = strpos($type, 'jpeg') !== false ? '.jpeg' :'';
+	    if (!$ext) $ext = strpos($type, 'png') !== false ? '.png' :'';
 
+	    $rootPath = Yii::getAlias('@frontend') . '/web/file/applet';
+	    $content = $response->content;
+	    if (!file_exists($rootPath))  mkdir($rootPath, 0777, true);
+	    $filePath = '/' . Yii::$app->applet->bid . '-' . time() . $ext;
+	    file_put_contents($rootPath . $filePath, $content);
+	    return '/file/applet/' . $filePath;
+    }
 
-
-
-
-
-
+    /**
+     * 上传文件
+     */
+    public function uploadTempMedia($file)
+    {
+    	$url = 'https://api.weixin.qq.com/cgi-bin/media/upload?access_token=' . $this->getAccessToken() . '&type=image';
+    	$client = new Client();
+		$response = $client->createRequest()
+		    ->setMethod('POST')
+		    ->setUrl($url)
+		    ->addFile('media', $file)
+		    ->send();
+	    if ($response->isOk) {
+		    $data = $response->data;
+		    // var_dump($data);
+		    if (isset($data['errcode']) && $data['errcode'] != 0) return false;
+		}
+		return true;
+    }
 
 
 
