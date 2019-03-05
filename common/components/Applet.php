@@ -18,6 +18,7 @@ class Applet extends Component
 	public $access_token;
 	public $expires_in;
 	public $bid;//商户id
+	public $uid;//系统身份表示唯一id
 
 	/**
 	 * 请求签名验证
@@ -55,6 +56,8 @@ class Applet extends Component
 				$this->bid = $v->id;
 				$this->access_token = $v->access_token;
 				$this->expires_in = $v->expires_in;
+    			$user = Yii::$app->user->identityClass::getAuthorizationBySubsystem($this->bid,'wechat_applet');
+    			$this->uid = $user->id;
 				$setting = Yii::$app->db_applet->createCommand("SELECT 
 				b.skey,b.value
 				FROM
@@ -122,18 +125,6 @@ class Applet extends Component
 	}
 
 	/**
-	 * 加密xml
-	 */
-	public function encrypt($xml, $timestamp, $nonce)
-	{
-		require Yii::getAlias('@rootpath') . '/wxpush/wxBizMsgCrypt.php';
-		$pc = new \WXBizMsgCrypt($this->token, $this->encodingAesKey, $this->appid);
-		$encryptMsg = '';
-		$pc->encryptMsg($xml, $timeStamp, $nonce, $encryptMsg);
-		return $encryptMsg;
-	}
-
-	/**
 	 * 获取后端访问凭证
 	 */
 	public function getAccessToken()
@@ -182,6 +173,7 @@ class Applet extends Component
 		    ->send();
 		if ($response->isOk) {
 		    $data = $response->data;
+		    var_dump($data);
 		    if (isset($data['errcode']) && $data['errcode'] != 0) return false;
 		}
 		return true;
@@ -212,7 +204,7 @@ class Applet extends Component
 	    if (!file_exists($rootPath))  mkdir($rootPath, 0777, true);
 	    $filePath = '/' . Yii::$app->applet->bid . '-' . time() . $ext;
 	    file_put_contents($rootPath . $filePath, $content);
-	    return '/file/applet/' . $filePath;
+	    return '/file/applet' . $filePath;
     }
 
     /**
@@ -235,14 +227,107 @@ class Applet extends Component
 		return true;
     }
 
+    /**
+     * 获取小程序模版列表
+     */
+    public function getTemplateLibraryList($page=1,$limit=20)
+    {
+    	$offset = ( $page - 1 ) * $limit;
+    	$url = 'https://api.weixin.qq.com/cgi-bin/wxopen/template/library/list?access_token=' . $this->getAccessToken();
+    	$client = new Client();
+		$response = $client->createRequest()
+		    ->setMethod('POST')
+    		->setFormat(Client::FORMAT_JSON)
+		    ->setUrl($url)
+		    ->setData(['offset' => $offset, 'count' => $limit])
+		    ->send();
+		if ($response->isOk) {
+		    $data = $response->data;
+		    if (isset($data['errcode']) && $data['errcode'] == 0) return $data['list'];
+		}
+		return false;
+    }
+
+    /**
+     * 获取小程序模版详情
+     */
+    public function getTemplateLibraryById($id)
+    {
+    	$url = 'https://api.weixin.qq.com/cgi-bin/wxopen/template/library/get?access_token=' . $this->getAccessToken();
+    	$client = new Client();
+		$response = $client->createRequest()
+		    ->setMethod('POST')
+    		->setFormat(Client::FORMAT_JSON)
+		    ->setUrl($url)
+		    ->setData(['id' => $id])
+		    ->send();
+		if ($response->isOk) {
+		    $data = $response->data;
+		    if (isset($data['errcode']) && $data['errcode'] == 0) return $data;
+		}
+		return false;
+    }
+
+    /**
+     * 添加个人模版库列表
+     */
+    public function addTemplate($id,$keyword_id_list=[])
+    {
+    	$url = 'https://api.weixin.qq.com/cgi-bin/wxopen/template/add?access_token=' . $this->getAccessToken();
+    	$client = new Client();
+		$response = $client->createRequest()
+		    ->setMethod('POST')
+    		->setFormat(Client::FORMAT_JSON)
+		    ->setUrl($url)
+		    ->setData(['id' => $id, 'keyword_id_list'=>$keyword_id_list])
+		    ->send();
+		if ($response->isOk) {
+		    $data = $response->data;
+		    if (isset($data['errcode']) && $data['errcode'] == 0) return $data;
+		}
+		return false;
+    }
 
 
+    /**
+     * 获取个人模版库列表
+     */
+    public function getTemplateList($page=1,$limit=20)
+    {
+    	$offset = ( $page - 1 ) * $limit;
+    	$url = 'https://api.weixin.qq.com/cgi-bin/wxopen/template/list?access_token=' . $this->getAccessToken();
+    	$client = new Client();
+		$response = $client->createRequest()
+		    ->setMethod('POST')
+    		->setFormat(Client::FORMAT_JSON)
+		    ->setUrl($url)
+		    ->setData(['offset' => $offset, 'count' => $limit])
+		    ->send();
+		if ($response->isOk) {
+		    $data = $response->data;
+		    if (isset($data['errcode']) && $data['errcode'] == 0) return $data['list'];
+		}
+		return false;
+    }
 
-
-
-
-
-
-
+    /**
+     * 发送模板消息
+     */
+    public function sendTemplateMessage($data=[])
+    {
+    	$url = 'https://api.weixin.qq.com/cgi-bin/message/wxopen/template/send?access_token=' . $this->getAccessToken();
+    	$client = new Client();
+		$response = $client->createRequest()
+		    ->setMethod('POST')
+    		->setFormat(Client::FORMAT_JSON)
+		    ->setUrl($url)
+		    ->setData($data)
+		    ->send();
+		if ($response->isOk) {
+		    $data = $response->data;
+		    if (isset($data['errcode']) && $data['errcode'] != 0) return false;
+		}
+		return false;
+    }
 
 }

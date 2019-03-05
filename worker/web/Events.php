@@ -42,7 +42,7 @@ class Events
           'data'=>$client_id,
           'msg'=>'sockte建立成功',
         ];
-        Gateway::sendToClient($client_id, json_encode($data));
+        Gateway::sendToClient($client_id, static::success());
         // 向所有人发送
         // Gateway::sendToAll("$client_id login\r\n");
     }
@@ -54,8 +54,24 @@ class Events
     */
    public static function onMessage($client_id, $message)
    {
-        // 向所有人发送 
-        Gateway::sendToAll("$client_id said $message\r\n");
+      $operation = json_decode($message,true);
+      if (empty($message) || empty($operation['type'])) Gateway::sendToClient($client_id,static::fail());
+
+      switch ($operation['type']) {
+        case 'wechat_applet_kefu'://微信小程序客服
+          Gateway::sendToClient($client_id,static::success());
+          break;
+        case '1'://
+          Gateway::sendToClient($client_id,static::success());
+          break;
+        case '2'://
+          Gateway::sendToClient($client_id,static::success());
+          break;
+        
+        default:
+          Gateway::sendToClient($client_id,static::success($operation));
+          break;
+      }
    }
    
    /**
@@ -66,5 +82,15 @@ class Events
    {
        // 向所有人发送 
        GateWay::sendToAll("$client_id logout\r\n");
+   }
+
+   public static function success($data=[],$msg='操作成功')
+   {
+     return json_encode(['status'=>1,'data'=>$data,'message'=>$msg],JSON_UNESCAPED_UNICODE);
+   }
+
+   public static function fail($msg='操作失败',$data=[])
+   {
+     return json_encode(['status'=>0,'data'=>$data,'message'=>$msg],JSON_UNESCAPED_UNICODE);
    }
 }

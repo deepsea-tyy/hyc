@@ -71,21 +71,12 @@ class LoginForm extends Model
     public function apiLogin()
     {
         if ($this->validate()) {
-            $this->_user->access_token = $this->generateApiToken();
+            $this->_user->access_token = Yii::$app->user->identityClass::generateApiToken();
             $this->_user->save();
             return $this->_user;
         }
         
         return false;
-    }
-
-    /**
-     * 生成 api_token
-     */
-    public function generateApiToken()
-    {
-        $t = Yii::$app->params['user.token_time'];
-        return Yii::$app->security->generateRandomString() . '_' . (time()+$t);
     }
 
     /**

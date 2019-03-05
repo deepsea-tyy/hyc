@@ -13,5 +13,17 @@ return [
         'authManager' => [
             'class'=>'mdm\admin\components\DbManager'
         ],
+
+        'db_applet' => [
+            'class' => 'yii\db\Connection',
+            'dsn' => 'mysql:host=127.0.0.1;dbname=jshop',
+            'username' => 'root',
+            'password' => '',
+            'charset' => 'utf8',
+            'tablePrefix' => 'jshop_',
+        ],
+        'applet' => [
+            'class' => 'common\components\Applet',
+        ],
     ],
 ];

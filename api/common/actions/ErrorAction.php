@@ -1,14 +1,14 @@
 <?php
 namespace api\common\actions;
+
 use Yii;
-use yii\base\Action;
 
 /**
  * 错误控制器
  */
-class ErrorAction extends Action
+class ErrorAction extends \yii\web\ErrorAction
 {
-	public function run()
+	/*public function run()
 	{
         if (($exception = Yii::$app->getErrorHandler()->exception) === null) {
             $exception = new NotFoundHttpException(Yii::t('yii', 'Page not found.'));
@@ -18,5 +18,12 @@ class ErrorAction extends Action
         }
 
         return 'token无效';
-	}
+	}*/
+
+
+    protected function renderHtmlResponse()
+    {
+        return $this->controller->asJson($this->getViewRenderParams());
+        // return $this->controller->render($this->view ?: $this->id, $this->getViewRenderParams());
+    }
 }

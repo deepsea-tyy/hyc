@@ -40,6 +40,7 @@ if ($signature && $nonce) {
 	if (empty($xmldata)) die('未接受到数据');
 	file_put_contents(\Yii::getAlias('@logpath') . '/info.log', $xmldata,FILE_APPEND);//记录xml
 	if ($encrypt_type) {
+		// $xmldata = '';
 		$xmldata = Yii::$app->applet->decrypt($xmldata, $timestamp, $nonce, $msg_signature);
 	}
 	Yii::$app->runAction('applet/receive',['xml'=>$xmldata]);

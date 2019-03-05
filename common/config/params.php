@@ -1,5 +1,6 @@
 <?php
 return [
+    'user.token_time' => 3600,
     'adminEmail' => 'admin@example.com',
     'supportEmail' => 'support@example.com',
     'user.passwordResetTokenExpire' => 3600,
@@ -38,7 +39,7 @@ return [
 		],
 		'gateway'  => [
 			'name' => 'App_Gateway',
-			'protocols' => 'websocket://0.0.0.0:8282',
+			'protocols' => 'websocket://0.0.0.0:8282',//外部访问端口
 			'count' => 4,
 			// 本机ip，分布式部署时使用内网ip
 			'lanIp' => '127.0.0.1',
@@ -46,4 +47,5 @@ return [
 			'pingInterval' => 50,
 		],
 	],
+	
 ];

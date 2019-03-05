@@ -57,6 +57,7 @@ class WeixinAppletMessage extends \yii\db\ActiveRecord
             'type' => 'Type',
             'content' => 'Content',
             'touser' => 'Touser',
+            'fromuser' => 'Fromuser',
             'status' => 'Status',
             'pid' => 'Pid',
             'bid' => 'Bid',

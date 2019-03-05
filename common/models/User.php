@@ -57,12 +57,59 @@ class User extends ActiveRecord implements IdentityInterface
         ];
     }
 
-
-    public function init()
+    /**
+     * 生成 api_token
+     */
+    public static function generateApiToken()
     {
-        
+        $t = Yii::$app->params['user.token_time'];
+        return Yii::$app->security->generateRandomString() . '_' . (time()+$t);
     }
 
+    /**
+     * 校验api_token是否有效
+     */
+    public static function apiTokenIsValid($token)
+    {
+        if (empty($token)) return false;
+        $timestamp = (int) substr($token, strrpos($token, '_') + 1);
+        return time() < $timestamp;
+    }
+
+    /**
+     * $s_uid 子系统uid
+     * $s_name 子系统名称
+     */
+    public static function addUserBySubsystem($s_uid,$s_name)
+    {
+        $token = static::generateApiToken();
+        $user = new User();
+        $user->username = $s_name . '_' . $s_uid;
+        $user->access_token = $token;
+        $user->setPassword($s_name . '_' . $s_uid);
+        $user->generateAuthKey();
+        $user->save();
+        $model = new SubsystemIdentity();
+        $model->uid = $user->id;
+        $model->s_name = $s_name;
+        $model->s_uid = $s_uid;
+        $model->save();
+        return $user->save() ? $token : false;
+    }
+
+    /**
+     * 根据子系统获取权限认证
+     */
+    public function getAuthorizationBySubsystem($s_uid,$s_name)
+    {
+        $s = SubsystemIdentity::find()->where(['s_uid'=>$s_uid,'s_name'=>$s_name])->one();
+        if ($s) {
+            $user = static::findOne($s->uid);
+            $user->access_token = static::generateApiToken();
+            return $user->save() ? $user : false;
+        }
+        return false;
+    }
 
     /**
      * @inheritdoc
@@ -83,16 +130,6 @@ class User extends ActiveRecord implements IdentityInterface
         }
 
         return static::findOne(['access_token' => $token,'status' => self::STATUS_ACTIVE]);
-    }
-
-    /**
-     * 校验api_token是否有效
-     */
-    public static function apiTokenIsValid($token)
-    {
-        if (empty($token)) return false;
-        $timestamp = (int) substr($token, strrpos($token, '_') + 1);
-        return time() < $timestamp;
     }
 
     /**
