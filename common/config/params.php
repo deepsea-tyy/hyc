@@ -1,6 +1,6 @@
 <?php
 return [
-    'user.token_time' => 3600,
+    'user.token_time' => 7200,
     'adminEmail' => 'admin@example.com',
     'supportEmail' => 'support@example.com',
     'user.passwordResetTokenExpire' => 3600,

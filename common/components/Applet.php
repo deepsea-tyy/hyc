@@ -173,7 +173,7 @@ class Applet extends Component
 		    ->send();
 		if ($response->isOk) {
 		    $data = $response->data;
-		    var_dump($data);
+		    // var_dump($data);
 		    if (isset($data['errcode']) && $data['errcode'] != 0) return false;
 		}
 		return true;

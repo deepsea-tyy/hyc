@@ -19,7 +19,7 @@ class WechatAppletKefuController extends BaseController
       // json_encode([$content],JSON_UNESCAPED_UNICODE)
       $s_uid = 1;
       Yii::$app->applet->setConfigById($s_uid);
-      $res = Yii::$app->runAction('applet/reply',['touser'=>$model->touser, 'content'=>$model->content,'type'=>$model->type]);
+      $res = Yii::$app->runAction('applet/reply',['touser'=>$form->touser, 'content'=>$form->content,'type'=>$form->type]);
       if ($res) {
         $model = new WeixinAppletMessage();
         $model->content = $form->content;

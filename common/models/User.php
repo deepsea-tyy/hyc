@@ -100,11 +100,12 @@ class User extends ActiveRecord implements IdentityInterface
     /**
      * 根据子系统获取权限认证
      */
-    public function getAuthorizationBySubsystem($s_uid,$s_name)
+    public static function getAuthorizationBySubsystem($s_uid,$s_name)
     {
         $s = SubsystemIdentity::find()->where(['s_uid'=>$s_uid,'s_name'=>$s_name])->one();
         if ($s) {
             $user = static::findOne($s->uid);
+            if (static::apiTokenIsValid($user->access_token)) return $user;
             $user->access_token = static::generateApiToken();
             return $user->save() ? $user : false;
         }
@@ -126,7 +127,8 @@ class User extends ActiveRecord implements IdentityInterface
     {
         // 如果token无效的话，
         if(!static::apiTokenIsValid($token)) {
-            throw new \yii\web\UnauthorizedHttpException("token is invalid.");
+            // throw new \yii\web\UnauthorizedHttpException("token is invalid.");
+            return false;
         }
 
         return static::findOne(['access_token' => $token,'status' => self::STATUS_ACTIVE]);

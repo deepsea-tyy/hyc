@@ -55,9 +55,12 @@ class Applet extends \yii\web\Controller
 			}
 			$model = new WeixinAppletMessage();
 			$model->load($where,'');
-			$model->save();
+			if (!YII_DEBUG) $model->save();
 			$res['type'] = 'wechat_applet_kefu';
-			$res['msg'] = $where['content'];
+			$res['message'] = '微信小程序客户消息';
+			$res['data']['message'] = $where['content'];
+			$res['data']['fromuser'] = $where['fromuser'];
+			$res['data']['touser'] = Yii::$app->applet->uid;
 			Gateway::sendToUid(Yii::$app->applet->uid, json_encode($res,JSON_UNESCAPED_UNICODE));
 		}
     }

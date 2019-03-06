@@ -36,13 +36,8 @@ class Events
      */
     public static function onConnect($client_id)
     {
-        // 向当前client_id发送数据 
-        $data = [
-          'type'=>'bind',
-          'data'=>$client_id,
-          'msg'=>'sockte建立成功',
-        ];
-        Gateway::sendToClient($client_id, static::success());
+        // 向当前client_id发送数据
+        Gateway::sendToClient($client_id, static::success(['sid'=>$client_id],'bind','sockte建立成功'));
         // 向所有人发送
         // Gateway::sendToAll("$client_id login\r\n");
     }
@@ -56,20 +51,20 @@ class Events
    {
       $operation = json_decode($message,true);
       if (empty($message) || empty($operation['type'])) Gateway::sendToClient($client_id,static::fail());
-
-      switch ($operation['type']) {
+      $type = $operation['type'];
+      switch ($type) {
         case 'wechat_applet_kefu'://微信小程序客服
-          Gateway::sendToClient($client_id,static::success());
+          Gateway::sendToClient($client_id,static::success([],$type));
           break;
         case '1'://
-          Gateway::sendToClient($client_id,static::success());
+          Gateway::sendToClient($client_id,static::success([],$type));
           break;
         case '2'://
-          Gateway::sendToClient($client_id,static::success());
+          Gateway::sendToClient($client_id,static::success([],$type));
           break;
         
         default:
-          Gateway::sendToClient($client_id,static::success($operation));
+          Gateway::sendToClient($client_id,static::success([],$type));
           break;
       }
    }
@@ -84,13 +79,13 @@ class Events
        GateWay::sendToAll("$client_id logout\r\n");
    }
 
-   public static function success($data=[],$msg='操作成功')
+   public static function success($data=[],$type='',$msg='操作成功')
    {
-     return json_encode(['status'=>1,'data'=>$data,'message'=>$msg],JSON_UNESCAPED_UNICODE);
+     return json_encode(['status'=>1,'type'=>$type,'data'=>$data,'message'=>$msg],JSON_UNESCAPED_UNICODE);
    }
 
-   public static function fail($msg='操作失败',$data=[])
+   public static function fail($msg='操作失败',$type='',$data=[])
    {
-     return json_encode(['status'=>0,'data'=>$data,'message'=>$msg],JSON_UNESCAPED_UNICODE);
+     return json_encode(['status'=>0,'type'=>$type,'data'=>$data,'message'=>$msg],JSON_UNESCAPED_UNICODE);
    }
 }
