@@ -17,7 +17,7 @@ class WechatAppletKefuController extends BaseController
     $form = new WechatAppletKefuForm();
     if ($form->load(Yii::$app->request->post(),'') && $form->validate()) {
       // json_encode([$content],JSON_UNESCAPED_UNICODE)
-      $s_uid = 1;
+      $s_uid = $form->s_uid;
       Yii::$app->applet->setConfigById($s_uid);
       $res = Yii::$app->runAction('applet/reply',['touser'=>$form->touser, 'content'=>$form->content,'type'=>$form->type]);
       if ($res) {
@@ -34,5 +34,51 @@ class WechatAppletKefuController extends BaseController
     }
     return $this->fail('参数有误',$model);
   }
+
+  /**
+   * 客服对话列表
+   */
+  public function actionDialoguelist()
+  {
+    $s_uid = (int)Yii::$app->request->post('s_uid',0);
+    if (!$s_uid) return $this->fail();
+    $prefix = Yii::$app->db_applet->tablePrefix;
+    $list = Yii::$app->db_applet->createCommand("SELECT 
+    b.openid,b.avatar,b.type,b.status 
+    FROM
+    {$prefix}business_data AS a,{$prefix}user_wx AS b
+    WHERE a.bid={$s_uid} AND a.tab_name='user' AND FIND_IN_SET(b.user_id,a.items)
+    ")->queryAll();
+    return $this->success($list);
+  }
+
+  /**
+   * 对话消息
+   */
+  public function actionDialoguemsg()
+  {
+    $fromuser = Yii::$app->request->post('fromuser');
+    $touser = Yii::$app->request->post('touser');
+    $list = Yii::$app->db_applet->createCommand("SELECT * 
+    FROM jshop_weixin_applet_message
+    WHERE
+    bid={$fromuser}
+    AND (fromuser={$fromuser} AND touser='{$touser}') OR (fromuser='{$touser}' AND touser={$fromuser})
+    ORDER BY ctime DESC LIMIT 0,15
+    ")->queryAll();
+    return $this->success(array_reverse($list));
+  }
+
+  /**
+   * 消息状态
+   */
+  public function actionReadmsg()
+  {
+    $fromuser = Yii::$app->request->post('fromuser');
+    $touser = Yii::$app->request->post('touser');
+    WeixinAppletMessage::updateAll(['status'=>1],['fromuser'=>$fromuser,'touser'=>$touser]);
+    return $this->success();
+  }
+
 
 }

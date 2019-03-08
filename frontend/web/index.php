@@ -37,8 +37,8 @@ if ($signature && $nonce) {
 
 	/*商户接收小程序回调*/
 	$xmldata=file_get_contents('php://input');
-	// if (empty($xmldata)) die('未接受到数据');
-	// file_put_contents(\Yii::getAlias('@logpath') . '/info.log', $xmldata,FILE_APPEND);//记录xml
+	if (empty($xmldata)) die('未接受到数据');
+	file_put_contents(\Yii::getAlias('@logpath') . '/info.log', $xmldata,FILE_APPEND);//记录xml
 	if ($encrypt_type) {
 		/*$xmldata = '<xml>
     <ToUserName><![CDATA[gh_28b705fe713d]]></ToUserName>

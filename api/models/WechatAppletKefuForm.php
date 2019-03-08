@@ -21,7 +21,7 @@ class WechatAppletKefuForm extends Model
     public function rules()
     {
         return [
-            [['touser', 'content', 'type'], 'required'],
+            [['touser', 'content', 'type', 's_uid'], 'required'],
         ];
     }
 }

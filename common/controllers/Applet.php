@@ -27,7 +27,8 @@ class Applet extends \yii\web\Controller
 			$where = [
 				'ctime' => $doc->getElementsByTagName('CreateTime')->item(0)->nodeValue,
 				'bid'   => Yii::$app->applet->bid,
-				'fromuser'=> $doc->getElementsByTagName('FromUserName')->item(0)->nodeValue,
+				'fromuser' => $doc->getElementsByTagName('FromUserName')->item(0)->nodeValue,
+				'touser' => Yii::$app->applet->uid
 			];
 			$row = WeixinAppletMessage::find()->where($where)->one();
 			if ($row) return;//接收过滤
@@ -60,7 +61,7 @@ class Applet extends \yii\web\Controller
 			$res['message'] = '微信小程序客户消息';
 			$res['data']['message'] = $where['content'];
 			$res['data']['fromuser'] = $where['fromuser'];
-			$res['data']['touser'] = Yii::$app->applet->uid;
+			$res['data']['touser'] = $where['touser'];
 			Gateway::sendToUid(Yii::$app->applet->uid, json_encode($res,JSON_UNESCAPED_UNICODE));
 		}
     }

@@ -40,10 +40,10 @@ class WeixinAppletMessage extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['type', 'status', 'pid', 'bid', 'ctime'], 'integer'],
+            [['type', 'status', 'bid', 'ctime'], 'integer'],
             [['content'], 'string'],
-            [['ctime'], 'required'],
-            [['touser'], 'string', 'max' => 128],
+            [['ctime','fromuser','touser'], 'required'],
+            // [[''], 'string', 'max' => 128],
         ];
     }
 
@@ -59,7 +59,6 @@ class WeixinAppletMessage extends \yii\db\ActiveRecord
             'touser' => 'Touser',
             'fromuser' => 'Fromuser',
             'status' => 'Status',
-            'pid' => 'Pid',
             'bid' => 'Bid',
             'ctime' => 'Ctime',
         ];
