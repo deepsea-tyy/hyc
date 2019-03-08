@@ -56,7 +56,7 @@ class Applet extends Component
 				$this->bid = $v->id;
 				$this->access_token = $v->access_token;
 				$this->expires_in = $v->expires_in;
-    			$user = Yii::$app->user->identityClass::getAuthorizationBySubsystem($this->bid,'wechat_applet');
+    			$user = Yii::$app->user->identityClass::getAuthorizationBySubsystem($this->bid,'wechat_applet',1);
     			$this->uid = $user->id;
 				$setting = Yii::$app->db_applet->createCommand("SELECT 
 				b.skey,b.value

@@ -6,7 +6,7 @@ use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use GatewayClient\Gateway;
-use common\models\BindForm;
+use api\models\BindForm;
 
 use yii\filters\auth\CompositeAuth;
 use yii\filters\auth\HttpBasicAuth;
