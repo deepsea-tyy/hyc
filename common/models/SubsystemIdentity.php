@@ -30,7 +30,7 @@ class SubsystemIdentity extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['uid', 's_uid', 'type', 'created_at', 'updated_at'], 'integer'],
+            [['uuid', 's_uid', 'type'], 'integer'],
             [['s_name'], 'string', 'max' => 128],
         ];
     }
@@ -42,7 +42,7 @@ class SubsystemIdentity extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'uid' => 'Uid',
+            'uuid' => 'Uuid',
             's_name' => 'S Name',
             's_uid' => 'S Uid',
             'created_at' => 'Created At',

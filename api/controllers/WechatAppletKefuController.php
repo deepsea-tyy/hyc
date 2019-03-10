@@ -4,35 +4,65 @@ namespace api\controllers;
 use Yii;
 use api\common\controllers\BaseController;
 use yii\helpers\Url;
-use common\models\applet\WeixinAppletMessage;
+use common\models\Chat;
+use common\models\SubsystemIdentity;
+use common\models\applet\BusinessData;
+use common\models\applet\UserWx;
 use api\models\WechatAppletKefuForm;
 
 class WechatAppletKefuController extends BaseController
 {
+  public $uuid;
+  public $bid;
+  public function setBusiness()
+  {
+    $si = Yii::$app->user->identityClass::getSidByAccessToken(Yii::$app->request->get('access-token',0),'wechat_applet',1); //系统身份
+    $this->uuid = $si->uuid;
+    $this->bid = $si->s_uid;
+  }
+
   /**
    * 商户客服发送消息
    */
   public function actionSendmsg()
   {
-    $form = new WechatAppletKefuForm();
-    if ($form->load(Yii::$app->request->post(),'') && $form->validate()) {
-      // json_encode([$content],JSON_UNESCAPED_UNICODE)
-      $s_uid = $form->s_uid;
-      Yii::$app->applet->setConfigById($s_uid);
-      $res = Yii::$app->runAction('applet/reply',['touser'=>$form->touser, 'content'=>$form->content,'type'=>$form->type]);
-      if ($res) {
-        $model = new WeixinAppletMessage();
-        $model->content = $form->content;
-        $model->bid = $s_uid;
-        $model->touser = $form->touser;
-        $model->fromuser = $s_uid;
-        $model->ctime = time();
-        $model->save();
-        return $this->success();
+    $this->setBusiness();
+    $model = new Chat();
+    $model->load(Yii::$app->request->post(),'');
+    Yii::$app->applet->setConfigById($this->bid);
+
+    $si = SubsystemIdentity::find()->where(['uuid'=>$model->touser])->asArray()->one();
+    $uwx = UserWx::find()->select('openid')->where(['user_id'=>$si['s_uid']])->asArray()->one();
+
+    //1文本2微信媒体图片3图片链接4卡片
+      switch ($model->type) {
+        case 2:
+          $model->type = 2;
+          
+          break;
+        case 3:
+          $model->type = 3;
+          // json_encode([$content],JSON_UNESCAPED_UNICODE)
+          
+          break;
+        case 4:
+          $model->type = 4;
+          
+          break;
+        
+        default:
+          $model->type = 1;
+          break;
       }
-      return $this->fail('发送失败');
+      return $this->success($uwx);
+    $res = Yii::$app->runAction('applet/reply',['touser'=>$uwx['openid'], 'content'=>$model->content,'type'=>$model->type]);
+    if ($res) {
+      $model->create_at = time();
+      $model->fromuser = $this->uuid;
+      $model->save();
+      return $this->success();
     }
-    return $this->fail('参数有误',$model);
+    return $this->fail('发送失败');
   }
 
   /**
@@ -40,16 +70,33 @@ class WechatAppletKefuController extends BaseController
    */
   public function actionDialoguelist()
   {
-    $s_uid = (int)Yii::$app->request->post('s_uid',0);
-    if (!$s_uid) return $this->fail();
-    $prefix = Yii::$app->db_applet->tablePrefix;
-    $list = Yii::$app->db_applet->createCommand("SELECT 
-    b.openid,b.avatar,b.type,b.status 
-    FROM
-    {$prefix}business_data AS a,{$prefix}user_wx AS b
-    WHERE a.bid={$s_uid} AND a.tab_name='user' AND FIND_IN_SET(b.user_id,a.items)
-    ")->queryAll();
-    return $this->success($list);
+    $this->setBusiness();
+
+    $customer = BusinessData::find()->select('items')->where(['bid'=>$this->bid, 'tab_name'=>'user'])->one();
+    if (!$customer) return $this->success();
+
+    $res = SubsystemIdentity::find()->select('uuid,s_uid')
+      ->where(['s_uid'=>explode(',', $customer['items']),'s_name'=>'wechat_applet','type'=>2])
+      ->all();
+    $identity = array_column($res, 'uuid');
+    $arr = array_combine($identity, array_column($res, 's_uid'));
+
+    $chat = Chat::find()
+      ->select('type,fromuser,touser,content,create_at')
+      ->where(['status'=>0,'fromuser'=>$identity,'touser'=>$this->uuid])
+      ->groupBy('fromuser,touser')
+      // ->createCommand()->getRawSql();
+      ->asArray()
+      ->all();
+
+    if ($chat) {
+      foreach ($chat as &$v) {
+        $info = UserWx::find()->select('avatar,nickname')->where(['user_id'=>$arr[$v['fromuser']]])->one();
+        $v['avatar'] = $info['avatar'];
+        $v['nickname'] = $info['nickname'];
+      }
+    }
+    return $this->success($chat);
   }
 
   /**
@@ -57,28 +104,15 @@ class WechatAppletKefuController extends BaseController
    */
   public function actionDialoguemsg()
   {
+    $this->setBusiness();
     $fromuser = Yii::$app->request->post('fromuser');
-    $touser = Yii::$app->request->post('touser');
-    $list = Yii::$app->db_applet->createCommand("SELECT * 
-    FROM jshop_weixin_applet_message
-    WHERE
-    bid={$fromuser}
-    AND (fromuser={$fromuser} AND touser='{$touser}') OR (fromuser='{$touser}' AND touser={$fromuser})
-    ORDER BY ctime DESC LIMIT 0,15
-    ")->queryAll();
+    $list = Chat::find()
+      ->where(['or',['fromuser'=>$fromuser,'touser'=>$this->uuid],['fromuser'=>$this->uuid,'touser'=>$fromuser]])
+      // ->createCommand()->getRawSql();
+      ->all();
+    if (!YII_DEBUG) Chat::updateAll(['status'=>1],['fromuser'=>$fromuser,'touser'=>$this->uuid]);
     return $this->success(array_reverse($list));
   }
 
-  /**
-   * 消息状态
-   */
-  public function actionReadmsg()
-  {
-    $fromuser = Yii::$app->request->post('fromuser');
-    $touser = Yii::$app->request->post('touser');
-    WeixinAppletMessage::updateAll(['status'=>1],['fromuser'=>$fromuser,'touser'=>$touser]);
-    return $this->success();
-  }
-
-
+  
 }

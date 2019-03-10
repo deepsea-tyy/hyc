@@ -18,7 +18,7 @@ class Applet extends Component
 	public $access_token;
 	public $expires_in;
 	public $bid;//商户id
-	public $uid;//系统身份表示唯一id
+	public $uuid;//系统身份表示唯一id
 
 	/**
 	 * 请求签名验证
@@ -57,7 +57,7 @@ class Applet extends Component
 				$this->access_token = $v->access_token;
 				$this->expires_in = $v->expires_in;
     			$user = Yii::$app->user->identityClass::getAuthorizationBySubsystem($this->bid,'wechat_applet',1);
-    			$this->uid = $user->id;
+    			$this->uuid = $user->id;
 				$setting = Yii::$app->db_applet->createCommand("SELECT 
 				b.skey,b.value
 				FROM

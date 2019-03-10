@@ -91,16 +91,16 @@ class User extends ActiveRecord implements IdentityInterface
         $user->generateAuthKey();
         $user->save();
         $model = new SubsystemIdentity();
-        $model->uid = $user->id;
+        $model->uuid = $user->id;
         $model->s_name = $s_name;
         $model->s_uid = $s_uid;
         $model->type = $type;
         $model->save();
-        return $user->save() ? $token : false;
+        return $user->save() ? $user : false;
     }
 
     /**
-     * 根据子系统获取权限认证
+     * 根据子系统获取权限认证token
      * $s_uid 子系统uid
      * $s_name 子系统名称
      * $type 子系统身份，用于多用户表 0表示单用户表，1管理员表，2客户表
@@ -109,12 +109,35 @@ class User extends ActiveRecord implements IdentityInterface
     {
         $s = SubsystemIdentity::find()->where(['type'=>$type, 's_uid'=>$s_uid, 's_name'=>$s_name])->one();
         if ($s) {
-            $user = static::findOne($s->uid);
+            $user = static::findOne($s->uuid);
             if (static::apiTokenIsValid($user->access_token)) return $user;
             $user->access_token = static::generateApiToken();
             return $user->save() ? $user : false;
         }
         return false;
+    }
+
+    /**
+     * 根据子系统获取全局uuid
+     * $s_uid 子系统uid
+     * $s_name 子系统名称
+     */
+    public static function getUuidBySubsystem($s_uid,$s_name,$type=0)
+    {
+        $s = SubsystemIdentity::find()->where(['type'=>$type, 's_uid'=>$s_uid, 's_name'=>$s_name])->one();
+        return $s->uuid;
+    }
+
+    /**
+     * 根据token获取子系统身份
+     * $s_uid 子系统uid
+     * $s_name 子系统名称
+     */
+    public static function getSidByAccessToken($token)
+    {
+        $user = static::findIdentityByAccessToken($token);
+        $si = SubsystemIdentity::find()->where(['uuid'=>$user->id])->one();
+        return $si;
     }
 
     /**
