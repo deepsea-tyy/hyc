@@ -5,6 +5,7 @@ namespace common\controllers;
 use Yii;
 use common\models\Chat;
 use GatewayClient\Gateway;
+use common\models\applet\UserWx;
 
 /**
  * 小程序操作
@@ -25,24 +26,16 @@ class Applet extends \yii\web\Controller
 		$msgType = $doc->getElementsByTagName('MsgType');
 		if ($msgType??'') {
 			$openid = $doc->getElementsByTagName('FromUserName')->item(0)->nodeValue;
-    		$prefix = Yii::$app->db_applet->tablePrefix;
-			$row = Yii::$app->db_applet->createCommand("SELECT 
-				user_id
-				FROM
-				{$prefix}user_wx 
-				WHERE
-				openid='{$openid}'")
-				->queryOne();
-			$uuid = Yii::$app->user->identityClass::getUuidBySubsystem($row['user_id'],'wechat_applet',2);
+			$userWx = UserWx::find()->select('user_id,avatar,nickname')->where(['openid'=>$openid])->asArray()->one();
+			$uuid = Yii::$app->user->identityClass::getUuidBySubsystem($userWx['user_id'],'wechat_applet',2);
 
 			$where = [
 				'create_at' => $doc->getElementsByTagName('CreateTime')->item(0)->nodeValue,
-				'bid'   => Yii::$app->applet->bid,
 				'fromuser' => $uuid,
 				'touser' => Yii::$app->applet->uuid
 			];
-			$row = Chat::find()->where($where)->one();
-			if ($row) return;//接收过滤
+			$message = Chat::find()->where($where)->one();
+			if ($message) return;//接收过滤
 			$msgType = $msgType->item(0)->nodeValue;
 			switch ($msgType) {
 				case 'text':
@@ -73,9 +66,10 @@ class Applet extends \yii\web\Controller
 			if (!YII_DEBUG) $model->save();
 			$res['type'] = 'wechat_applet_kefu';
 			$res['message'] = '微信小程序客户消息';
-			$res['data']['message'] = $where['content'];
-			$res['data']['fromuser'] = $where['fromuser'];
-			$res['data']['touser'] = $where['touser'];
+			$res['data'] = $where;
+			$res['data']['avatar'] = $userWx['avatar'];
+			$res['data']['nickname'] = $userWx['nickname'];
+			// var_dump($userWx);exit();
 			Gateway::sendToUid(Yii::$app->applet->uuid, json_encode($res,JSON_UNESCAPED_UNICODE));
 		}
     }
@@ -85,18 +79,22 @@ class Applet extends \yii\web\Controller
      */
     public function actionReply($touser,$content,$type=1)
     {
-    	$data = ['touser' => $touser, 'msgtype' => $type];
+    	$data['touser'] = $touser;
     	switch ($type) {
-    		case '1':
+    		case 1:
+    			$data['msgtype'] = 'text';
     			$data['text'] = ['content'=> $content];
     			break;
-    		case '2':
+    		case 2:
+    			$data['msgtype'] = 'image';
     			$data['image'] = ['media_id'=> $content];
     			break;
-    		case '3':
+    		case 3:
+    			$data['msgtype'] = 'link';
     			$data['link'] = json_decode($content,true);
     			break;
-    		case '4':
+    		case 4:
+    			$data['msgtype'] = 'miniprogrampage';
     			$data['miniprogrampage'] = json_decode($content,true);
     			break;
     		

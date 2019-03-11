@@ -35,38 +35,34 @@ class WechatAppletKefuController extends BaseController
     $uwx = UserWx::find()->select('openid')->where(['user_id'=>$si['s_uid']])->asArray()->one();
 
     //1文本2微信媒体图片3图片链接4卡片
-      switch ($model->type) {
-        case 2:
-          $model->type = 2;
-          
-          break;
-        case 3:
-          $model->type = 3;
-          // json_encode([$content],JSON_UNESCAPED_UNICODE)
-          
-          break;
-        case 4:
-          $model->type = 4;
-          
-          break;
+    switch ($model->type) {
+      case 2:
         
-        default:
-          $model->type = 1;
-          break;
-      }
-      return $this->success($uwx);
+        break;
+      case 3:
+        // json_encode([$content],JSON_UNESCAPED_UNICODE)
+        
+        break;
+      case 4:
+        
+        break;
+      
+      default:
+        break;
+    }
+    // return $this->success($uwx);
     $res = Yii::$app->runAction('applet/reply',['touser'=>$uwx['openid'], 'content'=>$model->content,'type'=>$model->type]);
-    if ($res) {
+    if ($res == true) {
       $model->create_at = time();
       $model->fromuser = $this->uuid;
       $model->save();
       return $this->success();
     }
-    return $this->fail('发送失败');
+    return $this->fail('发送失败',$res);
   }
 
   /**
-   * 客服对话列表
+   * 客服对话列表 只显示未读列表
    */
   public function actionDialoguelist()
   {
@@ -82,7 +78,7 @@ class WechatAppletKefuController extends BaseController
     $arr = array_combine($identity, array_column($res, 's_uid'));
 
     $chat = Chat::find()
-      ->select('type,fromuser,touser,content,create_at')
+      ->select('platform,type,fromuser,touser,content,create_at')
       ->where(['status'=>0,'fromuser'=>$identity,'touser'=>$this->uuid])
       ->groupBy('fromuser,touser')
       // ->createCommand()->getRawSql();

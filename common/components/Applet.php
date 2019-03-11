@@ -174,7 +174,7 @@ class Applet extends Component
 		if ($response->isOk) {
 		    $data = $response->data;
 		    // var_dump($data);
-		    if (isset($data['errcode']) && $data['errcode'] != 0) return false;
+		    if (isset($data['errcode']) && $data['errcode'] != 0) return $data;
 		}
 		return true;
 	}
