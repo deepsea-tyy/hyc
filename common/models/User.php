@@ -26,7 +26,6 @@ class User extends ActiveRecord implements IdentityInterface
     const STATUS_DELETED = 0; //注销
     const STATUS_ACTIVE = 1; //正常
     const STATUS_INACTIVE = 0;
-    public $api_token = null;
 
     /**
      * @inheritdoc
@@ -58,7 +57,7 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * 生成 api_token
+     * 生成 access-token
      */
     public static function generateApiToken()
     {
@@ -67,7 +66,7 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * 校验api_token是否有效
+     * 校验access-token是否有效
      */
     public static function apiTokenIsValid($token)
     {
@@ -153,9 +152,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public static function findIdentityByAccessToken($token, $type = null)
     {
-        // 如果token无效的话，
         if(!static::apiTokenIsValid($token)) {
-            // throw new \yii\web\UnauthorizedHttpException("token is invalid.");
             return false;
         }
 

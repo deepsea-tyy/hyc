@@ -8,7 +8,7 @@ use yii\filters\AccessControl;
 use GatewayClient\Gateway;
 use api\models\BindForm;
 
-use yii\filters\auth\CompositeAuth;
+use api\common\behaviors\CompositeAuth;
 use yii\filters\auth\HttpBasicAuth;
 use yii\filters\auth\HttpBearerAuth;
 use yii\filters\auth\QueryParamAuth;
@@ -18,6 +18,8 @@ use yii\filters\auth\QueryParamAuth;
  */
 class BaseController extends Controller
 {
+    public $user;
+    
     /**
      * @inheritdoc
      */

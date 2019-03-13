@@ -15,11 +15,20 @@ use Yii;
  * @property string $touser id
  * @property string $content
  * @property int $platform 0浏览器;1微信
- * @property int $create_at
- * @property int $update_at
+ * @property int $created_at
+ * @property int $updated_at
  */
 class Chat extends \yii\db\ActiveRecord
 {
+    const SCENARIO_SEND_MSG = 1;
+
+    public function scenarios()
+    {
+        $scenarios = parent::scenarios();
+        $scenarios[self::SCENARIO_SEND_MSG] = ['content', 'type', 'touser'];
+        return $scenarios;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -34,7 +43,7 @@ class Chat extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['type', 'status', 'platform', 'create_at', 'update_at'], 'integer'],
+            [['type', 'status', 'platform', 'created_at', 'updated_at'], 'integer'],
             [['content'], 'string'],
             [['fromuser', 'touser'], 'required'],
         ];
@@ -54,8 +63,8 @@ class Chat extends \yii\db\ActiveRecord
             'touser' => 'Touser',
             'content' => 'Content',
             'platform' => 'Platform',
-            'create_at' => 'Create At',
-            'update_at' => 'Update At',
+            'created_at' => 'Create At',
+            'updated_at' => 'Update At',
         ];
     }
 

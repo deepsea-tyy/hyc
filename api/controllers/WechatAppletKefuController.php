@@ -53,7 +53,7 @@ class WechatAppletKefuController extends BaseController
     // return $this->success($uwx);
     $res = Yii::$app->runAction('applet/reply',['touser'=>$uwx['openid'], 'content'=>$model->content,'type'=>$model->type]);
     if ($res == true) {
-      $model->create_at = time();
+      $model->created_at = time();
       $model->fromuser = $this->uuid;
       $model->save();
       return $this->success();
@@ -78,7 +78,7 @@ class WechatAppletKefuController extends BaseController
     $arr = array_combine($identity, array_column($res, 's_uid'));
 
     $chat = Chat::find()
-      ->select('platform,type,fromuser,touser,content,create_at')
+      ->select('platform,type,fromuser,touser,content,created_at')
       ->where(['status'=>0,'fromuser'=>$identity,'touser'=>$this->uuid])
       ->groupBy('fromuser,touser')
       // ->createCommand()->getRawSql();

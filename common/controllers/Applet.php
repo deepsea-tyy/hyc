@@ -30,7 +30,7 @@ class Applet extends \yii\web\Controller
 			$uuid = Yii::$app->user->identityClass::getUuidBySubsystem($userWx['user_id'],'wechat_applet',2);
 
 			$where = [
-				'create_at' => $doc->getElementsByTagName('CreateTime')->item(0)->nodeValue,
+				'created_at' => $doc->getElementsByTagName('CreateTime')->item(0)->nodeValue,
 				'fromuser' => $uuid,
 				'touser' => Yii::$app->applet->uuid
 			];
