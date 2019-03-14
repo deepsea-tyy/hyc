@@ -11,7 +11,7 @@ use common\models\car\CarSeriesStyling;
 use common\models\car\CarConfig;
 use common\models\Area;
 use common\models\LinePrice;
-use common\models\SystemConfig;
+use common\models\system\SystemConfig;
 
 /**
  * 汽车之家数据爬虫

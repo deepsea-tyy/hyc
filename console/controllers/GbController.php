@@ -2,20 +2,79 @@
 
 namespace console\controllers;
 
+use Yii;
 use serhatozles\simplehtmldom\SimpleHTMLDom;
 use yii\httpclient\Client;
+use common\models\system\Gb;
+use common\models\system\GbIcs;
+use common\models\system\SystemConfig;
 
 /**
  * 国标查询爬虫
  */
 class GbController extends BaseController
 {
-    public function actionIndex()
+    public function actionGb()
     {
-    	$num = 10;
-    	$page = 1;
-    	$p1 = 1;//1 强制标准 2 推荐标准
-		$url = 'http://www.gb688.cn/bzgk/gb/std_list_type?page='. $page .'&pageSize='. $num .'&p.p1='. $p1 .'&p.p90=circulation_date&p.p91=desc';
+    	$config = SystemConfig::find()->where(['name'=>'GB_CONTENT'])->one();
+    	$row = json_decode($config->content,true);
+		$res = GbIcs::find()->where('id>'.$row['id'])->andWhere('leaf=1')->limit(5)->all();
+		$pageSize = 50;
+		foreach ($res as $v) {
+			$pages = ceil($v->num/$pageSize);
+			$data = [];
+			for ($i=1; $i <= $pages; $i++) { 
+    			$data = array_merge($data,$this->getContent($v->id,1,$i,$pageSize));
+				
+			}
+			// break;
+			for ($i=1; $i <= $pages; $i++) { 
+    			$data = array_merge($data,$this->getContent($v->id,2,$i,$pageSize));
+			}
+		}
+
+		if (empty($res)) {
+			$config->content = json_encode(['id'=>0,'limit'=>10]);
+		}else{
+			$last = end($res);
+			$config->content = json_encode(['id'=>$last->id,'limit'=>10]);
+		}
+
+		foreach ($data as $k => $v) {
+			$row = Gb::find()->where(['gb_number' => $v['gb_number']])->one();
+			if ($row) {
+				$row->gb_number  = 	$v['gb_number'];
+				$row->code 	 	 = 	$v['code'];
+				$row->sampling   = 	$v['sampling'];
+				$row->name 	 	 = 	$v['name'];
+				$row->status 	 = 	$v['status'];
+				$row->type 	 	 = 	$v['type'];
+				$row->updated_at = 	time();
+				$row->save();
+				unset($data[$k]);
+			}
+		}
+		$config->save();
+		Yii::$app->db->createCommand()
+       	->batchInsert(Gb::tableName(),['code','gb_number','sampling','name','status','issue_time','implementation_time','type','ics_id','created_at'],$data)
+       	->execute();
+    }
+
+    /**
+     * 国标详情
+     */
+    public function actionGbdetal()
+    {
+    	
+    }
+
+	/**
+	 * 采集国标内容
+	 * $type 1 强制标准 2 推荐标准
+	 */
+    public function getContent($ics_id,$type=1,$page=1,$pageSize=25)
+    {
+		$url = "http://www.gb688.cn/bzgk/gb/std_list_type?page={$page}&pageSize={$pageSize}&p.p1={$type}&p.p90=circulation_date&p.p91=desc";
         $client = new Client();
         $response = $client->createRequest()
             ->setMethod('GET')
@@ -24,50 +83,133 @@ class GbController extends BaseController
         if ($response->isOk) $html = (string)$response->getData(true);
 
 		$html_dom =  SimpleHTMLDom::str_get_html($html);
-		// $val = $html['result']['list'];
 		$data = [];
-		for ($i=1; $i <= $num; $i++) {
+		$created_at = time();
+		for ($i=1; $i <= $pageSize; $i++) {
 			$tr = $html_dom->find('.table-responsive tbody',0)->find('tr',$i);
-
+			if (empty($tr)) continue;
 			$pattern = "#'(.*?)'#i"; 
 			preg_match_all($pattern, trim($tr->find('td a',0)->onclick) , $matches); 
 			$data[$i]['code'] 			 	 = $matches[1][0];
-
-			$data[$i]['number'] 			 = trim($tr->find('td',1)->plaintext);
-			$data[$i]['sampling'] 			 = trim($tr->find('td',2)->plaintext);
+			$data[$i]['gb_number'] 			 = trim($tr->find('td',1)->plaintext);
+			$data[$i]['sampling'] 			 = empty(trim($tr->find('td',2)->plaintext)) ? 0:1;
 			$data[$i]['name'] 				 = trim($tr->find('td',3)->plaintext);
-			// $data[$i]['status'] 			 = trim($tr->find('td',4)->plaintext);
-			$data[$i]['issue_time'] 		 = trim($tr->find('td',5)->plaintext);
-			$data[$i]['implementation_time'] = trim($tr->find('td',6)->plaintext);
+			$data[$i]['status'] 			 = trim($tr->find('td',4)->plaintext);
+			$data[$i]['issue_time'] 		 = strtotime(trim($tr->find('td',5)->plaintext));
+			$data[$i]['implementation_time'] = strtotime(trim($tr->find('td',6)->plaintext));
+			$data[$i]['type'] 				 = $type;
+			$data[$i]['ics_id'] 			 = $ics_id;
+			$data[$i]['created_at'] 			 = $created_at;
 		}
-		print_r($data);
-exit();
-		if ($data) {
-			$key = array_column($val, 'SpecId');
-			$sResult2 = array_combine($s, $sResult);
-			$price = array_combine($key, $val);
-
-			foreach ($key as $k) {
-				$row = $sResult2[$k];
-				$row->price = ($price[$k]['MinOriginalPrice'] / 10000) . ' 万';
-				$row->offer = ($price[$k]['MinPrice'] / 10000) . ' 万';
-				$row->updated_at = time();
-				$row->update();
-				// var_dump($row->update());
-				// $row->errors;
-			}
-		}
-
-		//更新设置
-		$max = CarSeriesStyling::find()->max('id');
-		if (end($sResult)->id>=$max) {
-			$config['id'] = 0;
-		}else{
-			$config['id'] = end($sResult)->id;
-		}
-		$content = json_encode($config);
-		$configResult->content = $content;
-		$configResult->save();
+		return $data;
     }
+
+    /**
+     * 采集ICS分类数据
+     */
+    public function actionIcs()
+    {
+    	$config = SystemConfig::find()->where(['name'=>'GB_ICS'])->one();
+    	$row = json_decode($config->content,true);
+    	$deep = $row['deep'];
+    	$data = [];
+    	if ($deep == 0) {
+    		$res = GbIcs::find()->where(['parent'=>0])->all();
+    		$code = array_column($res, 'code');
+
+	    	$query = ['pcode' => -1, 'p.p1' => 0];
+	    	$data = $this->getIcs($query);
+	    	$k = array_column($data, 'code');
+	    	$i = array_intersect($code, $k);
+	    	$data = array_combine($k, $data);
+	    	foreach ($res as $v) {
+	    		if (in_array($v->code, $i)) {
+	    			$v->updated_at = time();
+	    			$v->name = $data[$v->code]['name'];
+	    			$v->num = $data[$v->code]['num'];
+	    			$v->save();
+	    			unset($data[$v->code]);
+	    		}
+	    	}
+    	}
+
+    	if ($deep == 1) {
+    		$res = GbIcs::find()->where('id>'.$row['id'])->limit(10)->all();
+    		foreach ($res as $v) {
+    			if ($v['leaf'] == 0) {
+    				$query = ['pcode' => $v['code'], 'p.p1' => 0];
+	    			$data = array_merge($data, $this->getIcs($query,$v['id']));
+			    	$k = array_column($data, 'code');
+			    	$data = array_combine($k, $data);
+		    		$rows = GbIcs::find()->where(['code'=>$k])->all();
+		    		$code = array_column($rows, 'code');
+		    		// print_r($rows);exit();
+			    	$i = array_intersect($code, $k);
+		    		foreach ($rows as $v) {
+		    		if (in_array($v->code, $i)) {
+			    			$v->updated_at = time();
+			    			$v->name = $data[$v->code]['name'];
+			    			$v->num = $data[$v->code]['num'];
+			    			$v->save();
+			    			unset($data[$v->code]);
+			    		}
+			    	}
+
+    			}
+    			
+    		}
+    	}
+
+		if ($deep == 0) {
+			$config->content = json_encode(['deep'=>1,'id'=>0,'limit'=>10]);
+			$config->save();
+		}
+
+		if ($deep == 1) {
+			if (empty($res)) {
+				$config->content = json_encode(['deep'=>0,'id'=>0,'limit'=>10]);
+			}else{
+				$last = end($res);
+				$config->content = json_encode(['deep'=>1,'id'=>$last->id,'limit'=>10]);
+			}
+			$config->save();
+		}
+		Yii::$app->db->createCommand()
+       	->batchInsert(GbIcs::tableName(),['name','code','num','leaf','parent','created_at'],$data)
+       	->execute();
+    }
+
+    public function getIcs($query,$parent=0)
+    {
+    	
+		$url = 'http://www.gb688.cn/bzgk/gb/ajaxIcsList';
+        $client = new Client();
+        $response = $client->createRequest()
+            ->setMethod('POST')
+            ->setUrl($url)
+            ->setData($query)
+            ->send();
+		$data = [];
+        if ($response->isOk) {
+        	$res = $response->data;
+        	if (empty($res)) return;
+    		$created_at = time();
+        	foreach ($res as $v) {
+        		$row['name'] = $v['icsName'];
+        		$row['code'] = $v['icsCode'];
+        		$row['num'] = (int)$v['count'];
+        		$row['leaf'] = $v['leaf'];
+        		$row['parent'] = $parent;
+        		$row['created_at'] = $created_at;
+        		$data[] = $row;
+        	}
+        }
+    	return $data;
+    }
+
+
+
+
+
 
 }
