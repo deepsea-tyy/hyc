@@ -20,7 +20,8 @@ use Yii;
  * @property string $ccs 中国标准分类号
  * @property string $department 主管部门
  * @property string $unit 归口单位
- * @property string $issue_ unit 发行单位
+ * @property string $issue_unit 发行单位
+ * @property string $online 在线查询阅读地址
  * @property string $remake 备注
  * @property int $created_at
  * @property int $updated_at
@@ -43,9 +44,10 @@ class Gb extends \yii\db\ActiveRecord
         return [
             [['status'], 'required'],
             [['ics_id', 'sampling', 'issue_time', 'implementation_time', 'type', 'created_at', 'updated_at'], 'integer'],
-            [['name', 'code'], 'string', 'max' => 128],
-            [['gb_number', 'ccs'], 'string', 'max' => 64],
-            [['status', 'department', 'unit', 'issue_ unit', 'remake'], 'string', 'max' => 255],
+            [['name'], 'string', 'max' => 128],
+            [['gb_number', 'status', 'code'], 'string', 'max' => 64],
+            [['ccs'], 'string', 'max' => 32],
+            [['department', 'unit', 'issue_unit', 'online', 'remake'], 'string', 'max' => 255],
         ];
     }
 
@@ -57,7 +59,7 @@ class Gb extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'name' => 'Name',
-            'gb_number' => 'gb_number',
+            'gb_number' => 'Gb Number',
             'status' => 'Status',
             'ics_id' => 'Ics ID',
             'sampling' => 'Sampling',
@@ -68,7 +70,8 @@ class Gb extends \yii\db\ActiveRecord
             'ccs' => 'Ccs',
             'department' => 'Department',
             'unit' => 'Unit',
-            'issue_ unit' => 'Issue Unit',
+            'issue_unit' => 'Issue Unit',
+            'online' => 'Online',
             'remake' => 'Remake',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',

@@ -124,6 +124,9 @@ $(function() {
   	ws.onConnect = function(e){
 
 	}
+
+	var avatar_cust = "<?=Yii::getAlias('@web')?>/assets/chat/cust.png";
+	var avatar_buss = "<?=Yii::getAlias('@web')?>/assets/chat/icon-logo01.png";
 	ws.onmessage = function(e){
 		var res = eval("("+e.data+")");
 		switch(res.type)
@@ -135,7 +138,15 @@ $(function() {
 			  break;
 			case 'wechat_applet_kefu'://接收消息
 				var row = res.data;
-				$('#chatPanel').append('<div class="answer"><div class="heard_img left"><img src="'+ row.avatar +'"/></div><div class="answer_text"><p><a>' + new Date(parseInt(row.create_at) * 1000).format("hh:mm") +'</a><br>' + row.content +'</p><i></i></div></div>');
+				$("button").attr("data-platform",1);
+				$("button").attr("data-touser",row.fromuser);
+				$('#chatPanel').append('<div class="answer"><div class="heard_img left"><img src="'+ avatar_cust +'"/></div><div class="answer_text"><p><a>' + new Date(parseInt(row.created_at) * 1000).format("hh:mm") +'</a><br>' + row.content +'</p><i></i></div></div>');
+			  break;
+			case 'chat_message'://接收消息
+				var row = res.data;
+				$("button").attr("data-platform",0);
+				$("button").attr("data-touser",row.fromuser);
+				$('#chatPanel').append('<div class="answer"><div class="heard_img left"><img src="'+ avatar_cust +'"/></div><div class="answer_text"><p><a>' + new Date(parseInt(row.created_at) * 1000).format("hh:mm") +'</a><br>' + row.content +'</p><i></i></div></div>');
 			  break;
 			default:
 				console.log(e.data);
@@ -149,7 +160,7 @@ $(function() {
 		if (res.status == 1) {
 			$(res.data).each(function (i) {
 				var row = res.data[i];
-				$("#chatlist").append('<div class="aui-flex-list-item" data-fromuser="' + row.fromuser + '" data-touser="' + row.touser + '" data-avatar="' + row.avatar + '" data-platform="' + row.platform + '"><div class="aui-flex-list-image"><img src="' + row.avatar + '" alt=""></div><div class="aui-flex-list-text"><h4>' + row.nickname + '</h4><p>' + row.content + '</p></div><span class="aui-flex-list-right">' + new Date(parseInt(row.create_at) * 1000).format("hh:mm") + '</span></div>');
+				$("#chatlist").append('<div class="aui-flex-list-item" data-fromuser="' + row.fromuser + '" data-touser="' + row.touser + '" data-avatar="' + row.avatar + '" data-platform="' + row.platform + '"><div class="aui-flex-list-image"><img src="' + row.avatar + '" alt=""></div><div class="aui-flex-list-text"><h4>' + row.nickname + '</h4><p>' + row.content + '</p></div><span class="aui-flex-list-right">' + new Date(parseInt(row.created_at) * 1000).format("hh:mm") + '</span></div>');
 			});
 		}
 	});
@@ -183,22 +194,17 @@ $(function() {
 		var avatar = $(this).data("avatar");
 		var platform = $(this).data("platform");
 
-		$("#chatPanel").attr("data-touser",fromuser);
-		$("#chatPanel").attr("data-avatar",avatar);
 		$("button").attr("data-platform",platform);
+		$("button").attr("data-touser",fromuser);
 		$('#chatPanel').html("");
 		$.post("http://api.hyc.com/wechat-applet-kefu/dialoguemsg?access-token=<?=$token?>", {fromuser:fromuser}, function (res) {
 			if (res.status == 1) {
 				$(res.data).each(function (i) {
 					var row = res.data[i];
 					if (row.fromuser == fromuser) {
-						$('#chatPanel').append('<div class="answer"><div class="heard_img left"><img src="'+ avatar +'"/></div><div class="answer_text"><p><a>' + new Date(parseInt(row.create_at) * 1000).format("hh:mm") +'</a><br>' + row.content +'</p><i></i></div></div>');
+						$('#chatPanel').append('<div class="answer"><div class="heard_img left"><img src="'+ avatar_cust +'"/></div><div class="answer_text"><p><a>' + new Date(parseInt(row.created_at) * 1000).format("hh:mm") +'</a><br>' + row.content +'</p><i></i></div></div>');
 					}else{
-						$(res.data).each(function (i) {
-							var row = res.data[i];
-							if (row.fromuser == fromuser) {}
-							$('#chatPanel').append('<div class="question"><div class="heard_img right"><img src="'+ avatar +'"/></div><div class="question"><p><a>' + new Date(parseInt(row.create_at) * 1000).format("hh:mm") +'</a><br>' + row.content +'</p><i></i></div></div>');
-						});
+						$('#chatPanel').append('<div class="question"><div class="heard_img right"><img src="'+ avatar_buss +'"/></div><div class="question_text"><p><a>' + new Date(parseInt(row.created_at) * 1000).format("hh:mm") +'</a><br>' + row.content +'</p><i></i></div></div>');
 					}
 				});
 			}
@@ -206,19 +212,22 @@ $(function() {
 	})
 	$("button").click(function () {
 		var content = $("textarea").val();
-		var touser = $("#chatPanel").data("touser");
+		var touser = $(this).data("touser");
 		var platform = $(this).data("platform");
-		// var avatar = $("#chatPanel").data("avatar");
-		var avatar = "<?=Yii::getAlias('@web')?>/assets/chat/icon-logo01.png";
 		if (platform == 1) {//发送微信
 			$.post("http://api.hyc.com/wechat-applet-kefu/sendmsg?access-token=<?=$token?>", {touser:touser,content:content,type:1}, function (res) {
 				if (res.status == 1) {
-					$('#chatPanel').append('<div class="question"><div class="heard_img right"><img src="'+ avatar +'"/></div><div class="question_text"><p><a>' + (new Date()).format("hh:mm")  +'</a><br>' + content +'</p><i></i></div></div>');
+					$('#chatPanel').append('<div class="question"><div class="heard_img right"><img src="'+ avatar_buss +'"/></div><div class="question_text"><p><a>' + (new Date()).format("hh:mm")  +'</a><br>' + content +'</p><i></i></div></div>');
 					$("textarea").val("");
 				}
 			});
 		}else{//发送web
-
+			$.post("http://api.hyc.com/chat/sendmsg?access-token=<?=$token?>", {touser:touser,content:content,type:1}, function (res) {
+				if (res.status == 1) {
+					$('#chatPanel').append('<div class="question"><div class="heard_img right"><img src="'+ avatar_buss +'"/></div><div class="question_text"><p><a>' + (new Date()).format("hh:mm")  +'</a><br>' + content +'</p><i></i></div></div>');
+					$("textarea").val("");
+				}
+			});
 		}
 
 	});

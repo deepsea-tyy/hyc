@@ -11,6 +11,8 @@ use common\models\system\SystemConfig;
 
 /**
  * 国标查询爬虫
+ * pdf预览 http://c.gb688.cn/bzgk/gb/showGb?type=online&hcno={$code}
+ * pdf下载 http://c.gb688.cn/bzgk/gb/showGb?type=download&hcno={$code}
  */
 class GbController extends BaseController
 {
@@ -18,7 +20,7 @@ class GbController extends BaseController
     {
     	$config = SystemConfig::find()->where(['name'=>'GB_CONTENT'])->one();
     	$row = json_decode($config->content,true);
-		$res = GbIcs::find()->where('id>'.$row['id'])->andWhere('leaf=1')->limit(5)->all();
+		$res = GbIcs::find()->where('id>'.$row['id'])->andWhere('leaf=1')->limit($row['limit'])->all();
 		$pageSize = 50;
 		foreach ($res as $v) {
 			$pages = ceil($v->num/$pageSize);
@@ -34,10 +36,10 @@ class GbController extends BaseController
 		}
 
 		if (empty($res)) {
-			$config->content = json_encode(['id'=>0,'limit'=>10]);
+			$config->content = json_encode(['id'=>0,'limit'=>$row['limit']]);
 		}else{
 			$last = end($res);
-			$config->content = json_encode(['id'=>$last->id,'limit'=>10]);
+			$config->content = json_encode(['id'=>$last->id,'limit'=>$row['limit']]);
 		}
 
 		foreach ($data as $k => $v) {
@@ -65,7 +67,39 @@ class GbController extends BaseController
      */
     public function actionGbdetal()
     {
+    	$config = SystemConfig::find()->where(['name'=>'GB_CONTENT_DETAIL'])->one();
+    	$row = json_decode($config->content,true);
+		$res = Gb::find()->where('id>'.$row['id'])->limit($row['limit'])->all();
+        $client = new Client();
+		foreach ($res as $v) {
+			$url = 'http://www.gb688.cn/bzgk/gb/newGbInfo?hcno='.$v['code'];
+	    	$response = $client->createRequest()
+	            ->setMethod('GET')
+	            ->setUrl($url)
+	            ->send();
+	        if ($response->isOk) $html = (string)$response->getData(true);
+			$html_dom =  SimpleHTMLDom::str_get_html($html);
+			$online = $html_dom->find('.tdlist',0)->find('tr',-1)->find('span',0);
+			if (empty($online)) $online = ''; else $online = trim($online->innertext);
+			// print_r($online);
+			// exit();
+			$node = $html_dom->find('.tdlist',0)->nextSibling()->nextSibling();
+			$v->ccs 		= trim($node->find('div',1)->plaintext);
+			$v->department 	= trim($node->nextSibling()->nextSibling()->find('div',1)->plaintext);
+			$v->unit 		= trim($node->nextSibling()->nextSibling()->find('div',3)->plaintext);
+			$v->issue_unit 	= trim($node->nextSibling()->nextSibling()->nextSibling()->find('div',1)->plaintext);
+			$v->remake 		= trim($node->nextSibling()->nextSibling()->nextSibling()->nextSibling()->find('div',1)->plaintext);
+			$v->online 		= $online;
+			$v->save(false);
+		}
     	
+		if (empty($res)) {
+			$config->content = json_encode(['id'=>0,'limit'=>$row['limit']]);
+		}else{
+			$last = end($res);
+			$config->content = json_encode(['id'=>$last->id,'limit'=>$row['limit']]);
+		}
+		$config->save();
     }
 
 	/**
@@ -134,7 +168,7 @@ class GbController extends BaseController
     	}
 
     	if ($deep == 1) {
-    		$res = GbIcs::find()->where('id>'.$row['id'])->limit(10)->all();
+    		$res = GbIcs::find()->where('id>'.$row['id'])->limit($row['limit'])->all();
     		foreach ($res as $v) {
     			if ($v['leaf'] == 0) {
     				$query = ['pcode' => $v['code'], 'p.p1' => 0];
@@ -161,16 +195,16 @@ class GbController extends BaseController
     	}
 
 		if ($deep == 0) {
-			$config->content = json_encode(['deep'=>1,'id'=>0,'limit'=>10]);
+			$config->content = json_encode(['deep'=>1,'id'=>0,'limit'=>$row['limit']]);
 			$config->save();
 		}
 
 		if ($deep == 1) {
 			if (empty($res)) {
-				$config->content = json_encode(['deep'=>0,'id'=>0,'limit'=>10]);
+				$config->content = json_encode(['deep'=>0,'id'=>0,'limit'=>$row['limit']]);
 			}else{
 				$last = end($res);
-				$config->content = json_encode(['deep'=>1,'id'=>$last->id,'limit'=>10]);
+				$config->content = json_encode(['deep'=>1,'id'=>$last->id,'limit'=>$row['limit']]);
 			}
 			$config->save();
 		}

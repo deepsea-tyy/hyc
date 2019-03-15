@@ -4,52 +4,40 @@ namespace frontend\controllers;
 
 use Yii;
 use common\models\applet\WeixinAppletMessage;
+use yii\httpclient\Client;
+use serhatozles\simplehtmldom\SimpleHTMLDom;
 
 
 class IndexController extends \yii\web\Controller
 {
     public function actionIndex()
     {
-    	// Yii::$app->applet->setConfigById(1);
-		// $res = Yii::$app->applet->uploadTempMedia(Yii::getAlias('@frontend') . '/web/2.png');
-    	// $tmp = Yii::$app->applet->getTemplateLibraryById('AT0002');
-    	// $tmp = Yii::$app->applet->addTemplate('AT0002',[3,4,5]);
-    	// $tmp = Yii::$app->applet->getTemplateList();
-    	// $msg = WeixinAppletMessage::findOne(1);
-    	// $msg['touser'] = $msg->touser;
-    	// $content = '我是tyy';
-    	// $tmp = Yii::$app->applet->sendTemplateMessage([
-    	// 	'touser'=>$msg['touser'],
-    	// 	'template_id'=>'OxvjCmM8PPhgtqjZZao_E8wz9OyFSH04itrWQIk-y6o',
-    	// 	'page'=>'',
-    	// 	'form_id'=>'',
-    	// 	'data' => [],
-    		
-    	// ]);
-    	
-        // var_dump($user->id);exit();
-        
-    	return $this->asJson($tmp);
-        // return $this->render('index');
+        $num = 25;
+        $url = 'http://www.gb688.cn/bzgk/gb/std_list_type?page=1&pageSize='. $num .'&p.p1=1&p.p90=circulation_date&p.p91=desc';
+        $client = new Client();
+        $response = $client->createRequest()
+            ->setMethod('GET')
+            ->setUrl($url)
+            ->setData(['pcode' => $offset, 'count' => $limit])
+            ->send();
+        if ($response->isOk) $html = (string)$response->getData(true);
+
+        $html_dom =  SimpleHTMLDom::str_get_html($html);
+        // $val = $html['result']['list'];
+        $data = [];
+        for ($i=1; $i <= $num; $i++) { 
+            $tr = $html_dom->find('.table-responsive tbody',0)->find('tr',$i);
+            $data[$i]['number']              = trim($tr->find('td',1)->plaintext);
+            $data[$i]['sampling']            = trim($tr->find('td',2)->plaintext);
+            $data[$i]['name']                = trim($tr->find('td',3)->plaintext);
+            $data[$i]['status']              = trim($tr->find('td',4)->plaintext);
+            $data[$i]['issue_time']          = trim($tr->find('td',5)->plaintext);
+            $data[$i]['implementation_time'] = trim($tr->find('td',6)->plaintext);
+        }
+
+        return $this->asJson($data);
     }
 
-
-    public function sendmsg()
-    {
-    	
-    	Yii::$app->applet->setConfigById(1);
-    	
-    	if ($msg['status']) return ;
-
-		$res = Yii::$app->runAction('applet/reply',['touser'=>$msg->touser, 'content'=>json_encode([$content])]);
-		if ($res) {
-			$msg->status = 1;
-			$msg->save();
-			$model = new WeixinAppletMessage();
-			$model->load(['content'=>$content,'ctime'=>time(),'pid'=>$msg->id,'bid'=>$msg->bid],'');
-			$model->save();
-		}
-    }
 
     public function actionChat()
     {
@@ -57,5 +45,13 @@ class IndexController extends \yii\web\Controller
         $s_uid = 1;
         $user = Yii::$app->user->identityClass::getAuthorizationBySubsystem($s_uid,'wechat_applet',1);//获取全局身份
         return $this->render('chat',['token'=>$user->access_token,'uuid'=>$user->id]);
+    }
+
+    public function actionCust()
+    {
+        $this->layout = false;
+        $s_uid = 1;
+        $user = Yii::$app->user->identityClass::getAuthorizationBySubsystem($s_uid,'wechat_applet',2);//获取全局身份
+        return $this->render('cust',['token'=>$user->access_token,'uuid'=>$user->id]);
     }
 }
