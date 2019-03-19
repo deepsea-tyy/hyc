@@ -3,12 +3,11 @@
 namespace backend\controllers;
 
 use Yii;
-use common\models\Company;
-use common\models\CompanySearch;
+use common\models\hyc\Company;
+use common\models\hyc\CompanySearch;
 use backend\controllers\CommonController;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use yii\helpers\Url;
 
 /**
  * CompanyController implements the CRUD actions for Company model.
@@ -16,7 +15,7 @@ use yii\helpers\Url;
 class CompanyController extends CommonController
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function behaviors()
     {
@@ -68,7 +67,7 @@ class CompanyController extends CommonController
         $model = new Company();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->asJson(['url'=>Url::to(['index'])]);
+            return $this->redirect(['view', 'id' => $model->c_id]);
         }
 
         return $this->render('create', [
@@ -88,7 +87,7 @@ class CompanyController extends CommonController
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->asJson(['url'=>Url::to(['index'])]);
+            return $this->redirect(['view', 'id' => $model->c_id]);
         }
 
         return $this->render('update', [
@@ -107,7 +106,7 @@ class CompanyController extends CommonController
     {
         $this->findModel($id)->delete();
 
-        return $this->asJson(['url'=>Url::to(['index'])]);
+        return $this->redirect(['index']);
     }
 
     /**
