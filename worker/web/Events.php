@@ -50,7 +50,7 @@ class Events
    public static function onMessage($client_id, $message)
    {
       $operation = json_decode($message,true);
-      if (empty($message) || empty($operation['type'])) Gateway::sendToClient($client_id,static::fail());
+      if (empty($message) || empty($operation['type'])) $operation['type'] = '';
       $type = $operation['type'];
       switch ($type) {
         case 'wechat_applet_kefu'://微信小程序客服
@@ -64,7 +64,7 @@ class Events
           break;
         
         default:
-          Gateway::sendToClient($client_id,static::success([],$type));
+          Gateway::sendToClient($client_id,static::success([]));
           break;
       }
    }
@@ -79,12 +79,12 @@ class Events
        // GateWay::sendToAll("$client_id logout\r\n");
    }
 
-   public static function success($data=[],$type='',$msg='操作成功')
+   public static function success($data=[],$type='',$msg='success')
    {
      return json_encode(['status'=>1,'type'=>$type,'data'=>$data,'message'=>$msg],JSON_UNESCAPED_UNICODE);
    }
 
-   public static function fail($msg='操作失败',$type='',$data=[])
+   public static function fail($msg='fail',$type='',$data=[])
    {
      return json_encode(['status'=>0,'type'=>$type,'data'=>$data,'message'=>$msg],JSON_UNESCAPED_UNICODE);
    }

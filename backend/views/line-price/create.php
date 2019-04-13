@@ -2,9 +2,8 @@
 
 use yii\helpers\Html;
 
-
 /* @var $this yii\web\View */
-/* @var $model common\models\LinePrice */
+/* @var $model common\models\hyc\LinePrice */
 
 $this->title = 'Create Line Price';
 $this->params['breadcrumbs'][] = ['label' => 'Line Prices', 'url' => ['index']];

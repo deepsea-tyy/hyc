@@ -3,7 +3,7 @@
 use yii\helpers\Html;
 
 /* @var $this yii\web\View */
-/* @var $model common\models\LinePrice */
+/* @var $model common\models\hyc\LinePrice */
 
 $this->title = 'Update Line Price: ' . $model->id;
 $this->params['breadcrumbs'][] = ['label' => 'Line Prices', 'url' => ['index']];

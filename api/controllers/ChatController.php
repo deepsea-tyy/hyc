@@ -5,6 +5,7 @@ namespace api\controllers;
 use Yii;
 use GatewayClient\Gateway;
 use common\models\Chat;
+use common\models\applet\UserToken;
 use yii\helpers\Url;
 use yii\web\UploadedFile;
 /**
@@ -65,8 +66,6 @@ class ChatController extends \api\common\controllers\BaseController
     return $this->fail('参数有误',$model);
   }
 
-
- 
   /**
    * 分组发送
    */

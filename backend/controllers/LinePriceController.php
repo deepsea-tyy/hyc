@@ -3,12 +3,11 @@
 namespace backend\controllers;
 
 use Yii;
-use common\models\LinePrice;
-use yii\data\ActiveDataProvider;
+use common\models\hyc\LinePrice;
+use common\models\hyc\LinePriceSearch;
 use backend\controllers\CommonController;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use common\components\queue\DownloadJob;
 
 /**
  * LinePriceController implements the CRUD actions for LinePrice model.
@@ -16,7 +15,7 @@ use common\components\queue\DownloadJob;
 class LinePriceController extends CommonController
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function behaviors()
     {
@@ -36,46 +35,20 @@ class LinePriceController extends CommonController
      */
     public function actionIndex()
     {
-        echo Yii::getAlias('@bower');
-
-echo "<br/>for test";
-//         $info = Yii::$app->queue->info;
-
-//        // $id =  Yii::$app->queue->push(new DownloadJob([
-//        //      'url' => 'https://car3.autoimg.cn/cardfs/product/g18/M0C/C4/C7/1024x0_1_q87_autohomecar__wKgH2Vn5qFaAGtp5AAiHxHJl-w4315.jpg',
-//        //      'file' => './image.jpg',
-//        //  ]));
-// $id = 1;
-//         Yii::$app->queue->reserve();
-//        // The job is waiting for execute.
-//        $isWaiting = Yii::$app->queue->isWaiting($id);
-
-//         // Worker gets the job from queue, and executing it.
-//        $isReserved = Yii::$app->queue->isReserved($id);
-
-//         // Worker has executed the job.
-//        $isDone = Yii::$app->queue->isDone($id);
-//         // Yii::$app->queue->run(false);
-// echo "ok".time();
-//        var_dump($id,$isWaiting,$isReserved,$isDone);
-
-        // Yii::$app->queue->delay(5)->push(new DownloadJob([
-        //     'url' => 'http://example.com/image.jpg',
-        //     'file' => '/tmp/image.jpg',
-        // ]));
-        /*$dataProvider = new ActiveDataProvider([
-            'query' => LinePrice::find(),
-        ]);
+        $searchModel = new LinePriceSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
+            'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
-        ]);*/
+        ]);
     }
 
     /**
      * Displays a single LinePrice model.
      * @param integer $id
      * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionView($id)
     {
@@ -95,11 +68,11 @@ echo "<br/>for test";
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
         }
+
+        return $this->render('create', [
+            'model' => $model,
+        ]);
     }
 
     /**
@@ -107,6 +80,7 @@ echo "<br/>for test";
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionUpdate($id)
     {
@@ -114,11 +88,11 @@ echo "<br/>for test";
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
         }
+
+        return $this->render('update', [
+            'model' => $model,
+        ]);
     }
 
     /**
@@ -126,6 +100,7 @@ echo "<br/>for test";
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionDelete($id)
     {
@@ -145,8 +120,8 @@ echo "<br/>for test";
     {
         if (($model = LinePrice::findOne($id)) !== null) {
             return $model;
-        } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
         }
+
+        throw new NotFoundHttpException('The requested page does not exist.');
     }
 }

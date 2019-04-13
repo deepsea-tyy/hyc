@@ -156,7 +156,7 @@ $(function() {
 	 console.log(e);
 	}
 
-	$.post("http://api.hyc.com/wechat-applet-kefu/dialoguelist?access-token=<?=$token?>", {}, function (res) {
+	$.post("http://api.hyc.com/chat/dialoguelist?access-token=<?=$token?>", {}, function (res) {
 		if (res.status == 1) {
 			$(res.data).each(function (i) {
 				var row = res.data[i];
@@ -197,7 +197,7 @@ $(function() {
 		$("button").attr("data-platform",platform);
 		$("button").attr("data-touser",fromuser);
 		$('#chatPanel').html("");
-		$.post("http://api.hyc.com/wechat-applet-kefu/dialoguemsg?access-token=<?=$token?>", {fromuser:fromuser}, function (res) {
+		$.post("http://api.hyc.com/chat/dialoguemsg?access-token=<?=$token?>", {fromuser:fromuser}, function (res) {
 			if (res.status == 1) {
 				$(res.data).each(function (i) {
 					var row = res.data[i];
@@ -215,7 +215,7 @@ $(function() {
 		var touser = $(this).data("touser");
 		var platform = $(this).data("platform");
 		if (platform == 1) {//发送微信
-			$.post("http://api.hyc.com/wechat-applet-kefu/sendmsg?access-token=<?=$token?>", {touser:touser,content:content,type:1}, function (res) {
+			$.post("http://api.hyc.com/chat/sendmsg?access-token=<?=$token?>", {touser:touser,content:content,type:1}, function (res) {
 				if (res.status == 1) {
 					$('#chatPanel').append('<div class="question"><div class="heard_img right"><img src="'+ avatar_buss +'"/></div><div class="question_text"><p><a>' + (new Date()).format("hh:mm")  +'</a><br>' + content +'</p><i></i></div></div>');
 					$("textarea").val("");

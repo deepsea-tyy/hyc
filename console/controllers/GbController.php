@@ -90,6 +90,7 @@ class GbController extends BaseController
 			$v->issue_unit 	= trim($node->nextSibling()->nextSibling()->nextSibling()->find('div',1)->plaintext);
 			$v->remake 		= trim($node->nextSibling()->nextSibling()->nextSibling()->nextSibling()->find('div',1)->plaintext);
 			$v->online 		= $online;
+			$row->updated_at = 	time();
 			$v->save(false);
 		}
     	
@@ -120,7 +121,8 @@ class GbController extends BaseController
 		$data = [];
 		$created_at = time();
 		for ($i=1; $i <= $pageSize; $i++) {
-			$tr = $html_dom->find('.table-responsive tbody',0)->find('tr',$i);
+			if (empty($html_dom)) continue;
+			$tr = $html_dom->find('.table-responsive table',0)->lastChild()->find('tr',$i);
 			if (empty($tr)) continue;
 			$pattern = "#'(.*?)'#i"; 
 			preg_match_all($pattern, trim($tr->find('td a',0)->onclick) , $matches); 

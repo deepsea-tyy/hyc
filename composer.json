@@ -34,7 +34,8 @@
         "blockchain/blockchain": "^1.4",
         "workerman/gatewayclient": "^3.0",
         "shenhai1120/yii2-admin": "^1.0",
-        "shenhai1120/tyy-select": "^1.0"
+        "shenhai1120/tyy-select": "^1.0",
+        "zoujingli/wechat-php-sdk": "*"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",
