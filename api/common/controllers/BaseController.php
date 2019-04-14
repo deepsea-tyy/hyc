@@ -54,13 +54,13 @@ class BaseController extends Controller
         Gateway::$registerAddress = Yii::$app->params['workerConfig']['registerAddress'];
     }
 
-    public function success($data=[],$message='操作成功')
+    public function success($data=[],$message='success')
     {
         return ['status'=>1,'data'=>$data,'message'=>$message];
     }
 
 
-    public function fail($data=[],$message='操作失败')
+    public function fail($data=[],$message='fail')
     {
         return ['status'=>0,'data'=>$data,'message'=>$message];
     }
