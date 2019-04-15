@@ -22,9 +22,9 @@ class GbController extends BaseController
     	$row = json_decode($config->content,true);
 		$res = GbIcs::find()->where('id>'.$row['id'])->andWhere('leaf=1')->limit($row['limit'])->all();
 		$pageSize = 50;
+		$data = [];
 		foreach ($res as $v) {
 			$pages = ceil($v->num/$pageSize);
-			$data = [];
 			for ($i=1; $i <= $pages; $i++) { 
     			$data = array_merge($data,$this->getContent($v->id,1,$i,$pageSize));
 				
@@ -34,6 +34,9 @@ class GbController extends BaseController
     			$data = array_merge($data,$this->getContent($v->id,2,$i,$pageSize));
 			}
 		}
+// print_r($row);
+// print_r($res);
+// exit();
 
 		if (empty($res)) {
 			$config->content = json_encode(['id'=>0,'limit'=>$row['limit']]);
@@ -41,7 +44,6 @@ class GbController extends BaseController
 			$last = end($res);
 			$config->content = json_encode(['id'=>$last->id,'limit'=>$row['limit']]);
 		}
-
 		foreach ($data as $k => $v) {
 			$row = Gb::find()->where(['gb_number' => $v['gb_number']])->one();
 			if ($row) {
