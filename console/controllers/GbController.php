@@ -25,18 +25,15 @@ class GbController extends BaseController
 		$data = [];
 		foreach ($res as $v) {
 			$pages = ceil($v->num/$pageSize);
-			for ($i=1; $i <= $pages; $i++) { 
+			for ($i=1; $i <= $pages; $i++) {
     			$data = array_merge($data,$this->getContent($v->id,1,$i,$pageSize));
 				
 			}
 			// break;
-			for ($i=1; $i <= $pages; $i++) { 
+			for ($i=1; $i <= $pages; $i++) {
     			$data = array_merge($data,$this->getContent($v->id,2,$i,$pageSize));
 			}
 		}
-// print_r($row);
-// print_r($res);
-// exit();
 
 		if (empty($res)) {
 			$config->content = json_encode(['id'=>0,'limit'=>$row['limit']]);
@@ -92,7 +89,7 @@ class GbController extends BaseController
 			$v->issue_unit 	= trim($node->nextSibling()->nextSibling()->nextSibling()->find('div',1)->plaintext);
 			$v->remake 		= trim($node->nextSibling()->nextSibling()->nextSibling()->nextSibling()->find('div',1)->plaintext);
 			$v->online 		= $online;
-			$row->updated_at = 	time();
+			$v->updated_at = 	time();
 			$v->save(false);
 		}
     	
