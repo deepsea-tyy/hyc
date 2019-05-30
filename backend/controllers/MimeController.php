@@ -5,14 +5,14 @@ namespace backend\controllers;
 use Yii;
 use common\models\Mime;
 use common\models\MimeSearch;
-use backend\controllers\CommonController;
+use backend\controllers\Base;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
  * MimeController implements the CRUD actions for Mime model.
  */
-class MimeController extends CommonController
+class MimeController extends Base
 {
     /**
      * @inheritdoc

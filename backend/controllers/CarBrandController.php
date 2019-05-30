@@ -5,7 +5,7 @@ namespace backend\controllers;
 use Yii;
 use common\models\car\CarBrand;
 use yii\data\ActiveDataProvider;
-use backend\controllers\CommonController;
+use backend\controllers\Base;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\helpers\Url;
@@ -13,7 +13,7 @@ use yii\helpers\Url;
 /**
  * CarBrandController implements the CRUD actions for CarBrand model.
  */
-class CarBrandController extends CommonController
+class CarBrandController extends Base
 {
     /**
      * @inheritdoc

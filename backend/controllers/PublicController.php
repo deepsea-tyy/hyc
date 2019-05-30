@@ -5,7 +5,7 @@ namespace backend\controllers;
 use common\models\car\CarBrand;
 use common\models\Area;
 
-class PublicController extends \backend\controllers\CommonController
+class PublicController extends \backend\controllers\Base
 {
     // 测试接口
     public function actionIndex()

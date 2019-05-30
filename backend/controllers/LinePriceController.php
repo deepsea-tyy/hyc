@@ -5,14 +5,14 @@ namespace backend\controllers;
 use Yii;
 use common\models\hyc\LinePrice;
 use common\models\hyc\LinePriceSearch;
-use backend\controllers\CommonController;
+use backend\controllers\Base;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
  * LinePriceController implements the CRUD actions for LinePrice model.
  */
-class LinePriceController extends CommonController
+class LinePriceController extends Base
 {
     /**
      * {@inheritdoc}

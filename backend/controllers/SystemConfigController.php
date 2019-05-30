@@ -5,7 +5,7 @@ namespace backend\controllers;
 use Yii;
 use common\models\SystemConfig;
 use yii\data\ActiveDataProvider;
-use backend\controllers\CommonController;
+use backend\controllers\Base;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\base\DynamicModel;
@@ -13,7 +13,7 @@ use yii\base\DynamicModel;
 /**
  * SystemConfigController implements the CRUD actions for SystemConfig model.
  */
-class SystemConfigController extends CommonController
+class SystemConfigController extends Base
 {
     /**
      * @inheritdoc

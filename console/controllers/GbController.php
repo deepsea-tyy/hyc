@@ -121,7 +121,11 @@ class GbController extends BaseController
 		$created_at = time();
 		for ($i=1; $i <= $pageSize; $i++) {
 			if (empty($html_dom)) continue;
-			$tr = $html_dom->find('.table-responsive table',0)->lastChild()->find('tr',$i);
+			try {
+				$tr = $html_dom->find('.table-responsive table',0)->lastChild()->find('tr',$i);
+			} catch (Exception $e) {
+				return [];
+			}
 			if (empty($tr)) continue;
 			$pattern = "#'(.*?)'#i"; 
 			preg_match_all($pattern, trim($tr->find('td a',0)->onclick) , $matches); 

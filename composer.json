@@ -23,8 +23,6 @@
         "yiisoft/yii2-httpclient": "*",
         "yiisoft/yii2-redis": "^2.0",
         "yiisoft/yii2-imagine": "^2.1",
-        "2amigos/yii2-file-upload-widget": "~1.0",
-        "bailangzhan/yii2-webuploader": "dev-master",
         "kartik-v/yii2-grid": "~3.1",
         "kartik-v/yii2-editable": "^1.7",
         "kartik-v/yii2-widgets": "^3.4",
@@ -35,7 +33,8 @@
         "workerman/gatewayclient": "^3.0",
         "shenhai1120/yii2-admin": "^1.0",
         "shenhai1120/tyy-select": "^1.0",
-        "zoujingli/wechat-php-sdk": "*"
+        "zoujingli/wechat-php-sdk": "*",
+        "kartik-v/bootstrap-fileinput": "5.0.3"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

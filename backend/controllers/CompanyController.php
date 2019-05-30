@@ -5,14 +5,14 @@ namespace backend\controllers;
 use Yii;
 use common\models\hyc\Company;
 use common\models\hyc\CompanySearch;
-use backend\controllers\CommonController;
+use backend\controllers\Base;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
  * CompanyController implements the CRUD actions for Company model.
  */
-class CompanyController extends CommonController
+class CompanyController extends Base
 {
     /**
      * {@inheritdoc}
@@ -106,7 +106,7 @@ class CompanyController extends CommonController
     {
         $this->findModel($id)->delete();
 
-        return $this->redirect(['index']);
+        return $this->asJson(['url'=>Url::to(['index'])]);
     }
 
     /**

@@ -4,7 +4,7 @@ namespace backend\controllers;
 
 use Yii;
 
-class CommonController extends \yii\web\Controller
+class Base extends \yii\web\Controller
 {
     // public $layout = false;
 	 /**
