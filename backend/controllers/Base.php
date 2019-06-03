@@ -13,11 +13,16 @@ class Base extends \yii\web\Controller
     public function behaviors()
     {
         return [
-            'islogin' => [
-                'class' => \backend\common\behaviors\IsLogin::className(),
-                'actions' => '*',
-            ],
+            // 'islogin' => [
+            //     'class' => \backend\common\behaviors\IsLogin::className(),
+            //     'actions' => '*',
+            // ],
         ];
+    }
+    
+    public function allowAction()
+    {
+        return ['ueditor'];
     }
 
     public function actions()
@@ -26,6 +31,9 @@ class Base extends \yii\web\Controller
             'upload' => [
                 'class' => 'common\components\actions\upload',
             ],
+            'ueditor' => [
+                'class' => 'sh\ueditor\UEditorAction',
+            ]
         ];
     }
 

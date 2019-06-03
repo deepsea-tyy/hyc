@@ -34,7 +34,8 @@
         "shenhai1120/yii2-admin": "^1.0",
         "shenhai1120/tyy-select": "^1.0",
         "zoujingli/wechat-php-sdk": "*",
-        "kartik-v/bootstrap-fileinput": "5.0.3"
+        "kartik-v/bootstrap-fileinput": "5.0.3",
+        "shenhai1120/yii2-ueditor": "1.1"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",
