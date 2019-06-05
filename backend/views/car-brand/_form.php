@@ -1,7 +1,7 @@
 <?php
 
 use yii\helpers\Html;
-use dlds\metronic\widgets\ActiveForm;
+use common\widgets\ActiveForm;
 use dlds\metronic\widgets\Button;
 
 /* @var $this yii\web\View */
@@ -11,19 +11,7 @@ use dlds\metronic\widgets\Button;
 
 <div class="car-brand-form">
 
-    <?php $form = ActiveForm::begin(['separated'=>true/*,'fieldClass'=>'dlds\metronic\widgets\ActiveField'*/,'buttons'=>[
-    //optional, horizontal align
-    'align' => ActiveForm::BUTTONS_ALIGN_LEFT,
-    //optional, vertical position
-    'position' => ActiveForm::BUTTONS_POSITION_BOTTOM,
-     //optional, array of buttons
-    'items' => [
-        Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']),
-        Button::widget(['label' => 'Back']),
-    ],
-    // optional, the HTML attributes (name-value pairs) for the form actions tag.
-    'options' => ['class' => 'fluid']
-]]); ?>
+    <?php $form = ActiveForm::begin(); ?>
 
     <?= $form->field($model, 'brand')->textInput(['maxlength' => true]) ?>
 
@@ -34,6 +22,10 @@ use dlds\metronic\widgets\Button;
     <?= $form->field($model, 'created_at')->textInput() ?>
 
     <?= $form->field($model, 'updated_at')->textInput() ?>
+
+    <div class="form-group">
+        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+    </div>
 
     <?php ActiveForm::end(); ?>
 

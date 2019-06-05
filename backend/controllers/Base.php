@@ -19,23 +19,6 @@ class Base extends \yii\web\Controller
             // ],
         ];
     }
-    
-    public function allowAction()
-    {
-        return ['ueditor'];
-    }
-
-    public function actions()
-    {
-        return [
-            'upload' => [
-                'class' => 'common\components\actions\upload',
-            ],
-            'ueditor' => [
-                'class' => 'sh\ueditor\UEditorAction',
-            ]
-        ];
-    }
 
     public function actionIndex()
     {

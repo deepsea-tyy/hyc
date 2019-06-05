@@ -7,6 +7,26 @@ use common\models\Area;
 
 class PublicController extends \backend\controllers\Base
 {
+    public function allowAction()
+    {
+        return ['ueditor','fileupload'];
+    }
+
+    public function actions()
+    {
+        return [
+            'fileupload' => [
+                'class' => 'common\components\actions\FileUpload',
+            ],
+            'filedelete' => [
+                'class' => 'common\components\actions\FileDelete',
+            ],
+            'ueditor' => [
+                'class' => 'sh\ueditor\UEditorAction',
+            ]
+        ];
+    }
+    
     // 测试接口
     public function actionIndex()
     {

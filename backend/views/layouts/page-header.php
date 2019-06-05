@@ -27,7 +27,7 @@ $assets_url=$this->assetBundles[common\assets\M47Asset::className()]->baseUrl;
                             <!-- DOC: Apply "dropdown-dark" class after "dropdown-extended" to change the dropdown styte -->
                             <!-- DOC: Apply "dropdown-hoverable" class after below "dropdown" and remove data-toggle="dropdown" data-hover="dropdown" data-close-others="true" attributes to enable hover dropdown mode -->
                             <!-- DOC: Remove "dropdown-hoverable" and add data-toggle="dropdown" data-hover="dropdown" data-close-others="true" attributes to the below A element with dropdown-toggle class -->
-                            <li class="dropdown dropdown-extended dropdown-notification" id="header_notification_bar">
+                            <!-- <li class="dropdown dropdown-extended dropdown-notification" id="header_notification_bar">
                                 <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
                                     <i class="icon-bell"></i>
                                     <span class="badge badge-default"> 7 </span>
@@ -124,11 +124,11 @@ $assets_url=$this->assetBundles[common\assets\M47Asset::className()]->baseUrl;
                                         </ul>
                                     </li>
                                 </ul>
-                            </li>
+                            </li> -->
                             <!-- END NOTIFICATION DROPDOWN -->
                             <!-- BEGIN INBOX DROPDOWN -->
                             <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
-                            <li class="dropdown dropdown-extended dropdown-inbox" id="header_inbox_bar">
+                           <!--  <li class="dropdown dropdown-extended dropdown-inbox" id="header_inbox_bar">
                                 <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
                                     <i class="icon-envelope-open"></i>
                                     <span class="badge badge-default"> 4 </span>
@@ -199,11 +199,11 @@ $assets_url=$this->assetBundles[common\assets\M47Asset::className()]->baseUrl;
                                         </ul>
                                     </li>
                                 </ul>
-                            </li>
+                            </li> -->
                             <!-- END INBOX DROPDOWN -->
                             <!-- BEGIN TODO DROPDOWN -->
                             <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
-                            <li class="dropdown dropdown-extended dropdown-tasks" id="header_task_bar">
+                            <!-- <li class="dropdown dropdown-extended dropdown-tasks" id="header_task_bar">
                                 <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
                                     <i class="icon-calendar"></i>
                                     <span class="badge badge-default"> 3 </span>
@@ -310,22 +310,22 @@ $assets_url=$this->assetBundles[common\assets\M47Asset::className()]->baseUrl;
                                         </ul>
                                     </li>
                                 </ul>
-                            </li>
+                            </li> -->
                             <!-- END TODO DROPDOWN -->
                             <!-- BEGIN USER LOGIN DROPDOWN -->
                             <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
                             <li class="dropdown dropdown-user">
                                 <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
-                                    <img alt="" class="img-circle" src="<?=$assets_url?>/layouts/layout3/img/avatar3.jpg" />
-                                    <span class="username username-hide-on-mobile"> Nick </span>
+                                    <img alt="" class="img-circle" src="<?=$assets_url?>/layouts/layout3/img/avatar.png" />
+                                    <span class="username username-hide-on-mobile"> 昵称 </span>
                                     <i class="fa fa-angle-down"></i>
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-default">
                                     <li>
                                         <a href="page_user_profile_1.html">
-                                            <i class="icon-user"></i> My Profile </a>
+                                            <i class="icon-user"></i> 个人信息 </a>
                                     </li>
-                                    <li>
+                                    <!-- <li>
                                         <a href="app_calendar.html">
                                             <i class="icon-calendar"></i> My Calendar </a>
                                     </li>
@@ -345,10 +345,10 @@ $assets_url=$this->assetBundles[common\assets\M47Asset::className()]->baseUrl;
                                     <li>
                                         <a href="page_user_lock_1.html">
                                             <i class="icon-lock"></i> Lock Screen </a>
-                                    </li>
+                                    </li> -->
                                     <li>
                                         <a href="<?=\yii\helpers\Url::to(['/admin/user/logout'])?>" >
-                                            <i class="icon-key"></i> Log Out </a>
+                                            <i class="icon-key"></i> 退出登录</a>
                                     </li>
                                 </ul>
                             </li>

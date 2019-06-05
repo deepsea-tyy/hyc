@@ -1,13 +1,13 @@
 <?php
 
-namespace common\models;
+namespace common\models\hyc;
 
 /**
- * This is the ActiveQuery class for [[SubsystemIdentity]].
+ * This is the ActiveQuery class for [[LinePrice]].
  *
- * @see SubsystemIdentity
+ * @see LinePrice
  */
-class SubsystemIdentityQuery extends \yii\db\ActiveQuery
+class LinePriceQuery extends \yii\db\ActiveQuery
 {
     /*public function active()
     {
@@ -16,7 +16,7 @@ class SubsystemIdentityQuery extends \yii\db\ActiveQuery
 
     /**
      * {@inheritdoc}
-     * @return SubsystemIdentity[]|array
+     * @return LinePrice[]|array
      */
     public function all($db = null)
     {
@@ -25,7 +25,7 @@ class SubsystemIdentityQuery extends \yii\db\ActiveQuery
 
     /**
      * {@inheritdoc}
-     * @return SubsystemIdentity|array|null
+     * @return LinePrice|array|null
      */
     public function one($db = null)
     {
