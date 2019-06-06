@@ -4,6 +4,7 @@ namespace backend\controllers;
 
 use common\models\car\CarBrand;
 use common\models\Area;
+use common\models\File;
 
 class PublicController extends \backend\controllers\Base
 {
@@ -16,13 +17,18 @@ class PublicController extends \backend\controllers\Base
     {
         return [
             'fileupload' => [
-                'class' => 'common\components\actions\FileUpload',
+                'class' => 'common\components\actions\FileAction',
             ],
             'filedelete' => [
-                'class' => 'common\components\actions\FileDelete',
+                'class' => 'common\components\actions\FileAction',
             ],
             'ueditor' => [
-                'class' => 'sh\ueditor\UEditorAction',
+                'class' => 'common\components\actions\FileAction',
+            ],
+            'imagecropper' => [
+                'class' => 'budyaga\cropper\actions\UploadAction',
+                'url' => File::getFileUrl(),
+                'path' => File::getFileStoragePath(),
             ]
         ];
     }
