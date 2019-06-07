@@ -10,7 +10,7 @@ use common\models\File;
 use yii\data\Pagination;
 
 /**
-* 文件上传
+* 文件上传操作
 */
 class FileAction extends Action
 {
@@ -23,8 +23,8 @@ class FileAction extends Action
     {
         Yii::$app->request->enableCsrfValidation = false;
     }
-	
-	public function run()
+    
+    public function run()
     {
         switch ($this->id) {
             case 'fileupload':
@@ -89,13 +89,10 @@ class FileAction extends Action
                     'type' => '.'.$file->extension,             //文件类型
                     'size' => $file->size,                      //文件大小
                 ];
-            }else{
-                unlink(File::getFilePath($data['file_url']));
-                return ['state'=>'上传失败'];
             }
-        } else {
-            return ['state'=>'上传失败'];
+            File::fileDelete($data['file_url']);
         }
+        return ['state'=>'上传失败'];
     }
 
     /**
@@ -104,6 +101,8 @@ class FileAction extends Action
     protected function upload()
     {
         $file = $this->checkFile(); //单文件
+        $file2 = $this->checkFile('fileBlob'); //单文件
+        $file = $file ? $file : $file2;
         switch ($file) {
             case null:
                 return ['error'=>'未选择文件'];
@@ -115,24 +114,50 @@ class FileAction extends Action
                 return ['error'=>'文件大小不许可'];
                 break;
         }
-        
-        if ($data = $this->saveFile($file)) {
+
+        if ($data = $this->saveFile($file, $file2 ? 2:1)) {
+            if ($data == 2) return ['chunkIndex' => Yii::$app->request->post('chunkIndex')];
             if ($this->saveData($data)) {
-                $img = Html::img($data['file_url'], ['style' => 'width:auto;height:auto;max-width:100%;max-height:100%;']);
+                $mime = explode('/', $data['type']);
+                $show = [$this->show($mime)];
                 $config[] = [
                     'caption' => $file->name,
                     'key' => $data['id'], // 图片标示
-                    'size' => $file->size,
-                    // 'downloadUrl' => $data['file_url'], // 下载地址
+                    'fileId' => Yii::$app->request->post('fileId'),
+                    'size' => Yii::$app->request->post('fileSize'),
                     'url' => Url::to(['public/filedelete']), // 删除地址 对应 key
+                    'type' => $mime[0]
+                    // 'downloadUrl' => $data['file_url'], // 下载地址
                 ];
-               return ['initialPreview' => [$img], 'initialPreviewConfig' => $config, 'initialPreviewAsData' => true];
-            }else{
-                unlink(File::getFilePath($data['file_url']));
-                return ['error'=>'上传失败'];
+                if ($file2) {
+                    return ['initialPreview' => $show, 'initialPreviewConfig' => $config, 'append' => true,
+                        'chunkIndex' => Yii::$app->request->post('chunkIndex')];
+                }else {
+                    return ['initialPreview' => $show, 'initialPreviewConfig' => $config, 'initialPreviewAsData' => true];
+                }
             }
-        } else {
-            return ['error'=>'上传失败'];
+            File::fileDelete($data['file_url']);
+        }
+        return ['error'=>'上传失败'];
+    }
+
+    /**
+     * fileinput文件显示
+     * ['image', 'html', 'text', 'video', 'audio', 'flash', 'object']
+     */
+    public function show($url,$mime='image')
+    {
+        switch ($mime) {
+            case 'image':
+                return Html::img($url, ['style' => 'width:auto;height:auto;max-width:100%;max-height:100%;']);
+                break;
+            case 'video':
+                return Html::video($url);
+                break;
+            
+            default:
+                # code...
+                break;
         }
     }
 
@@ -142,7 +167,7 @@ class FileAction extends Action
     protected function checkFile($fname='file')
     {
         $this->config['allowFiles'];
-        $file = UploadedFile::getInstanceByName('file'); //单文件
+        $file = UploadedFile::getInstanceByName($fname); //接收文件
         if ($file === null) return $file;
         if (!in_array(strtolower($file->extension), $this->config['allowFiles'])) return 1;
         if ($file->size > $this->config['maxSize']) return 2;
@@ -152,27 +177,58 @@ class FileAction extends Action
 
     /**
      * 保存文件
+     * $type 1:单文件直接存储 2:分片文件临时存储
      * return array
      */
-    protected function saveFile($file)
+    protected function saveFile($file,$type=1)
     {
-        $filename = md5($file->baseName . '_' . time());
-        $imgpath = File::getFileDir($file->extension) . '/' . $filename . '.' .$file->extension;
-        $realpath = File::getFilePath($imgpath);
-        if ($file->saveAs($realpath)) {
-            $img = getimagesize($realpath);
-            return [
-                'id' => $filename,
-                'photo_width' =>$img[0],
-                'photo_hight' =>$img[1],
-                'file_size' =>$file->size,
-                'type' =>$file->type,
-                'name' =>$file->name,
-                'file_url' =>$imgpath,
-                'created_by' =>Yii::$app->user->id,
-            ];
-         }
-         return false;
+        switch ($type) {
+            case 1:
+                $filename = md5($file->baseName . '_' . time());
+                $imgpath = File::getFileDir($file->extension) . '/' . $filename . '.' .$file->extension;
+                $realpath = File::getFilePath($imgpath);
+                if ($file->saveAs($realpath)) {
+                    $img = getimagesize($realpath);
+                    return [
+                        'id' => $filename,
+                        'photo_width' =>$img[0],
+                        'photo_hight' =>$img[1],
+                        'file_size' =>$file->size,
+                        'type' =>$file->type,
+                        'name' =>$file->name,
+                        'file_url' =>$imgpath,
+                        'created_by' =>Yii::$app->user->id,
+                    ];
+                }
+                return false;
+                break;
+            case 2:
+                $filename = Yii::$app->user->id . '_'. md5($file->baseName) . '_' . Yii::$app->request->post('chunkIndex') . '.' .$file->extension;
+                $realpath = File::getChunkFileDir($filename);
+                if ($file->saveAs($realpath)){
+                    $filename = Yii::$app->user->id . '_'. md5($file->baseName);
+                    $count = Yii::$app->request->post('chunkCount');
+                    if ($mergePath = File::mergeChunkFile($filename,$count,$file->extension)) {
+                        $img = getimagesize(File::getFilePath($mergePath));
+                        return [
+                            'id' => basename($mergePath),
+                            'photo_width' =>$img[0],
+                            'photo_hight' =>$img[1],
+                            'file_size' =>$file->size,
+                            'type' =>$file->type,
+                            'name' =>$file->name,
+                            'file_url' =>$mergePath,
+                            'created_by' =>Yii::$app->user->id,
+                        ];
+                    }
+                }
+                return 2;
+                break;
+            
+            default:
+                return false;
+                break;
+        }
     }
 
     /**
@@ -233,16 +289,5 @@ class FileAction extends Action
                 'total' => $count
             ];
         }
-    }
-
-    /**
-     * 分片文件
-     */
-    public function chunkFile()
-    {
-        
-        // $fileBlob = UploadedFile::getInstanceByName('fileBlob'); //分片文件
-        // Yii::$app->request->post('chunkCount');//总分片
-        // Yii::$app->request->post('chunkIndex');//上传第几分片
     }
 }

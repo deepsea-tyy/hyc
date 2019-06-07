@@ -73,7 +73,7 @@ return [
         // ],
         'session' => [
             'class' => 'yii\redis\Session',
-            
+            'timeout' => 3600,
         ],
         
         'log' => [

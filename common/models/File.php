@@ -104,11 +104,11 @@ class File extends \yii\db\ActiveRecord
      */
     public static function getFileUrl($path='')
     {
-        return  Yii::$app->params['file_storage']['local']['dirpath'] . $path;
+        return $path;
     }
 
     /**
-     * 文件访问url
+     * 删除文件
      * @return string
      */
     public static function fileDelete($path='')
@@ -135,11 +135,48 @@ class File extends \yii\db\ActiveRecord
             $fileDir = '/files';
         }
         $dir = static::getFileStoragePath() . $fileDir . '/' . date('Ymd',time());
-        // echo $dir;exit();
         if(!is_dir($dir)){
             mkdir($dir, 0777, true);
         }
         return Yii::$app->params['file_storage']['local']['dirpath'] . $fileDir . '/' . date('Ymd',time());
+    }
+
+    /**
+     * 分片文件存储文件夹
+     * return string
+     */
+    public static function getChunkFileDir($path='')
+    {
+        $dir = static::getFileStoragePath() . '/tmp/' . date('Ymd',time());
+        if(!is_dir($dir)){
+            mkdir($dir, 0777, true);
+        }
+        return $path ? $dir . '/' . $path : $dir;
+    }
+
+    /**
+     * 合并分片文件
+     */
+    public static function mergeChunkFile($fname='',$count=0,$ext='')
+    {
+        $chunkpath = static::getChunkFileDir();
+        $chunks = glob("{$chunkpath}/{$fname}_*");
+        if ($count > 1 && count($chunks) == $count) {
+            $realpath = static::getFileDir($ext) . '/' . md5($fname . '_' . time()) . '.' .$ext;
+            $handle = fopen(static::getFilePath($realpath), 'a+');
+
+            foreach ($chunks as $file) {
+                fwrite($handle, file_get_contents($file));
+            }
+
+            foreach ($chunks as $file) {
+                @unlink($file);
+            }
+
+            fclose($handle);
+            return $realpath;
+        }
+        return false;
     }
 
 }
