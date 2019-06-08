@@ -27,7 +27,8 @@
         "kartik-v/bootstrap-fileinput": "5.0.3",
         "shenhai1120/yii2-ueditor": "1.1",
         "budyaga/yii2-cropper": "2.0.20",
-        "zoujingli/wechat-developer": "v1.2.12"
+        "zoujingli/wechat-developer": "v1.2.12",
+        "hzhihua/yii2-videojs-widget": "*"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

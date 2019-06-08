@@ -27,7 +27,7 @@ $data = [1,2,3,4];
     // //图片上传插件
     echo $form->field($model, 'c_logo')->widget(FileInput::classname(), [
         'options' => [
-            'accept' => 'image/*',
+            'accept' => '*',
             'name' => 'file',
             'multiple' => true,
         ],
@@ -43,7 +43,7 @@ $data = [1,2,3,4];
             'showCancel'=> true,//取消按钮
             'resumableUploadOptions'=> [
                 // 'testUrl'=> "/site/test-file-chunks", //分片检测续传等功能
-                'chunkSize'=> 50, // 1 kB chunk size
+                'chunkSize'=> 1024 , // 1 kB chunk size
             ],
 
             'layoutTemplates' => [
@@ -66,12 +66,39 @@ $data = [1,2,3,4];
             // 分片上传等待一秒
             'filechunkbeforesend'=> new JsExpression('function(event, params) {
                             var start = (new Date()).getTime();
-                            while ((new Date()).getTime() - start < 1000) {
+                            while ((new Date()).getTime() - start < 100) {
                                 continue;
                             }
             }'),
         ]
     ]);
+
+    //视频播放插件
+    /*echo \hzhihua\videojs\VideoJsWidget::widget([
+        'options' => [  // video tag attibutes
+            'class' => 'video-js vjs-default-skin vjs-big-play-centered',
+            'title' => '',
+            'poster' => "//vjs.zencdn.net/v/oceans.png",  // 视频播放封面地址
+            'controls' => true, // 显示控制页面
+            'width' => '300', // 设置宽度
+            'data' => [
+                'setup' => [
+                    'language' => 'zh', // 设置语言
+                ],
+            ],
+        ],
+        'jsOptions' => [
+            'playbackRates' => [0.5, 1, 1.5, 2],  // 播放速率选项
+        ],
+        'tags' => [
+            'source' => [
+                ['src' => '//vjs.zencdn.net/v/oceans.mp4', 'type' => 'video/mp4'],
+            ],
+            'p' => [
+                ['content' => '您的浏览器不支持媒体播放'],
+            ],
+        ]
+    ]);*/
 
     //下拉选择插件
    /* echo $form->field($dynamicModel, 'test',['options'=>['class'=>'form-group col1-md-4']])->widget('kartik\select2\Select2',[

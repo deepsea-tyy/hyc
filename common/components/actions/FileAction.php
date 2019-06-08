@@ -8,6 +8,8 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 use common\models\File;
 use yii\data\Pagination;
+use yii\helpers\FileHelper;
+use common\helpers\Tools;
 
 /**
 * 文件上传操作
@@ -184,7 +186,7 @@ class FileAction extends Action
     {
         switch ($type) {
             case 1:
-                $filename = md5($file->baseName . '_' . time());
+                $filename = Tools::get_sn(10);
                 $imgpath = File::getFileDir($file->extension) . '/' . $filename . '.' .$file->extension;
                 $realpath = File::getFilePath($imgpath);
                 if ($file->saveAs($realpath)) {
@@ -211,11 +213,11 @@ class FileAction extends Action
                     if ($mergePath = File::mergeChunkFile($filename,$count,$file->extension)) {
                         $img = getimagesize(File::getFilePath($mergePath));
                         return [
-                            'id' => basename($mergePath),
+                            'id' => basename($mergePath, '.' . $file->extension),
                             'photo_width' =>$img[0],
                             'photo_hight' =>$img[1],
                             'file_size' =>$file->size,
-                            'type' =>$file->type,
+                            'type' =>FileHelper::getMimeType(File::getFilePath($mergePath)),
                             'name' =>$file->name,
                             'file_url' =>$mergePath,
                             'created_by' =>Yii::$app->user->id,

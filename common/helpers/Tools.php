@@ -48,6 +48,9 @@ class Tools extends \yii\helpers\BaseIpHelper
 	        case 9:         //提货单号
 	            $str = 'T'.$type.substr(static::mstime().rand(0,5), 1);
 	            break;
+	        case 10:         //文件编号
+	            $str = 'F'.$type.substr(static::mstime().rand(0,5), 1);
+	            break;
 	        default:
 	            $str = substr(static::mstime().rand(0,9),1);
 	    }

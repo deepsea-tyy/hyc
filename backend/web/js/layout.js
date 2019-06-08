@@ -317,7 +317,7 @@ var Layout = function () {
         // handle the search query submit on enter press
         $('.page-sidebar .sidebar-search').on('keypress', 'input.form-control', function (e) {
             if (e.which == 13) {
-                $('.sidebar-search').submit();
+                menuSearch();
                 return false; //<---- Add this line
             }
         });
@@ -332,10 +332,10 @@ var Layout = function () {
                     }
                     $('.sidebar-search').addClass("open");
                 } else {
-                    $('.sidebar-search').submit();
+                    menuSearch();
                 }
             } else {
-                $('.sidebar-search').submit();
+                menuSearch();
             }
         });
 

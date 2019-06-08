@@ -111,3 +111,10 @@ function request_error($code=0,$msg='') {
 	        break;
 	}
 }
+
+function menuSearch() {
+	$('.sidebar-search').submit(function () {
+		console.log('.sidebar-search')
+		return false;
+	});
+}

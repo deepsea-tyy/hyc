@@ -5,6 +5,7 @@ namespace common\models;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\Expression;
+use common\helpers\Tools;
 
 /**
  * This is the model class for table "{{%file}}".
@@ -124,14 +125,14 @@ class File extends \yii\db\ActiveRecord
      * 获取存储文件夹
      * return string
      */
-    public static function getFileDir($type)
+    public static function getFileDir($ext)
     {
         $fileDir = '';
-        if (in_array($type, ['png','jpg','jpeg','gif','bmp'])) {
+        if (static::getFileTypeByExt($ext) == 'image') {
             $fileDir = '/images';
-        }elseif (in_array($type, ['flv','swf','mkv','avi','rm','rmvb','mpeg','mpg','ogg','ogv','mov','wmv','mp4','webm','mp3','wav','mid'])) {
+        }elseif (static::getFileTypeByExt($ext) == 'video') {
             $fileDir = '/videos';
-        }else{
+        }elseif (static::getFileTypeByExt($ext) == 'file') {
             $fileDir = '/files';
         }
         $dir = static::getFileStoragePath() . $fileDir . '/' . date('Ymd',time());
@@ -139,6 +140,16 @@ class File extends \yii\db\ActiveRecord
             mkdir($dir, 0777, true);
         }
         return Yii::$app->params['file_storage']['local']['dirpath'] . $fileDir . '/' . date('Ymd',time());
+    }
+
+    /**
+     * 获取文件类型
+     */
+    public static function getFileTypeByExt($ext='')
+    {
+        if (in_array($ext, ['png','jpg','jpeg','gif','bmp'])) return 'image';
+        if (in_array($ext, ['flv','swf','mkv','avi','rm','rmvb','mpeg','mpg','ogg','ogv','mov','wmv','mp4','webm','mp3','wav','mid'])) return 'video';
+        return 'file';
     }
 
     /**
@@ -162,7 +173,7 @@ class File extends \yii\db\ActiveRecord
         $chunkpath = static::getChunkFileDir();
         $chunks = glob("{$chunkpath}/{$fname}_*");
         if ($count > 1 && count($chunks) == $count) {
-            $realpath = static::getFileDir($ext) . '/' . md5($fname . '_' . time()) . '.' .$ext;
+            $realpath = static::getFileDir($ext) . '/' . Tools::get_sn(10) . '.' .$ext;
             $handle = fopen(static::getFilePath($realpath), 'a+');
 
             foreach ($chunks as $file) {
