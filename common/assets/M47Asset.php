@@ -52,7 +52,5 @@ class M47Asset extends AssetBundle
 
     ];
 
-    public $depends = [
-        'yii\web\YiiAsset',
-    ];
+    public $depends = ['common\assets\JqueryAsset'];
 }

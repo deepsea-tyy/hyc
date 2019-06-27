@@ -17,7 +17,5 @@ class CommonAsset extends AssetBundle
       	'js/common.js',
 
     ];
-    public $depends = [
-        'yii\web\YiiAsset',
-    ];
+    public $depends = [];
 }

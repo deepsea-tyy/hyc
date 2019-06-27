@@ -21,12 +21,6 @@ return [
             'port' => 6379,
             'database' => 0,
         ],
-        'redis' => [ //session
-            'class' => \yii\redis\Connection::class,
-            'hostname' => 'localhost',
-            'port' => 6379,
-            'database' => 1,
-        ],
         'queue' => [
             // 'class' => \yii\queue\file\Queue::class,
             // 'path' => '@runtime/queue',
@@ -37,7 +31,7 @@ return [
                 'class' => \yii\redis\Connection::class,
                 'hostname' => 'localhost',
                 'port' => 6379,
-                'database' => 2,
+                'database' => 1,
             ], // Redis connection component or its config
             'channel' => 'queue', // Queue channel key
         ],
@@ -51,12 +45,12 @@ return [
                 'class' => \yii\redis\Connection::class,
                 'hostname' => 'localhost',
                 'port' => 6379,
-                'database' => 2,
+                'database' => '2',
                 // retry connecting after connection has timed out
                 // yiisoft/yii2-redis >=2.0.7 is required for this.
                 'retries' => 3,
-            ], // Redis connection component or its config
-            'channel' => 'queue', // Queue channel key
+            ],
+            'channel' => 'ms', // Queue channel key
         ],
         'user' => [
             // 'identityClass' => 'common\models\User',

@@ -11,12 +11,11 @@ use common\assets\IeAsset;
 use common\assets\M47Asset;
 use common\assets\AdminLayoutAsset;
 use common\assets\CommonAsset;
-use common\widgets\Alert;
 
 
 
-IeAsset::register($this);
 M47Asset::register($this);
+IeAsset::register($this);
 AdminLayoutAsset::register($this);
 CommonAsset::register($this);
 

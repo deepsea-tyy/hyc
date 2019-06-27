@@ -3,19 +3,19 @@
 namespace backend\controllers;
 
 use Yii;
-use common\models\Mime;
-use common\models\MimeSearch;
+use common\models\goods\Goods;
+use common\models\goods\GoodsQuery;
 use backend\controllers\Base;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * MimeController implements the CRUD actions for Mime model.
+ * GoodsController implements the CRUD actions for Goods model.
  */
-class MimeController extends Base
+class GoodsController extends Base
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function behaviors()
     {
@@ -30,12 +30,12 @@ class MimeController extends Base
     }
 
     /**
-     * Lists all Mime models.
+     * Lists all Goods models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new MimeSearch();
+        $searchModel = new GoodsQuery();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -45,7 +45,7 @@ class MimeController extends Base
     }
 
     /**
-     * Displays a single Mime model.
+     * Displays a single Goods model.
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
@@ -58,17 +58,16 @@ class MimeController extends Base
     }
 
     /**
-     * Creates a new Mime model.
+     * Creates a new Goods model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Mime();
+        $model = new Goods();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            $this->action->id = 'index';
-            return $this->actionIndex();
+            return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('create', [
@@ -77,7 +76,7 @@ class MimeController extends Base
     }
 
     /**
-     * Updates an existing Mime model.
+     * Updates an existing Goods model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -88,7 +87,7 @@ class MimeController extends Base
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->mime_id]);
+            return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('update', [
@@ -97,7 +96,7 @@ class MimeController extends Base
     }
 
     /**
-     * Deletes an existing Mime model.
+     * Deletes an existing Goods model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -111,15 +110,15 @@ class MimeController extends Base
     }
 
     /**
-     * Finds the Mime model based on its primary key value.
+     * Finds the Goods model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Mime the loaded model
+     * @return Goods the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Mime::findOne($id)) !== null) {
+        if (($model = Goods::findOne($id)) !== null) {
             return $model;
         }
 

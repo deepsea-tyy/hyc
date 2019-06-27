@@ -20,7 +20,6 @@
         "workerman/gateway-worker": "^3.0",
         "workerman/globaldata": "^1.0",
         "workerman/channel": "^1.0",
-        "blockchain/blockchain": "^1.4",
         "workerman/gatewayclient": "^3.0",
         "shenhai1120/yii2-admin": "^1.0",
         "shenhai1120/tyy-select": "^1.0",
@@ -28,7 +27,9 @@
         "shenhai1120/yii2-ueditor": "1.1",
         "budyaga/yii2-cropper": "2.0.20",
         "zoujingli/wechat-developer": "v1.2.12",
-        "hzhihua/yii2-videojs-widget": "*"
+        "hzhihua/yii2-videojs-widget": "*",
+        "zircote/swagger-php": "3.0.2",
+        "php-ffmpeg/php-ffmpeg": "^0.14.0"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

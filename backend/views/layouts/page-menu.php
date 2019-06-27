@@ -1,6 +1,7 @@
 <?php
 use mdm\admin\components\MenuHelper;
 use backend\widgets\Menu;
+use yii\widgets\Pjax;
 
 $menu =  MenuHelper::getAssignedMenu(\Yii::$app->user->id,null,function ($menu)
 {
@@ -13,7 +14,7 @@ $menu =  MenuHelper::getAssignedMenu(\Yii::$app->user->id,null,function ($menu)
             ];
     if ($menu['children'] != []) {
         $item['items'] = $menu['children'];
-        $item['url'] = '#';
+        $item['url'] = 'javascript:;';
     }
 
     $item['icon'] = $data['icon'];
@@ -23,7 +24,7 @@ $menu =  MenuHelper::getAssignedMenu(\Yii::$app->user->id,null,function ($menu)
     $item['arrow'] = $menu['children'] ? 'arrow' : '';
 
     return $item;
-});
+},true);
 $item = [
             [
                 'options' => ['class'=>'sidebar-search-wrapper'],
@@ -46,21 +47,27 @@ $item = [
 $menu = array_merge($item,$menu);
 
 ?>
-  
 <div class="page-sidebar navbar-collapse collapse">
+    <?php Pjax::begin([
+        'options'=>[
+            'id' => 'main-menu',
+        ],
+        'clientOptions' => [
+            'container' => '#container',
+        ]
+    ]); ?>
     <?=Menu::widget([
         'submenuTemplate'=>"\n<ul class=\"sub-menu\">\n{items}\n</ul>\n",
         'options'=>[
                 'id'=>'menu',
-                'class'=>'page-sidebar-menu  page-header-fixed',
+                'class'=>'page-sidebar-menu page-header-fixed',
                 'data-keep-expanded'=>'false',
                 'data-auto-scroll'=>'true',
                 'data-slide-speed'=>'200',
                 'style'=>'padding-top: 20px'
             ],
         'itemOptions'=>['class'=>'nav-item'],
-        //ajaxify ajax请求方法. nav-toggle 跳转
-        'linkTemplate'=>'<a href="{url}" class="nav-toggle nav-link ajaxify">
+        'linkTemplate'=>'<a href="{url}" class="nav-toggle nav-link">
         <i class="{icon}"></i>
         <span class="title">{label}</span>
         <span class="selected"></span>
@@ -69,4 +76,5 @@ $menu = array_merge($item,$menu);
         'items'=>$menu,
     ]);?>
 
+    <?php Pjax::end(); ?>
 </div>

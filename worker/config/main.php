@@ -1,9 +1,9 @@
 <?php
 $params = array_merge(
-    require __DIR__ . '/../../common/config/params.php',
-    require __DIR__ . '/../../common/config/params-local.php',
-    require __DIR__ . '/params.php',
-    require __DIR__ . '/params-local.php'
+    require_once __DIR__ . '/../../common/config/params.php',
+    require_once __DIR__ . '/../../common/config/params-local.php',
+    require_once __DIR__ . '/params.php',
+    require_once __DIR__ . '/params-local.php'
 );
 
 return [
@@ -12,11 +12,6 @@ return [
     'bootstrap' => ['log'],
     'controllerNamespace' => 'worker\controllers',
     'components' => [
-        'request' => [
-            'class' => 'common\components\web\Request',
-            'csrfParam' => '_csrf-worker',
-            'enableCsrfValidation' => false,
-        ],
         'redis' => [
             'class' => 'yii\redis\Connection',
             'hostname' => 'localhost',
@@ -45,25 +40,9 @@ return [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
-        
-        'urlManager' => [
-            'class' => 'common\components\web\UrlManager',
-            'enablePrettyUrl' => true,
-            'showScriptName' => false,
-            'rules' => [
-            ],
-        ],
         'response' => [
             'class' => 'yii\web\Response',
             'format' => yii\web\Response::FORMAT_JSON,
-            // 'on beforeSend' => function ($event) {
-            //     $response = $event->sender;
-            //     $response->data = [
-            //         'code' => $response->getStatusCode(),
-            //         'data' => $response->data,
-            //         'message' => $response->statusText
-            //     ];
-            // },
         ],
     ],
     'params' => $params,

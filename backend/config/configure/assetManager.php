@@ -17,7 +17,7 @@ return [
         'yii\bootstrap\BootstrapPluginAsset' => [
             'sourcePath'=>'@m47',
             'js'=>['global/plugins/bootstrap/js/bootstrap.min.js'],
-            'depends' => [],
+            'depends' => ['common\assets\JqueryAsset'],
         ],
         'yii\bootstrap\BootstrapAsset' => [
             'css' => [],

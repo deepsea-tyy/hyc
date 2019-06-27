@@ -7,12 +7,19 @@ use common\models\applet\WeixinAppletMessage;
 use yii\httpclient\Client;
 use serhatozles\simplehtmldom\SimpleHTMLDom;
 
-
 class IndexController extends \yii\web\Controller
 {
     public function actionIndex()
     {
-        // return $this->asJson($data);
+        /**
+         * nginx 直播间权限认证 get请求
+         * rtmp://localhost:1935/live/1?auth=123456
+         */
+        Yii::$app->response->setStatusCode(200);
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        Yii::$app->response->data = ['code'=>200,'detail'=>'SUCCESS'];
+        // Yii::$app->response->data = ['code'=>500,'detail'=>'auth error'];
+        Yii::$app->response->send();
     }
 
 

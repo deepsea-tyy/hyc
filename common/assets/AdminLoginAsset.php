@@ -46,7 +46,5 @@ class AdminLoginAsset extends AssetBundle
 
     ];
 
-    public $depends = [
-        'yii\web\YiiAsset',
-    ];
+    public $depends = [];
 }
