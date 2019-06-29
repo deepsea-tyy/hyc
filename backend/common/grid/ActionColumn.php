@@ -14,8 +14,8 @@ class ActionColumn extends \kartik\grid\ActionColumn
      */
     protected function initDefaultButtons()
     {
-        $this->initDefaultButton('view', 'eye-open',['class'=>'ajaxify']);
-        $this->initDefaultButton('update', 'pencil',['class'=>'ajaxify']);
+        $this->initDefaultButton('view', 'eye-open');
+        $this->initDefaultButton('update', 'pencil');
         $this->initDefaultButton('delete', 'trash', [
             'class'=>'ajax-request',
             'data-title'=>'删除',

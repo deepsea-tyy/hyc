@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use kartik\grid\GridView;
+use yii\widgets\Pjax;
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\CompanySearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -9,32 +10,24 @@ use kartik\grid\GridView;
 $this->title = 'Companies';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="page-bar">
-    <ul class="page-breadcrumb">
-        <li>
-            <a href="index.html">公司管理</a>
-            <i class="fa fa-circle"></i>
-        </li>
-        <li>
-            <span>列表</span>
-        </li>
-    </ul>
-    <div class="page-toolbar">
-        <div id="dashboard-report-range" class="pull-right tooltips btn btn-sm" data-container="body" data-placement="bottom" data-original-title="Change dashboard date range">
-            <i class="icon-calendar"></i>&nbsp;
-            <span class="thin uppercase hidden-xs"></span>&nbsp;
-            <i class="fa fa-angle-down"></i>&nbsp;
-            <i class="fa fa-refresh"></i>
-        </div>
-    </div>
-</div>
+
+<?=$this->render('/layouts/page-container-breadcrumbs');?>
 
 <div class="company-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Create Company', ['create'], ['class' => 'btn btn-success ajaxify']) ?>
+        <?php Pjax::begin([
+            'options'=>[
+                'id' => 'creat-bnt',
+            ],
+            'clientOptions' => [
+                'container' => '#container',
+            ]
+        ]); ?>
+            <?= Html::a('Create Company', ['create'], ['class' => 'btn btn-success']) ?>
+        <?php Pjax::end(); ?>
     </p>
 
     <?= GridView::widget([

@@ -21,7 +21,7 @@ class M47Asset extends AssetBundle
     public $baseUrl = '@web';
 
     public $css = [
-    // BEGIN GLOBAL MANDATORY STYLES
+        // BEGIN GLOBAL MANDATORY STYLES
         'global/plugins/font-awesome/css/font-awesome.min.css',
         'global/plugins/simple-line-icons/simple-line-icons.min.css',
         'global/plugins/bootstrap/css/bootstrap.min.css',
@@ -34,10 +34,16 @@ class M47Asset extends AssetBundle
         'global/css/plugins.min.css',
         // END THEME GLOBAL STYLES
         
+        // BEGIN THEME LAYOUT STYLES
+        'layouts/layout/css/layout.min.css',
+        'layouts/layout/css/themes/darkblue.min.css',
+        'layouts/layout/css/custom.min.css',
+        // END THEME LAYOUT STYLES
+        
     ];
 
     public $js = [
-    	// BEGIN CORE PLUGINS
+        // BEGIN CORE PLUGINS
         'global/plugins/bootstrap/js/bootstrap.min.js',
         // 'global/plugins/js.cookie.min.js',
         'global/plugins/jquery-slimscroll/jquery.slimscroll.min.js',
@@ -49,6 +55,11 @@ class M47Asset extends AssetBundle
         // BEGIN THEME GLOBAL SCRIPTS
         'global/scripts/app.min.js',
         // END THEME GLOBAL SCRIPTS
+        
+        // BEGIN THEME LAYOUT SCRIPTS
+        'layouts/global/scripts/quick-sidebar.min.js',
+        'layouts/global/scripts/quick-nav.min.js',
+        // END THEME LAYOUT SCRIPTS 
 
     ];
 

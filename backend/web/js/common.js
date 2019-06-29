@@ -88,6 +88,10 @@
 		        });
             }
         });
+	}).on('pjax:send', function() {
+        App.startPageLoading({animate: true});
+	}).on('pjax:complete', function() {
+        App.stopPageLoading();
 	});
 })($);
 

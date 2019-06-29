@@ -55,103 +55,6 @@ var Layout = function () {
         }
     };
 
-    // Handle sidebar menu links
-    var handleSidebarMenuActiveLink = function (mode, el, $state) {
-        var url = location.hash.toLowerCase();
-        var menu = $('.page-sidebar-menu');
- 
-        if (mode === 'click' || mode === 'set') {
-            el = $(el);
-        } else if (mode === 'match') {
-            menu.find('li > a').each(function () {
-                var state = $(this).attr('ui-sref');
-                if ($state && state) {
-                    if ($state.is(state)) {
-                        el = $(this);
-                        return;
-                    }
-                } else {
-                    var path = $(this).attr('href');
-                    if (path) {
-                        // url match condition         
-                        path = path.toLowerCase();
-                        if (path.length > 1 && url.substr(1, path.length - 1) == path.substr(1)) {
-                            el = $(this);
-                            return;
-                        }
-                    }
-                }
-            });
-        }
- 
-        if (!el || el.size() == 0) {
-            return;
-        }
- 
-        if (el.attr('href') == 'javascript:;' ||
-            el.attr('ui-sref') == 'javascript:;' ||
-            el.attr('href') == '#' ||
-            el.attr('ui-sref') == '#'
-            ) {
-            return;
-        }
- 
-        var slideSpeed = parseInt(menu.data('slide-speed'));
-        var keepExpand = menu.data('keep-expanded');
- 
-        // begin: handle active state
-        if (menu.hasClass('page-sidebar-menu-hover-submenu') === false) {
-            menu.find('li.nav-item.open').each(function () {
-                var match = false;
-                $(this).find('li').each(function () {
-                    var state = $(this).attr('ui-sref');
-                    if ($state && state) {
-                        if ($state.is(state)) {
-                            match = true;
-                            return;
-                        }
-                    } else if ($(this).find(' > a').attr('href') === el.attr('href')) {
-                        match = true;
-                        return;
-                    }
-                });
- 
-                if (match === true) {
-                    return;
-                }
- 
-                $(this).removeClass('open');
-                $(this).find('> a > .arrow.open').removeClass('open');
-                $(this).find('> .sub-menu').slideUp();
-            });
-        } else {
-            menu.find('li.open').removeClass('open');
-        }
- 
-        menu.find('li.active').removeClass('active');
-        menu.find('li > a > .selected').remove();
-        // end: handle active state
- 
-        el.parents('li').each(function () {
-            $(this).addClass('active');
-            $(this).find('> a > span.arrow').addClass('open');
- 
-            if ($(this).parent('ul.page-sidebar-menu').size() === 1) {
-                $(this).find('> a').append('<span class="selected"></span>');
-            }
- 
-            if ($(this).children('ul.sub-menu').size() === 1) {
-                $(this).addClass('open');
-            }
-        });
- 
-        if (mode === 'click') {
-            if (App.getViewPort().width < resBreakpointMd && $('.page-sidebar').hasClass('in')) { // close the menu on mobile view while laoding a page 
-                $('.page-header .responsive-toggler').click();
-            }
-        }
-    };
-
     // Handle sidebar menu
     var handleSidebarMenu = function () {
         // offcanvas mobile menu 
@@ -184,6 +87,7 @@ var Layout = function () {
 
             var hasSubMenu = that.next().hasClass('sub-menu');
 
+            
             if (App.getViewPort().width >= resBreakpointMd && that.parents('.page-sidebar-menu-hover-submenu').size() === 1) { // exit of hover sidebar menu
                 return;
             }
@@ -192,6 +96,8 @@ var Layout = function () {
                 if (App.getViewPort().width < resBreakpointMd && $('.page-sidebar').hasClass("in")) { // close the menu on mobile view while laoding a page 
                     $('.page-header .responsive-toggler').click();
                 }
+                $(".sub-menu > li.active").removeClass("active");
+                $(this).parent().addClass("active");
                 return;
             }
 
@@ -230,6 +136,7 @@ var Layout = function () {
             } else if (hasSubMenu) {
                 $('.arrow', the).addClass("open");
                 the.parent().addClass("open");
+                the.parent().addClass("active").siblings().removeClass("active");
                 sub.slideDown(slideSpeed, function () {
                     if (autoScroll === true && $('body').hasClass('page-sidebar-closed') === false) {
                         if ($('body').hasClass('page-sidebar-fixed')) {
@@ -245,59 +152,6 @@ var Layout = function () {
             }
 
             e.preventDefault();
-        });
-
-        // handle menu close for angularjs version
-        if (App.isAngularJsApp()) {
-            $(".page-sidebar-menu li > a").on("click", function(e) {
-                if (App.getViewPort().width < resBreakpointMd && $(this).next().hasClass('sub-menu') === false) {
-                    $('.page-header .responsive-toggler').click();
-                }
-            });
-        }
-
-        // handle ajax links within sidebar menu
-        $('.page-sidebar').on('click', ' li > a.ajaxify', function (e) {
-            e.preventDefault();
-            App.scrollTop();
-            var url = $(this).attr("href");
-            var menuContainer = $('.page-sidebar ul');
-
-            menuContainer.children('li.active').removeClass('active');
-            menuContainer.children('arrow.open').removeClass('open');
-
-            $(this).parents('li').each(function () {
-                $(this).addClass('active');
-                $(this).children('a > span.arrow').addClass('open');
-            });
-            $(this).parents('li').addClass('active');
-
-            //移动端菜单点击bug
-            // if (App.getViewPort().width < resBreakpointMd && $('.page-sidebar').hasClass("in")) { // close the menu on mobile view while laoding a page 
-            //     $('.page-header .responsive-toggler').click();
-            // }
-
-            if (url=="#" || url == "") {
-                return ;
-            }
-            Layout.loadAjaxContent(url,"GET", $(this));
-        });
-
-        // handle ajax link within main content
-        $('.page-content').on('click', '.ajaxify', function (e) {
-            e.preventDefault();
-
-            var url = $(this).attr("href");
-            var method = $(this).attr("method");
-            if (App.getViewPort().width < resBreakpointMd && $('.page-sidebar').hasClass("in")) { // close the menu on mobile view while laoding a page 
-                $('.page-header .responsive-toggler').click();
-            }
-            if (url=="#" || url == "") {
-                return ;
-            }
-            
-            App.scrollTop();
-            Layout.loadAjaxContent(url,method);
         });
 
         // handle scrolling to top on responsive menu toggler click when header is fixed for mobile view
@@ -398,13 +252,7 @@ var Layout = function () {
     };
 
     // Hanles sidebar toggler
-    var handleSidebarToggler = function () {       
-        /**
-        if (Cookies && Cookies.get('sidebar_closed') === '1' && App.getViewPort().width >= resBreakpointMd) {
-            $('body').addClass('page-sidebar-closed');
-            $('.page-sidebar-menu').addClass('page-sidebar-menu-closed');
-        }
-        */
+    var handleSidebarToggler = function () {
 
         // handle sidebar show/hide
         $('body').on('click', '.sidebar-toggler', function (e) {
@@ -425,9 +273,6 @@ var Layout = function () {
                 if (body.hasClass("page-sidebar-fixed")) {
                     sidebarMenu.trigger("mouseleave");
                 }
-                /*if (Cookies) {
-                    Cookies.set('sidebar_closed', '1');
-                }*/
             }
 
             $(window).trigger('resize');
@@ -571,24 +416,11 @@ var Layout = function () {
             handleHorizontalMenu(); // handles horizontal menu    
         },
 
-        setSidebarMenuActiveLink: function(mode, el) {
-            handleSidebarMenuActiveLink(mode, el, null);
-        },
-
-        setAngularJsSidebarMenuActiveLink: function(mode, el, $state) {
-            handleSidebarMenuActiveLink(mode, el, $state);
-        },
-
         initSidebar: function($state) {
             //layout handlers
             handleFixedSidebar(); // handles fixed sidebar menu
             handleSidebarMenu(); // handles main menu
             handleSidebarToggler(); // handles sidebar hide/show
-
-            if (App.isAngularJsApp()) {      
-                handleSidebarMenuActiveLink('match', null, $state); // init sidebar active links 
-            }
-
             App.addResizeHandler(handleFixedSidebar); // reinitialize fixed sidebar on window resize
         },
 
@@ -609,54 +441,6 @@ var Layout = function () {
             this.initSidebar(null);
             this.initContent();
             this.initFooter();
-        },
-
-        loadAjaxContent: function(url, method="GET", sidebarMenuLink) {
-            // var pageContent = $('.page-content .page-content-body');    
-            var pageContent = $('#container');    
-
-            App.startPageLoading({animate: true});
-            
-            $.ajax({
-                type: method,
-                cache: false,
-                url: url,
-                dataType: "html"
-            }).then(function (res) {
-                App.stopPageLoading();
-
-
-                pageContent.html(res);
-
-                if (!$.isEmptyObject(sidebarMenuLink) && sidebarMenuLink.size() > 0 && sidebarMenuLink.parents('li.open').size() === 0) {
-                    $('.page-sidebar-menu > li.open > a').click();
-                }
-                for (var i = 0; i < ajaxContentSuccessCallbacks.length; i++) {
-                    ajaxContentSuccessCallbacks[i].call(res);
-                }
-
-                Layout.fixContentHeight(); // fix content height
-                App.initAjax(); // initialize core stuff
-                ajaxContentSuccessCallbacks = [];
-                ajaxContentErrorCallbacks = [];
-            },function (res, ajaxOptions, thrownError) {
-                request_error(res.status,thrownError);
-                App.stopPageLoading();
-                for (var i = 0; i < ajaxContentErrorCallbacks.length; i++) {
-                    ajaxContentErrorCallbacks[i].call(res);
-                }
-
-                ajaxContentSuccessCallbacks = [];
-                ajaxContentErrorCallbacks = [];
-            });
-        },
-
-        addAjaxContentSuccessCallback: function(callback) {
-            ajaxContentSuccessCallbacks.push(callback);
-        },
-
-        addAjaxContentErrorCallback: function(callback) {
-            ajaxContentErrorCallbacks.push(callback);
         },
 
         //public function to fix the sidebar and content height accordingly
@@ -683,8 +467,6 @@ var Layout = function () {
 
 }();
 
-if (App.isAngularJsApp() === false) {
-    jQuery(document).ready(function() {    
-       Layout.init(); // init metronic core componets
-    });
-}
+jQuery(document).ready(function() {    
+   Layout.init(); // init metronic core componets
+});

@@ -24,7 +24,7 @@ $menu =  MenuHelper::getAssignedMenu(\Yii::$app->user->id,null,function ($menu)
     $item['arrow'] = $menu['children'] ? 'arrow' : '';
 
     return $item;
-},true);
+},true/*更新*/);
 $item = [
             [
                 'options' => ['class'=>'sidebar-search-wrapper'],
