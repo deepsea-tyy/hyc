@@ -25,8 +25,6 @@ CommonAsset::register($this);
 <!--[if !IE]><!-->
 <html lang="en">
     <!--<![endif]-->
-    <!-- BEGIN HEAD -->
-
     <head>
         <meta charset="utf-8" />
 
@@ -41,8 +39,6 @@ CommonAsset::register($this);
         
         <link rel="shortcut icon" href="/favicon.ico" />
     </head>
-    <!-- END HEAD -->
-
 <?php $this->beginBody() ?>
     <body class="page-header-fixed page-sidebar-closed-hide-logo page-content-white">
         <div class="page-wrapper">
@@ -51,32 +47,18 @@ CommonAsset::register($this);
             <div class="clearfix"> </div>
 
             <div class="page-container">
-                <!-- BEGIN SIDEBAR -->
                 <div class="page-sidebar-wrapper">
                         <?=$this->render('page-menu');?>
                 </div>
-                <!-- END SIDEBAR -->
-                <!-- BEGIN CONTENT -->
                 <div class="page-content-wrapper">
-                    <!-- BEGIN CONTENT BODY -->
                     <div class="page-content">
-                        <!-- BEGIN PAGE HEADER-->
-                        
-                        <!-- BEGIN PAGE BAR -->
-                        
-                        <!-- END PAGE BAR -->
-                        <!-- BEGIN PAGE TITLE-->
-                        
-                        <!-- END PAGE TITLE-->
-                        <!-- END PAGE HEADER-->
-                        <div class="page-content-body" id="container"><?=$content ?></div>
+                        <div class="page-content-body" id="container">
+                            <?=$this->render('/layouts/page-container-breadcrumbs');?>
+                            <?=$content ?>
+                        </div>
                     </div>
-                    <!-- END CONTENT BODY -->
                 </div>
-                <!-- END CONTENT -->
-                <!-- BEGIN QUICK SIDEBAR -->
                 <?=$this->render('page-quick-sidebar');?>
-                <!-- END QUICK SIDEBAR -->
             </div>
 
             <div class="page-footer">
@@ -84,11 +66,8 @@ CommonAsset::register($this);
                     2018 &copy; integration the theme by Tyy
                 </div>
             </div>
-            <!-- END FOOTER -->
         </div>
-        <!-- BEGIN QUICK NAV -->
         <?=$this->render('page-quick-nav');?>
-        <!-- END QUICK NAV -->
     </body>
 <?php $this->endBody() ?>
 

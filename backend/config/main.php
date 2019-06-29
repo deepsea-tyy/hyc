@@ -57,8 +57,7 @@ return [
             // 'enableAutoLogin' => true,
             // 'identityCookie' => ['name' => '_identity-backend', 'httpOnly' => true],
             
-            // 'identityClass' => 'mdm\admin\models\User',
-            'identityClass' => 'common\models\User',
+            'identityClass' => 'mdm\admin\models\User',
             'loginUrl' => ['admin/user/login'],
         ],
         // 'session' => [
@@ -91,7 +90,7 @@ return [
         'admin' => [
             'class' => 'mdm\admin\Module',
             'layout' => 'left-menu',
-
+            'mainLayout' => '@backend/views/layouts/main.php'
         ],
         'spider' => [
             'class' => 'backend\modules\spider\Module',
@@ -119,6 +118,7 @@ return [
             'site/error',
             'site/index',
             'public/*',
+            'debug/*',
         ]
     ],
 ];

@@ -37,11 +37,7 @@ class SiteController extends Controller
                 'actions' => [
                     'logout' => ['post'],
                 ],
-            ],
-            'islogin' => [
-                'class' => \backend\common\behaviors\IsLogin::className(),
-                'actions' => ['index'],
-            ],
+            ]
         ];
     }
 
@@ -64,7 +60,6 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        
         return $this->render('index');
     }
 

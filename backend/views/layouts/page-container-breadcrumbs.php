@@ -1,20 +1,13 @@
 <?php 
 use yii\widgets\Breadcrumbs;
-
+use common\helpers\Tools;
+$links = Tools::getPageBreadcrumb();
 ?>
 <div class="page-bar">
     <?=Breadcrumbs::widget([
         'options'=>['class' => 'page-breadcrumb'],
         'itemTemplate' => "<li><i>{link}</i></li>\n", // template for all links
-        'links' => [
-            [
-                'label' => 'Post Category',
-                'url' => ['/', 'id' => 10],
-                'template' => "<li><b>{link}</b></li>\n", // template for this link only
-            ],
-            ['label' => 'Sample Post', 'url' => ['/', 'id' => 1]],
-            'Edit',
-        ],
+        'links' => $links,
     ]); ?>
     <div class="page-toolbar">
         <div id="dashboard-report-range" class="pull-right tooltips btn btn-sm" data-container="body" data-placement="bottom" data-original-title="Change dashboard date range">
