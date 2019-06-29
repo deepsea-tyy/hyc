@@ -1,6 +1,8 @@
 <?php
 namespace common\helpers;
 
+use Yii;
+use mdm\admin\models\Menu;
 /**
  * 工具函数
  */
@@ -95,7 +97,7 @@ class Tools extends \yii\helpers\BaseIpHelper
 	 * @param int $second
 	 * @return string
 	 */
-	function secondConversion($second = 0)
+	public static function secondConversion($second = 0)
 	{
 	    $newtime = '';
 	    $d = floor($second / (3600*24));
@@ -127,7 +129,7 @@ class Tools extends \yii\helpers\BaseIpHelper
 	 * @param $data
 	 * @return array
 	 */
-	function get_lately_days($day, $data)
+	public static function get_lately_days($day, $data)
 	{
 	    $day = $day-1;
 	    $days = [];
@@ -148,4 +150,30 @@ class Tools extends \yii\helpers\BaseIpHelper
 	    }
 	    return ['day' => $d, 'data' => $new];
 	}
+
+	/**
+	 * 页面面包屑
+	 */
+	public static function getPageBreadcrumb($route='')
+	{
+		if (!$route) $route = Yii::$app->controller->getRoute();
+		$submenu = Menu::find()->where(['route'=>'/' . $route])->asArray()->one();
+		$links[] = self::normalizeMenu($submenu);
+		$parent = [];
+		if ($submenu['parent']) {
+			$parent = Menu::find()->where(['id'=>$submenu['parent']])->one();
+			$links = array_merge([self::normalizeMenu($parent)],$links);
+		}
+
+		return array_filter($links);
+	}
+
+    private static function normalizeMenu($menu)
+    {
+    	$data = json_decode($menu['data'],true);
+    	return [
+    		'label' => $data['label'],
+    		// 'url' => $menu['route'],
+    	];
+    }
 }
