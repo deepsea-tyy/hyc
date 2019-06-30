@@ -37,7 +37,7 @@ $assets_url=$this->assetBundles[common\assets\M47Asset::className()]->baseUrl;
                                     </li>
 
                                     <li>
-                                        <a href="<?=\yii\helpers\Url::to(['/admin/user/logout'])?>" >
+                                        <a href="<?=\yii\helpers\Url::to(['/site/logout'])?>" >
                                             <i class="icon-key"></i> 退出登录</a>
                                     </li>
                                 </ul>

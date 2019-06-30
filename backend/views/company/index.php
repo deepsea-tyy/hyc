@@ -10,6 +10,7 @@ use yii\widgets\Pjax;
 $this->title = 'Companies';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
+<?=$this->render('/layouts/page-container-breadcrumbs');?>
 
 <div class="company-index">
 

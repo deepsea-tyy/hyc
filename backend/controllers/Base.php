@@ -6,7 +6,6 @@ use Yii;
 
 class Base extends \yii\web\Controller
 {
-    // public $layout = false;
 	 /**
      * @inheritdoc
      */

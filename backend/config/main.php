@@ -58,7 +58,7 @@ return [
             // 'identityCookie' => ['name' => '_identity-backend', 'httpOnly' => true],
             
             'identityClass' => 'mdm\admin\models\User',
-            'loginUrl' => ['admin/user/login'],
+            'loginUrl' => ['site/login'],
         ],
         // 'session' => [
         //     // this is the name of the session cookie used for login on the backend
@@ -110,15 +110,15 @@ return [
     'as access' => [
         'class' => 'mdm\admin\components\AccessControl',
         'allowActions' => [
-            'admin/user/login',
-            'admin/user/logout',
-            'admin/user/request-password-reset',
-            'admin/user/signup',
-            'admin/user/captcha',
-            'site/error',
-            'site/index',
             'public/*',
             'debug/*',
+            'site/error',
+            'site/login',
+            'site/logout',
+            'site/captcha',
+            'gii/*',
+            'goods/*',
+            'company/*',
         ]
     ],
 ];

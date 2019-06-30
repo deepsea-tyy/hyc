@@ -10,6 +10,7 @@ $this->params['breadcrumbs'][] = ['label' => 'Companies', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->c_id, 'url' => ['view', 'id' => $model->c_id]];
 $this->params['breadcrumbs'][] = 'Update';
 ?>
+<?=$this->render('/layouts/page-container-breadcrumbs');?>
 <div class="company-update">
 
     <h1><?= Html::encode($this->title) ?></h1>

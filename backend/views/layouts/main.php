@@ -53,7 +53,6 @@ CommonAsset::register($this);
                 <div class="page-content-wrapper">
                     <div class="page-content">
                         <div class="page-content-body" id="container">
-                            <?=$this->render('/layouts/page-container-breadcrumbs');?>
                             <?=$content ?>
                         </div>
                     </div>

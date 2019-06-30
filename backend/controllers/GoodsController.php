@@ -3,8 +3,8 @@
 namespace backend\controllers;
 
 use Yii;
-use common\models\goods\Goods;
-use common\models\goods\GoodsQuery;
+use common\models\mall\Goods;
+use common\models\mall\GoodsSearch;
 use backend\controllers\Base;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -35,7 +35,7 @@ class GoodsController extends Base
      */
     public function actionIndex()
     {
-        $searchModel = new GoodsQuery();
+        $searchModel = new GoodsSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [

@@ -18,18 +18,20 @@ class ActionColumn extends \kartik\grid\ActionColumn
         $this->initDefaultButton('update', 'pencil');
         $this->initDefaultButton('delete', 'trash', [
             'class'=>'ajax-request',
-            'data-title'=>'删除',
-            'data-message'=>'确定删除?',
-            'data-type'=>'info',
-            'data-allow-outside-click'=>'false',
-            'data-show-confirm-button'=>'true',
-            'data-show-cancel-button'=>'true',
-            'data-confirm-button-class'=>'btn-danger',
-            'data-cancel-button-class'=>'btn-default',
-            'data-close-on-confirm'=>'false',
-            'data-close-on-cancel'=>'true',
-            'data-confirm-button-text'=>'确定',
-            'data-cancel-button-text'=>'取消',
+            'data-swal'=> json_encode([
+                'title' => '删除',
+                'message'=>'确定删除?',
+                'type'=>'info',
+                'allowOutsideClick'=>false,
+                'showConfirmButton'=>true,
+                'showCancelButton'=>true,
+                'confirmButtonClass'=>'btn-danger',
+                'cancelButtonClass' => 'btn-default',
+                'closeOnConfirm' => false,
+                'closeOnCancel' => true,
+                'confirmButtonText' => '确定',
+                'cancelButtonText' => '取消',
+            ]),
         ]);
     }
 
