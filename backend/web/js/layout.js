@@ -97,7 +97,7 @@ var Layout = function () {
                     $('.page-header .responsive-toggler').click();
                 }
                 $(".sub-menu > li.active").removeClass("active");
-                $(this).parent().addClass("active");
+                $(this).parent().addClass("active").siblings().removeClass("active");
                 return;
             }
 

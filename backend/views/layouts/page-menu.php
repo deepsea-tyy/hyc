@@ -6,7 +6,7 @@ use yii\widgets\Pjax;
 $menu =  MenuHelper::getAssignedMenu(\Yii::$app->user->id,null,function ($menu)
 {
     $data = json_decode($menu['data'],true);
-
+    if (isset($data['show']) && $data['show'] == 0) return [];
     $item = [
                 'label' => $data['label'],
                 // 'label' => $menu['data'],
@@ -44,7 +44,7 @@ $item = [
             ],
         ];
         
-$menu = array_merge($item,$menu);
+$menu = array_merge(array_filter($item),$menu);
 
 ?>
 <div class="page-sidebar navbar-collapse collapse">

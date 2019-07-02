@@ -23,6 +23,8 @@ use common\helpers\Tools;
  */
 class File extends \yii\db\ActiveRecord
 {
+    public static $deleteUrl = '/public/filedelete';
+    public static $uploadUrl = '/public/fileupload';
     /**
      * {@inheritdoc}
      */

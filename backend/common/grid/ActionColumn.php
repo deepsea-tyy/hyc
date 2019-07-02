@@ -17,9 +17,8 @@ class ActionColumn extends \kartik\grid\ActionColumn
         $this->initDefaultButton('view', 'eye-open');
         $this->initDefaultButton('update', 'pencil');
         $this->initDefaultButton('delete', 'trash', [
-            'class'=>'ajax-request',
             'data-swal'=> json_encode([
-                'title' => '删除',
+                'title' => '确定删除此条数据？',
                 'message'=>'确定删除?',
                 'type'=>'info',
                 'allowOutsideClick'=>false,

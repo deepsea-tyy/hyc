@@ -9,11 +9,8 @@ $links = Tools::getPageBreadcrumb();
         'itemTemplate' => "<li><i>{link}</i></li>\n", // template for all links
         'links' => $links,
     ]); ?>
-    <div class="page-toolbar">
-        <div id="dashboard-report-range" class="pull-right tooltips btn btn-sm" data-container="body" data-placement="bottom" data-original-title="Change dashboard date range">
-            <i class="icon-calendar"></i>&nbsp;
-            <span class="thin uppercase hidden-xs"></span>&nbsp;
-            <i class="fa fa-angle-down"></i>&nbsp;
+    <div class="page-toolbar" data-refresh="1">
+        <div class="pull-right btn btn-sm">
             <i class="fa fa-refresh"></i>
         </div>
     </div>

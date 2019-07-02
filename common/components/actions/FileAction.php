@@ -121,7 +121,7 @@ class FileAction extends Action
             if ($data == 2) return ['chunkIndex' => Yii::$app->request->post('chunkIndex')];
             if ($this->saveData($data)) {
                 $mime = explode('/', $data['type']);
-                $show = [$this->show($mime)];
+                $show = [$this->show($data['file_url'],$mime[0])];
                 $config[] = [
                     'caption' => $file->name,
                     'key' => $data['id'], // 图片标示
@@ -151,6 +151,7 @@ class FileAction extends Action
     {
         switch ($mime) {
             case 'image':
+                return $url;
                 return Html::img($url, ['style' => 'width:auto;height:auto;max-width:100%;max-height:100%;']);
                 break;
             case 'video':
@@ -248,6 +249,7 @@ class FileAction extends Action
      */
     protected function delete()
     {
+        if (Yii::$app->request->get('edit',0)) return ['success'=>'删除成功'];//编辑数据时不删文件
         $key = Yii::$app->request->post('key');
         $model = File::find()->where(['id'=>$key])->one();
         if (File::fileDelete($model->file_url)) {

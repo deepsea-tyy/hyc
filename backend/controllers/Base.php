@@ -33,4 +33,13 @@ class Base extends \yii\web\Controller
         }
     }
 
+    public function success($data=[],$msg='操作成功')
+    {
+        return $this->asJson(['status'=>200,'data'=>$data,'msg'=>$msg]);
+    }
+
+    public function fail($msg='操作失败',$data=[])
+    {
+        return $this->asJson(['status'=>400,'data'=>$data,'msg'=>$msg]);
+    }
 }

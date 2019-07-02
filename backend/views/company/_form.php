@@ -36,15 +36,16 @@ $data = [1,2,3,4];
             'uploadUrl'=> Url::to(['public/fileupload']),
             'maxFileCount'=> 10, //上传数量
             'overwriteInitial'=> false,
+            'initialPreviewAsData'=> true,//插件默认展示
 
-            // 'allowedFileTypes'=> ['image'],//文件类型
-            //分片设置
-            'enableResumableUpload'=> true,//开启分片
-            'showCancel'=> true,//取消按钮
-            'resumableUploadOptions'=> [
-                // 'testUrl'=> "/site/test-file-chunks", //分片检测续传等功能
-                'chunkSize'=> 1024 , // 1 kB chunk size
-            ],
+            'allowedFileTypes'=> ['image'],//文件类型
+            // //分片设置
+            // 'enableResumableUpload'=> true,//开启分片
+            // 'showCancel'=> true,//取消按钮
+            // 'resumableUploadOptions'=> [
+            //     // 'testUrl'=> "/site/test-file-chunks", //分片检测续传等功能
+            //     'chunkSize'=> 1024 , // 1 kB chunk size
+            // ],
 
             'layoutTemplates' => [
                 // 'actionUpload'=>''//去除上传预览缩略图中的上传图片

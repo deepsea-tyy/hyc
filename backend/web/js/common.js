@@ -9,23 +9,22 @@
 	    }
 
        	$form.find(":submit").addClass("disabled");
-        var goUrl = $form.data("goUrl");
-
-	   $.ajax({
+        var goUrl = $form.attr("data-goUrl");
+	    $.ajax({
 	        url: $form.attr("action"),
 	        type: $form.attr("method"),
 	        data: $form.serialize(),
 	    }).then(function (res) {
-	    	getAjaxPage(goUrl);
+	    	getAjaxPage(goUrl,res);
 	    },function (res,status) {
 	      $form.find(":submit").removeClass("disabled");
 	    });
 	    return false;
-	}).on("click", "a[data-confirm]", function(event) {
+	}).on("click", "a[data-swal]", function(event) {
 		event.preventDefault();
-		if ($(this).data("confirm")) {
+		if ($(this).attr("data-swal")) {
 	        var url = $(this).attr("href");
-	        var goUrl = $(this).data("goUrl");
+	        var goUrl = $(this).attr("data-goUrl");
 	        if (url=="#" || url=="") {
 	            return ;
 	        }
@@ -34,7 +33,7 @@
 	        swal($setting,function(isConfirm){
 	            if (isConfirm){
 			        $.post(url).then(function (res) {
-		    			getAjaxPage(goUrl);
+		    			getAjaxPage(goUrl,res);
 			        },function (res,b,c,d,e) {
 			        	request_error(res.status,res.responseText);
 			        });
@@ -45,6 +44,12 @@
         App.startPageLoading({animate: true});
 	}).on("pjax:complete", function() {
         App.stopPageLoading();
+	}).on("click", "[data-refresh]", function() {
+        App.startPageLoading({animate: true});
+        $.get(window.location.href,function (res) {
+			$("#container").html(res);
+        	App.stopPageLoading();
+		})
 	}).pjax("a[data-pjax]", "#container");
 })($);
 
@@ -75,11 +80,35 @@ function menuSearch() {
 		return false;
 	});
 }
-function getAjaxPage($url) {
-	$.get($url,function (res) {
-        swal("", "操作成功", "success");
-		$("#container").html(res);
-	},function (res) {
-        swal("", "操作失败", "error");
-	})
+function getAjaxPage($url,$res) {
+	if ($res.status == 200) {
+        swal("", $res.msg, "success");
+		$.get($url,function (res) {
+			$("#container").html(res);
+		})
+	}else{
+		if (!$res.status) {$("#container").html($res);return;}
+		swal("", $res.msg, "info");
+	}
+}
+
+/**
+ * $id 元素id
+ * $data 数据
+ * $do 1增加 2删除 3覆盖
+ */
+function json_value($id,$data,$do=1) {
+	var value = $($id).val() ?  JSON.parse($($id).val()) : new Array();
+	if ($do == 1) {
+		value.push($data);
+	}else if ($do == 2) {
+		value.map(function (val,index) {
+			if (val['image_id'] == $data['image_id']) {
+    			value.splice(index, 1);
+			}
+		})
+	}else if ($do == 3) {
+		value = $data;
+	}
+	$($id).val(JSON.stringify(value));
 }

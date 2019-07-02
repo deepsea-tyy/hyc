@@ -18,7 +18,7 @@ class Tools extends \yii\helpers\BaseIpHelper
 
 
 	/**
-	 * 生成编号
+	 * 生成编号 sign number
 	 */
 	public static function get_sn($type){
 	    switch ($type)
@@ -158,13 +158,19 @@ class Tools extends \yii\helpers\BaseIpHelper
 	{
 		if (!$route) $route = Yii::$app->controller->getRoute();
 		$submenu = Menu::find()->where(['route'=>'/' . $route])->asArray()->one();
+		$data = json_decode($submenu['data'],true); //菜单deep处理
+		$deep = empty($data['deep']) ? 0 : $data['deep'];
+		
 		$links[] = self::normalizeMenu($submenu);
 		$parent = [];
 		if ($submenu['parent']) {
 			$parent = Menu::find()->where(['id'=>$submenu['parent']])->one();
 			$links = array_merge([self::normalizeMenu($parent)],$links);
 		}
-
+		if ($deep == 2) {
+			$parent = Menu::find()->where(['id'=>$parent['parent']])->one();
+			$links = array_merge([self::normalizeMenu($parent)],$links);
+		}
 		return array_filter($links);
 	}
 

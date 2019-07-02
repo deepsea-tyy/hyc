@@ -66,7 +66,6 @@ CommonAsset::register($this);
                 </div>
             </div>
         </div>
-        <?=$this->render('page-quick-nav');?>
     </body>
 <?php $this->endBody() ?>
 
