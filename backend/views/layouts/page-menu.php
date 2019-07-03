@@ -18,6 +18,7 @@ $menu =  MenuHelper::getAssignedMenu(\Yii::$app->user->id,null,function ($menu)
     }
 
     $item['icon'] = $data['icon'];
+    $item['deep'] = $data['deep'] ?? 0;
     // $item['itemOptions'] = [
     //         'class'=>'active'
     //     ];
@@ -48,16 +49,7 @@ $menu = array_merge(array_filter($item),$menu);
 
 ?>
 <div class="page-sidebar navbar-collapse collapse">
-    <?php Pjax::begin([
-        'options'=>[
-            'id' => 'main-menu',
-        ],
-        'clientOptions' => [
-            'container' => '#container',
-        ]
-    ]); ?>
     <?=Menu::widget([
-        'submenuTemplate'=>"\n<ul class=\"sub-menu\">\n{items}\n</ul>\n",
         'options'=>[
                 'id'=>'menu',
                 'class'=>'page-sidebar-menu page-header-fixed',
@@ -67,7 +59,8 @@ $menu = array_merge(array_filter($item),$menu);
                 'style'=>'padding-top: 20px'
             ],
         'itemOptions'=>['class'=>'nav-item'],
-        'linkTemplate'=>'<a href="{url}" class="nav-toggle nav-link">
+        'submenuTemplate'=>"\n<ul class=\"sub-menu\">\n{items}\n</ul>\n",
+        'linkTemplate'=>'<a href="{url}" data-deep="{deep}" class="nav-toggle nav-link">
         <i class="{icon}"></i>
         <span class="title">{label}</span>
         <span class="selected"></span>
@@ -76,5 +69,4 @@ $menu = array_merge(array_filter($item),$menu);
         'items'=>$menu,
     ]);?>
 
-    <?php Pjax::end(); ?>
 </div>

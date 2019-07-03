@@ -23,9 +23,6 @@ class AdminLoginAsset extends AssetBundle
     public $css = [
 
         // BEGIN PAGE LEVEL PLUGINS
-        // 'pages/css/lock-2.min.css'
-        'global/plugins/select2/css/select2.min.css',
-        'global/plugins/select2/css/select2-bootstrap.min.css',
         // '',
         'pages/css/login.min.css',
         // END PAGE LEVEL PLUGINS
@@ -38,9 +35,9 @@ class AdminLoginAsset extends AssetBundle
         // BEGIN PAGE LEVEL PLUGINS
         
         // 'global/plugins/backstretch/jquery.backstretch.min.js',
-        'global/plugins/jquery-validation/js/jquery.validate.min.js',
-        'global/plugins/jquery-validation/js/additional-methods.min.js',
-        'global/plugins/select2/js/select2.full.min.js',
+        // 'global/plugins/jquery-validation/js/jquery.validate.min.js',
+        // 'global/plugins/jquery-validation/js/additional-methods.min.js',
+        // 'global/plugins/select2/js/select2.full.min.js',
         // END PAGE LEVEL PLUGINS
         
 

@@ -51,7 +51,7 @@ CommonAsset::register($this);
                         <?=$this->render('page-menu');?>
                 </div>
                 <div class="page-content-wrapper">
-                    <div class="page-content">
+                    <div class="page-content" style="min-height: 1000px;">
                         <div class="page-content-body" id="container">
                             <?=$content ?>
                         </div>

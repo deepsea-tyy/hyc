@@ -26,6 +26,7 @@ class Menu extends \yii\widgets\Menu
                 '{label}' => $item['label'],
                 '{icon}' => $item['icon'],
                 '{arrow}' => $item['arrow'],
+                '{deep}' => $item['deep'],
             ]);
         }
 

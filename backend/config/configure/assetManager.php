@@ -2,33 +2,24 @@
 return [
     'class' => 'yii\web\AssetManager',
     'linkAssets' => true,
-    'bundles'=>array_merge([
+    'bundles'=>[
         'yii\web\JqueryAsset' => [
             'sourcePath' => '@m47',
             'js' => [
                 'global/plugins/jquery.min.js',
             ],
         ],
-        'yii\web\YiiAsset' => [
-            'depends' => [
-                'common\assets\JqueryAsset',
-            ],
+        'yii\bootstrap\BootstrapAsset' => [
+            'sourcePath'=>'@m47',
+            'css' => ['global/plugins/bootstrap/css/bootstrap.min.css'],
         ],
         'yii\bootstrap\BootstrapPluginAsset' => [
             'sourcePath'=>'@m47',
             'js'=>['global/plugins/bootstrap/js/bootstrap.min.js'],
-            'depends' => ['common\assets\JqueryAsset'],
+            'depends' => [
+                'yii\web\JqueryAsset',
+            ],
         ],
-        'yii\bootstrap\BootstrapAsset' => [
-            'css' => [],
-            'depends' => [],
-        ],
-        'yii\widgets\ActiveFormAsset' => [
-            'depends' => [],
-        ],
-        
 
-
-    ],require('asset/kartik.php')),
-
+    ],
 ];

@@ -13,7 +13,7 @@ class CommonAsset extends AssetBundle
     public $baseUrl = '@web';
 
     public $js = [
-    	'js/layout.js',
+    	'js/menu.js',
       	'js/common.js',
 
     ];

@@ -119,6 +119,7 @@ return [
             'gii/*',
             'goods/*',
             'company/*',
+            'car-brand/*',
         ]
     ],
 ];
