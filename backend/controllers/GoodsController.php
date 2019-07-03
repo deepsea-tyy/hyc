@@ -67,8 +67,8 @@ class GoodsController extends Base
     {
         $model = new Goods();
 
-        if ($model->addGoods(Yii::$app->request->post())) {
-            return $this->success();
+        if (Yii::$app->request->getIsPost()) {
+            return $model->addGoods(Yii::$app->request->post()) ? $this->success() : $this->fail($model->getErrors());
         }
 
         return $this->render('create', [
@@ -87,8 +87,8 @@ class GoodsController extends Base
     {
         $model = $this->findModel($id);
 
-        if ($model->editGoods(Yii::$app->request->post())) {
-            return $this->success();
+        if (Yii::$app->request->getIsPost()) {
+            return $model->editGoods(Yii::$app->request->post()) ? $this->success() : $this->fail($model->getErrors());
         }
 
         $goods_images = $model->getImages()->orderBy('sort')->all();

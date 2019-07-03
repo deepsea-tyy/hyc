@@ -90,7 +90,6 @@ return [
         'admin' => [
             'class' => 'mdm\admin\Module',
             'layout' => 'left-menu',
-            'mainLayout' => '@backend/views/layouts/main.php'
         ],
         'spider' => [
             'class' => 'backend\modules\spider\Module',

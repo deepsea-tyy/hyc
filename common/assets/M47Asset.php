@@ -33,10 +33,11 @@ class M47Asset extends AssetBundle
         'global/plugins/bootstrap-sweetalert/sweetalert.min.js',
         'global/scripts/app.min.js',
         'layouts/global/scripts/quick-sidebar.min.js',
+        '/js/common.js',
     ];
 
     public $depends = [
-        'common\assets\JqueryAsset',
-        'yii\widgets\PjaxAsset'
+        'yii\web\JqueryAsset',
+        'yii\bootstrap\BootstrapPluginAsset'
     ];
 }

@@ -82,12 +82,8 @@ function menuSearch() {
 }
 function getAjaxPage($url,$res) {
 	if ($res.status == 200) {
-        swal("", $res.msg, "success");
-		$.get($url,function (res) {
-			$("#container").html(res);
-		})
+		window.location.href = $url;
 	}else{
-		if (!$res.status) {$("#container").html($res);return;}
 		swal("", $res.msg, "info");
 	}
 }

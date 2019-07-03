@@ -13,9 +13,9 @@ use common\assets\CommonAsset;
 
 
 
-M47Asset::register($this);
-IeAsset::register($this);
 CommonAsset::register($this);
+IeAsset::register($this);
+M47Asset::register($this);
 ?>
 
 <?php $this->beginPage() ?>

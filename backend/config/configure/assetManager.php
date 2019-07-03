@@ -6,6 +6,7 @@ return [
         'yii\web\JqueryAsset' => [
             'sourcePath' => '@m47',
             'js' => [
+                // 'http://apps.bdimg.com/libs/jquery/1.9.1/jquery.js',
                 'global/plugins/jquery.min.js',
             ],
         ],
@@ -17,7 +18,7 @@ return [
             'sourcePath'=>'@m47',
             'js'=>['global/plugins/bootstrap/js/bootstrap.min.js'],
             'depends' => [
-                'yii\web\JqueryAsset',
+                'common\assets\CommonAsset',
             ],
         ],
 

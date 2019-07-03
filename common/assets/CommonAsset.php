@@ -14,8 +14,9 @@ class CommonAsset extends AssetBundle
 
     public $js = [
     	'js/menu.js',
-      	'js/common.js',
-
     ];
-    public $depends = [];
+    public $depends = [
+    	'yii\web\JqueryAsset',
+        'yii\widgets\PjaxAsset'
+    ];
 }

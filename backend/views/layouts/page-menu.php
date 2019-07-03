@@ -12,17 +12,19 @@ $menu =  MenuHelper::getAssignedMenu(\Yii::$app->user->id,null,function ($menu)
                 // 'label' => $menu['data'],
                 'url' => MenuHelper::parseRoute($menu['route']),
             ];
-    if ($menu['children'] != []) {
-        $item['items'] = $menu['children'];
+
+    $children = array_filter($menu['children']);
+    if ($children) {
+        $item['items'] = $children;
         $item['url'] = 'javascript:;';
     }
 
-    $item['icon'] = $data['icon'];
+    $item['icon'] = $data['icon'] ?? '';
     $item['deep'] = $data['deep'] ?? 0;
     // $item['itemOptions'] = [
     //         'class'=>'active'
     //     ];
-    $item['arrow'] = $menu['children'] ? 'arrow' : '';
+    $item['arrow'] = $children ? 'arrow' : '';
 
     return $item;
 },true/*更新*/);
@@ -49,12 +51,21 @@ $menu = array_merge(array_filter($item),$menu);
 
 ?>
 <div class="page-sidebar navbar-collapse collapse">
+    <?php Pjax::begin([
+        'options'=>[
+            'id' => 'main-menu',
+        ],
+        'clientOptions' => [
+            'container' => '#container',
+        ]
+    ]); ?>
+
     <?=Menu::widget([
         'options'=>[
                 'id'=>'menu',
                 'class'=>'page-sidebar-menu page-header-fixed',
                 'data-keep-expanded'=>'false',
-                'data-auto-scroll'=>'true',
+                'data-auto-scroll'=>'false',
                 'data-slide-speed'=>'200',
                 'style'=>'padding-top: 20px'
             ],
@@ -68,5 +79,6 @@ $menu = array_merge(array_filter($item),$menu);
         </a>',
         'items'=>$menu,
     ]);?>
+    <?php Pjax::end(); ?>
 
 </div>
