@@ -11,7 +11,8 @@ return [
             'class' => 'yii\caching\FileCache',
         ],
         'authManager' => [
-            'class'=>'mdm\admin\components\DbManager'
+            'class'=>'mdm\admin\components\DbManager',
+            'defaultRoles' => []
         ],
 
         'applet' => [

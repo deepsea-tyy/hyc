@@ -4,7 +4,6 @@ namespace api\controllers;
 use Yii;
 use yii\base\InvalidParamException;
 use yii\web\BadRequestHttpException;
-use api\common\controllers\BaseController;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use api\models\PasswordResetRequestForm;
@@ -16,16 +15,10 @@ use common\models\LoginForm;
 /**
  * Site controller
  */
-class SiteController extends BaseController
+class SiteController extends Api
 {
-    public $layout = false;
     public function behaviors(){
         return [];
-    }
-
-    public function actionIndex()
-    {
-        echo "index";
     }
 
     /**
@@ -51,9 +44,8 @@ class SiteController extends BaseController
         $model = new LoginForm;
         if ($model->load(Yii::$app->request->post(),'') &&  $user = $model->apiLogin()) {
             return $this->success(['token'=>$user->access_token]);
-        } else {
-            return $this->fail($model->errors);
         }
+        return $this->fail($model->errors);
     }
 
     /**

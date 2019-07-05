@@ -19,19 +19,17 @@ return [
                 if ($response->getStatusCode() != 200) {
                     
                 }
-                // $response->data = [
-                //     'code' => $response->getStatusCode(),
-                //     'response' => $response->data,
-                //     'message' => $response->statusText
-                // ];
                 $response->format = yii\web\Response::FORMAT_JSON;
             },
         ],
         
         'request' => [
             'class' => 'common\components\web\Request',
-            'csrfParam' => '_csrf-api',
             'enableCsrfValidation' => false,
+            'parsers' => [
+                'application/json' => 'yii\web\JsonParser',
+                'text/json' => 'yii\web\JsonParser',
+            ],
         ],
         
         'redis' => [ //token
@@ -43,9 +41,10 @@ return [
 
         'user' => [
             'identityClass' => 'common\models\User',
+            // 'identityClass' => 'mdm\admin\models\User',
             'enableAutoLogin' => false,
             'enableSession' => false,
-            'identityCookie' => ['name' => '_identity-api', 'httpOnly' => true],
+            // 'loginUrl' => ['site/login'],
         ],
         
 
