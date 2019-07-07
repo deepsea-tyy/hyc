@@ -1,6 +1,7 @@
 <?php
 namespace api\controllers;
 
+use Yii;
 use common\controllers\BaseController;
 use api\common\behaviors\CompositeAuth;
 use yii\filters\auth\HttpHeaderAuth;
@@ -50,7 +51,6 @@ class Api extends BaseController
         ];
     }
 
-
     public function success($data=[],$message='success')
     {
         return ['code'=>200,'data'=>$data,'message'=>$message];
@@ -60,5 +60,12 @@ class Api extends BaseController
     public function fail($message='fail',$data=[])
     {
         return ['code'=>0,'data'=>$data,'message'=>$message];
+    }
+
+    public function send($data=[])
+    {
+        Yii::$app->response->data = $data;
+        Yii::$app->response->send();
+        exit();
     }
 }

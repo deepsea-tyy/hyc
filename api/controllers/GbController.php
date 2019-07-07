@@ -3,7 +3,6 @@
 namespace api\controllers;
 
 use Yii;
-use api\common\controllers\BaseController;
 use common\models\system\GbIcs;
 use common\models\system\Gb;
 use yii\data\Pagination;
@@ -11,7 +10,7 @@ use yii\data\Pagination;
 /**
  * 国标接口
  */
-class GbController extends BaseController
+class GbController extends Api
 {
 
     public function actionGetics()

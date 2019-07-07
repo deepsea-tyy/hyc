@@ -11,7 +11,7 @@ use yii\web\UploadedFile;
 /**
  * 聊天接口
  */
-class ChatController extends \api\common\controllers\BaseController
+class ChatController extends Api
 {
      /**
    * 点对点发送消息

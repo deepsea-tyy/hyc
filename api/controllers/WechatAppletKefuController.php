@@ -2,7 +2,6 @@
 namespace api\controllers;
 
 use Yii;
-use api\common\controllers\BaseController;
 use yii\helpers\Url;
 use common\models\Chat;
 use common\models\SubsystemIdentity;
@@ -10,7 +9,7 @@ use common\models\applet\BusinessData;
 use common\models\applet\UserWx;
 use api\models\WechatAppletKefuForm;
 
-class WechatAppletKefuController extends BaseController
+class WechatAppletKefuController extends Api
 {
   public $uuid;
   public $bid;

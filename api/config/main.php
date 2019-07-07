@@ -41,10 +41,8 @@ return [
 
         'user' => [
             'identityClass' => 'common\models\User',
-            // 'identityClass' => 'mdm\admin\models\User',
             'enableAutoLogin' => false,
             'enableSession' => false,
-            // 'loginUrl' => ['site/login'],
         ],
         
 

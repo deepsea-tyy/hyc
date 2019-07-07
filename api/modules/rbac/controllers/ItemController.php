@@ -11,7 +11,7 @@ use yii\rbac\Item;
 use mdm\admin\components\Configs;
 use mdm\admin\components\Helper;
 
-class ItemController extends \api\controllers\Api
+class ItemController extends Rbac
 {
     public function allowAction()
     {
@@ -76,13 +76,6 @@ class ItemController extends \api\controllers\Api
     {
         $model = new AuthItem(null);
         $model->type = $this->type;
-        Yii::$app->i18n->translations['*'] = [
-            'class' => 'yii\i18n\PhpMessageSource',
-            'basePath' => '@mdm/admin/messages',
-            'fileMap' => [
-                'rbac-admin' => 'rbac-admin.php',
-            ],
-        ];
         if ($model->load(Yii::$app->getRequest()->post(),'') && $model->save()) {
             return $this->success();
         } else {
@@ -184,7 +177,7 @@ class ItemController extends \api\controllers\Api
         if ($item) {
             return new AuthItem($item);
         } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
+            $this->send($this->fail('数据不存在'));
         }
     }
 }

@@ -12,22 +12,12 @@ use yii\filters\VerbFilter;
  * @author Misbahul D Munir <misbahuldmunir@gmail.com>
  * @since 1.0
  */
-class RouteController extends \api\controllers\Api
+class RouteController extends Rbac
 {
-    public function behaviors()
-    {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'create' => ['post'],
-                    'assign' => ['post'],
-                    'remove' => ['post'],
-                    'refresh' => ['post'],
-                ],
-            ],
-        ];
-    }
+	public function allowAction()
+	{
+		return ['index','create','remove','assign'];
+	}
     /**
      * Lists all Route models.
      * @return mixed
@@ -36,7 +26,7 @@ class RouteController extends \api\controllers\Api
     {
         $model = new Route();
 
-        return $this->fail('index', ['routes' => $model->getRoutes()]);
+        return $this->success($model->getRoutes());
     }
 
     /**
@@ -46,12 +36,11 @@ class RouteController extends \api\controllers\Api
      */
     public function actionCreate()
     {
-        Yii::$app->getResponse()->format = 'json';
         $routes = Yii::$app->getRequest()->post('route', '');
         $routes = preg_split('/\s*,\s*/', trim($routes), -1, PREG_SPLIT_NO_EMPTY);
         $model = new Route();
         $model->addNew($routes);
-        return $model->getRoutes();
+        return $this->success($model->getRoutes());
     }
 
     /**
@@ -63,8 +52,7 @@ class RouteController extends \api\controllers\Api
         $routes = Yii::$app->getRequest()->post('routes', []);
         $model = new Route();
         $model->addNew($routes);
-        Yii::$app->getResponse()->format = 'json';
-        return $model->getRoutes();
+        return $this->success($model->getRoutes());
     }
 
     /**
@@ -76,8 +64,7 @@ class RouteController extends \api\controllers\Api
         $routes = Yii::$app->getRequest()->post('routes', []);
         $model = new Route();
         $model->remove($routes);
-        Yii::$app->getResponse()->format = 'json';
-        return $model->getRoutes();
+        return $this->success($model->getRoutes());
     }
 
     /**
@@ -88,7 +75,6 @@ class RouteController extends \api\controllers\Api
     {
         $model = new Route();
         $model->invalidate();
-        Yii::$app->getResponse()->format = 'json';
-        return $model->getRoutes();
+        return $this->success($model->getRoutes());
     }
 }
