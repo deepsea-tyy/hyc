@@ -16,10 +16,10 @@ return [
             'class' => 'yii\web\Response',
             'on beforeSend' => function ($event) {
                 $response = $event->sender;
-                if ($response->getStatusCode() != 200) {
-                    
-                }
-                $response->format = yii\web\Response::FORMAT_JSON;
+                if ($response->getStatusCode() != 200)
+                    $response->format = yii\web\Response::FORMAT_HTML;
+                else
+                    $response->format = yii\web\Response::FORMAT_JSON;
             },
         ],
         
@@ -68,6 +68,11 @@ return [
             ],
         ],
         
+    ],
+    'modules' => [
+        'rbac' => [
+            'class' => 'api\modules\rbac\Module',
+        ],
     ],
     'params' => $params,
 ];
