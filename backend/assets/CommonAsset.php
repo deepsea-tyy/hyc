@@ -1,12 +1,9 @@
 <?php
 
-namespace common\assets;
+namespace backend\assets;
 
 use yii\web\AssetBundle;
 
-/**
- * Main common application asset bundle.
- */
 class CommonAsset extends AssetBundle
 {
     // public $sourcePath = '';
@@ -17,6 +14,7 @@ class CommonAsset extends AssetBundle
     ];
     public $depends = [
     	'yii\web\JqueryAsset',
+    	'yii\bootstrap\BootstrapAsset',
         'yii\widgets\PjaxAsset'
     ];
 }

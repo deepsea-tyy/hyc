@@ -13,12 +13,6 @@ use mdm\admin\components\Helper;
 
 class ItemController extends Rbac
 {
-    public function allowAction()
-    {
-        return [
-            'index','assign','view','update','remove','create','delete'
-        ];
-    }
 	/**
      * Lists all AuthItem models.
      * @return mixed

@@ -7,9 +7,9 @@ use yii\helpers\Html;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
-use common\assets\IeAsset;
-use common\assets\M47Asset;
-use common\assets\CommonAsset;
+use backend\assets\IeAsset;
+use backend\assets\M47Asset;
+use backend\assets\CommonAsset;
 
 
 

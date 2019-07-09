@@ -14,10 +14,6 @@ use yii\filters\VerbFilter;
  */
 class RouteController extends Rbac
 {
-	public function allowAction()
-	{
-		return ['index','create','remove','assign'];
-	}
     /**
      * Lists all Route models.
      * @return mixed

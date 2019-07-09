@@ -182,4 +182,18 @@ class Tools extends \yii\helpers\BaseIpHelper
     		// 'url' => $menu['route'],
     	];
     }
+
+    /**
+     * 数组递归
+     */
+    public static function limitless($data,$pid=0,$level=0){
+	    $arr = array();
+	    foreach ($data as $v) {
+	      if ($v['wg_parent_id'] == $pid) {
+	        $arr[] = $v;
+	        $arr = array_merge($arr,$this->limitless($data,$v['wg_id'],$level+1));
+	      }
+	    }
+	    return $arr;
+	}
 }

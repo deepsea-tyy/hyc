@@ -8,7 +8,7 @@ $menu =  MenuHelper::getAssignedMenu(\Yii::$app->user->id,null,function ($menu)
     $data = json_decode($menu['data'],true);
     if (isset($data['show']) && $data['show'] == 0) return [];
     $item = [
-                'label' => $data['label'],
+                'label' => $data['label']??'未填写',
                 // 'label' => $menu['data'],
                 'url' => MenuHelper::parseRoute($menu['route']),
             ];

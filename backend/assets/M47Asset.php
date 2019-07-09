@@ -1,19 +1,8 @@
 <?php
-/**
- * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
- * @license http://www.yiiframework.com/license/
- */
-
-namespace common\assets;
+namespace backend\assets;
 
 use yii\web\AssetBundle;
-/**
- * This asset bundle provides the base JavaScript files for the Yii Framework.
- *
- * @author Qiang Xue <qiang.xue@gmail.com>
- * @since 2.0
- */
+
 class M47Asset extends AssetBundle
 {
     public $sourcePath = '@m47';

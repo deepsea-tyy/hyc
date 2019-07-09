@@ -1,12 +1,9 @@
 <?php
 
-namespace common\assets;
+namespace backend\assets;
 
 use yii\web\AssetBundle;
 
-/**
- * Main common application asset bundle.
- */
 class IeAsset extends AssetBundle
 {
     public $sourcePath = '@m47';

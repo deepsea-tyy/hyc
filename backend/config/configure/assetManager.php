@@ -18,7 +18,7 @@ return [
             'sourcePath'=>'@m47',
             'js'=>['global/plugins/bootstrap/js/bootstrap.min.js'],
             'depends' => [
-                'common\assets\CommonAsset',
+                'backend\assets\CommonAsset',
             ],
         ],
 

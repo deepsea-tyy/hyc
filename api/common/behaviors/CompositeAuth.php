@@ -48,9 +48,7 @@ class CompositeAuth extends \yii\filters\auth\CompositeAuth
             if (Helper::checkRoute('/' . $actionId, Yii::$app->getRequest()->get())) {
                 return true;
             }
-
-            Yii::$app->response->data = $action->controller->fail('没有权限','/' . $actionId);
-            Yii::$app->response->send();
+            $action->controller->send($action->controller->fail('没有权限','/' . $actionId));
             return false;
         }
     }

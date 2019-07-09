@@ -71,6 +71,9 @@ return [
         'rbac' => [
             'class' => 'api\modules\rbac\Module',
         ],
+        'order' => [
+            'class' => 'api\modules\order\Module',
+        ],
     ],
     'params' => $params,
 ];
