@@ -3,6 +3,7 @@
 namespace console\models\mongo\hf;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for collection "hf_goods".

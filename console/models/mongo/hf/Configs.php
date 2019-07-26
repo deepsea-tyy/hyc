@@ -37,7 +37,7 @@ class Configs extends \yii\mongodb\ActiveRecord
     public function rules()
     {
         return [
-            
+            [['name', 'data'], 'safe']
         ];
     }
 

@@ -68,11 +68,11 @@ class IndexController extends BaseController
 	 */
 	public function actionHsku()
 	{
-		$rows = HfBrand::find()->orderBy('_id asc')->offset(0)->limit(5)->asArray()->all();
+		$config = Configs::find()->where(['name'=>'hf_sku'])->asArray()->one();
+		$rows = HfBrand::find()->orderBy('_id asc')->offset($config['offset'])->limit($config['limit'])->asArray()->all();
 		$jd = 'https://search.jd.com';
 		foreach ($rows as $row) {
-
-			$url = $jd . $row['url'];
+			$url = $jd . '/' . $row['url'];
 			$ql = QueryList::get($url);
 			
 			preg_match('/base_url=\'.*;/i', $ql->getHtml(),$base_url);
@@ -93,12 +93,24 @@ class IndexController extends BaseController
 
 				$url = $jd . '/search?'. $base_url . "&page={$p1}&s={$s1}&click=0";
 				$url2 = $jd . '/s_new.php?'. $base_url ."&page={$p2}&s={$s2}&scrolling=y";
-				$data = $this->getPid($url,$url2);
-				$this->saveData($data);
+				$data = $this->getPid($url,$url2,$row['brand_id']);
+				
+				foreach ($data as $v) {
+					$r = HfGoods::find()->where(['sku_id'=>$v['sku_id']])->asArray()->one();
+					if ($r) {
+						$a = HfGoods::getCollection()->update(['sku_id'=>$v['sku_id']],$v);
+					}else{
+						$a = HfGoods::getCollection()->insert($v);
+					}
+				}
 			}
-			break;
 		}
 
+		if ($rows) {
+			Configs::updateAllCounters(['offset'=>$config['limit']],['name'=>'hf_sku']);
+		}else{
+			Configs::updateAllCounters(['offset'=>0],['name'=>'hf_sku']);
+		}
 	}
 
 	/**
@@ -107,13 +119,17 @@ class IndexController extends BaseController
 	 * @param  [type] $url2 [description]
 	 * @return array       [description]
 	 */
-	public function getPid($url,$url2)
+	public function getPid($url,$url2,$brand_id=0)
 	{
 		$rl = [
 	          'sku_id'=>['#J_goodsList>ul>.gl-item','data-sku'],
 	      ];
 	    $ql = QueryList::rules($rl)->get($url);
-		$data = $ql->queryData();
+		$data = $ql->queryData(function ($item)use($brand_id)
+		{
+			$item['brand_id'] = $brand_id;
+			return $item;
+		});
 		preg_match('/log_id:?\'\d+\.\d+/i', $ql->getHtml(),$logid);
 		$log_id = str_replace('log_id:\'', '', $logid[0]);
 
@@ -122,21 +138,13 @@ class IndexController extends BaseController
 		];
 		$url2 = $url2 . '&log_id=' .$log_id . '&tpl=3_L&show_items=' . implode(',', array_column($data, 'pid'));
 
-		$data2 = $ql->rules($rl2)->get($url2)->queryData();
+		$data2 = $ql->rules($rl2)->get($url2)->queryData(function ($item)use($brand_id)
+		{
+			$item['brand_id'] = $brand_id;
+			return $item;
+		});
 
 		return array_merge($data,$data2);
-	}
-
-	/**
-	 * [saveData description]
-	 * @param  [type] $data [description]
-	 * @return bool       [description]
-	 */
-	public function saveData($data)
-	{
-		$row = HfGoods::getCollection()
-       	->batchInsert($data);
-       	return $row;
 	}
 
 	/**
@@ -146,11 +154,9 @@ class IndexController extends BaseController
 	 */
 	public function actionHgoods()
 	{
-		$config = Configs::find(['name'=>'hf_goods'])->one();
-		// print_r($config->data['offset']);exit();
-		$rows = HfGoods::find()->orderBy('_id asc')->offset($config->data['offset'])->limit($config->data['limit'])->asArray()->all();
+		$config = Configs::find()->where(['name'=>'hf_goods'])->asArray()->one();
+		$rows = HfGoods::find()->orderBy('_id asc')->offset($config['offset'])->limit($config['limit'])->asArray()->all();
 		foreach ($rows as $row) {
-			// print_r(count($row));exit();
 			$url = 'https://item.jd.com/'.$row['sku_id'].'.html';
 			$rl = [
 		          'sku_name'=>['.sku-name','text'],
@@ -159,24 +165,30 @@ class IndexController extends BaseController
 			$ql = QueryList::getInstance();
 			// 注册插件，默认注册的方法名为: chrome
 			$ql->use(Chrome::class);
-			$ql->chrome(function ($page,$browser)use($url) {
-			    $page->goto($url,['timeout'=> 100000]);
-			    // 等待h1元素出现
-			    $page->waitFor(4000);
-			    // 获取页面HTML内容
-			    $html = $page->content();
-			    // 关闭浏览器
-			    // $browser->close();
-			    // 返回值一定要是页面的HTML内容
-			    return $html;
-			},[
-				'timeout' => 9000,
-  				'ignoreHTTPSErrors' => true,
-			])->rules($rl);
+			try {
+				$ql->chrome(function ($page,$browser)use($url) {
+				    $page->goto($url,['timeout'=> 1000000]);
+				    // 等待h1元素出现
+				    $page->waitFor(4000);
+				    // 获取页面HTML内容
+				    $html = $page->content();
+				    // 关闭浏览器
+				    // $browser->close();
+				    // 返回值一定要是页面的HTML内容
+				    return $html;
+				},[
+					'timeout' => 9000,
+	  				'ignoreHTTPSErrors' => true,
+				])->rules($rl);
+				
+			} catch (Exception $e) {
+				
+			}
+
 			$preview = explode('!', $ql->find('#spec-img')->attr('data-origin'));
 			$preview_size = '!'.$preview[1]??'';
 			$preview = explode('_', $preview[0]??'');
-			$preview_url = 'https:' . $preview[0]??'' . '_';
+			$preview_url = 'https:' . ($preview[0]??'') . '_';
 
 			preg_match('/desc:.*\/\/.*\'/i', $ql->getHtml(),$content_url);
 			$content_url = substr($content_url[0], 7,-1);
@@ -187,7 +199,6 @@ class IndexController extends BaseController
 				{
 					return 'https:' . substr($item['img'], 2,-2);
 				});
-				// print_r($item);exit();
 				$item['sku_name'] = iconv('GBK','UTF-8',$item['sku_name']);
 				return $item;
 			});
@@ -216,7 +227,7 @@ class IndexController extends BaseController
 			$insert['updated_at'] = 0;
 			// print_r($insert);exit();
 			$fg = 0;
-			if (count($row)>2) {
+			if (count($row)>3) {
 				$fg = HfGoods::updateAll(
 					['$set'=>$insert],
 					[
@@ -225,7 +236,7 @@ class IndexController extends BaseController
 				);
 			}else{
 				$insert['created_at'] = time();
-				$fg = HfGoods::updateAll(
+				HfGoods::updateAll(
 					['$set'=>$insert],
 					[
 						'_id'=>$row['_id'],
@@ -239,7 +250,9 @@ class IndexController extends BaseController
 						'updated_at'=>['$exists'=>false],
 					]
 				);
+				$fg = 1;
 			}
+
 			if ($fg) {
 				foreach ($insert['sku_content'] as $k => $v) {
 					Tools::download_file($v,$row['sku_id'] . "_{$k}." . pathinfo($v,PATHINFO_EXTENSION) ,Yii::getAlias('@files') . '/' .$row['sku_id'] . '/content');
@@ -250,9 +263,12 @@ class IndexController extends BaseController
 				foreach ($insert['sku_imags_thum'] as $k => $v) {
 					Tools::download_file($v,$row['sku_id'] . "_{$k}." . pathinfo($v,PATHINFO_EXTENSION) ,Yii::getAlias('@files') . '/' .$row['sku_id'] . '/thum');
 				}
-				// $config->data['offset'] = 
 			}
-
+		}
+		if ($rows) {
+			Configs::updateAllCounters(['offset'=>$config['limit']],['name'=>'hf_goods']);
+		}else{
+			Configs::updateAllCounters(['offset'=>0],['name'=>'hf_goods']);
 		}
 	}
 

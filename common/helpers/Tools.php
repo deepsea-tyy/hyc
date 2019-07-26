@@ -234,16 +234,16 @@ class Tools extends \yii\helpers\BaseIpHelper
         if (!file_exists($path)) {
             self::make_dir($path);
         }
+        ob_start(); //打开输出
         try {
-	        ob_start(); //打开输出
-	        readfile($url); //输出内容
-	        $content = ob_get_contents(); //得到浏览器输出
-	        ob_end_clean(); //清除输出并关闭
-	        file_put_contents($file, $content);
-	        return $file;
+	        @readfile($url); //输出内容
         } catch (Exception $e) {
         	return false;
         }
+        $content = ob_get_contents(); //得到浏览器输出
+        ob_end_clean(); //清除输出并关闭
+        file_put_contents($file, $content);
+        return $file;
     }
 
     /**
