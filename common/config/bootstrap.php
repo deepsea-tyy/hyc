@@ -10,3 +10,4 @@ Yii::setAlias('@cmf', dirname(dirname(dirname(__DIR__))) . '/cmf5/public/index.p
 Yii::setAlias('@xcx', dirname(dirname(dirname(__DIR__))) . '/integrated-shop/public/index.php' );
 Yii::setAlias('@logpath', dirname(dirname(__DIR__)) . '/frontend/runtime/logs' );
 Yii::setAlias('@rootpath', dirname(dirname(__DIR__)));
+Yii::setAlias('@files', dirname(dirname(__DIR__)) . '/files');

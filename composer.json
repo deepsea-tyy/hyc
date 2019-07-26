@@ -29,7 +29,12 @@
         "hzhihua/yii2-videojs-widget": "*",
         "zircote/swagger-php": "3.0.2",
         "php-ffmpeg/php-ffmpeg": "^0.14.0",
-        "mdmsoft/yii2-admin": "2.9"
+        "mdmsoft/yii2-admin": "2.9",
+        "tsingsun/yii2-swoole": "^2.3",
+        "yiisoft/yii2-mongodb": "^2.1",
+        "alikdex/yii2-crawler-detect": "^1.0",
+        "jaeger/querylist": "^4.1",
+        "jaeger/querylist-puppeteer": "^4.0"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",

@@ -196,4 +196,64 @@ class Tools extends \yii\helpers\BaseIpHelper
 	    }
 	    return $arr;
 	}
+
+	/**
+	 * 读取所有目录
+	 */
+	public static function read_all_dir ( $dir ){
+	    $result = [];
+	    $handle = opendir($dir);//读资源
+	    if ($handle){
+	        $file = readdir($handle);
+	        while (($file = readdir($handle)) !== false ){
+	            if ($file != '.' && $file != '..'){
+	                $cur_path = $dir . DIRECTORY_SEPARATOR . $file;
+	                if (is_dir($cur_path )){//判断是否为目录，递归读取文件
+	                    $result = array_merge($result, $this->read_all_dir($cur_path ));
+	                }else{
+	                    $result[] = $cur_path;
+	                }
+	            }
+	        }
+	        closedir($handle);
+	    }
+	    return $result;
+	}
+
+	/**
+	 * 下载远程文件
+	 * @param  string $url
+	 * @param  [type] $name
+	 * @param  string $path
+	 * @return string
+	 */
+    public static function download_file($url, $name, $path='')
+    {
+        
+        $file = $path . '/' . $name;
+        if (!file_exists($path)) {
+            self::make_dir($path);
+        }
+        try {
+	        ob_start(); //打开输出
+	        readfile($url); //输出内容
+	        $content = ob_get_contents(); //得到浏览器输出
+	        ob_end_clean(); //清除输出并关闭
+	        file_put_contents($file, $content);
+	        return $file;
+        } catch (Exception $e) {
+        	return false;
+        }
+    }
+
+    /**
+     * 递归生成目录
+     * @param  [type] $dir [description]
+     * @return [type]      [description]
+     */
+    public static function make_dir( $dir ){  
+	   return  is_dir ( $dir ) or self::make_dir(dirname( $dir )) and  mkdir ( $dir , 0777);
+	}
+
+
 }

@@ -6,6 +6,9 @@ use Yii;
 use common\models\applet\WeixinAppletMessage;
 use yii\httpclient\Client;
 use serhatozles\simplehtmldom\SimpleHTMLDom;
+use yii\helpers\Url;
+use frontend\models\redis\Test;
+use frontend\models\mongo\User;
 
 class IndexController extends \yii\web\Controller
 {
@@ -15,11 +18,35 @@ class IndexController extends \yii\web\Controller
          * nginx 直播间权限认证 get请求
          * rtmp://localhost:1935/live/1?auth=123456
          */
-        Yii::$app->response->setStatusCode(200);
-        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        Yii::$app->response->data = ['code'=>200,'detail'=>'SUCCESS'];
-        // Yii::$app->response->data = ['code'=>500,'detail'=>'auth error'];
-        Yii::$app->response->send();
+        // Yii::$app->response->setStatusCode(200);
+        // Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        // Yii::$app->response->data = ['code'=>200,'detail'=>'SUCCESS'];
+        // // Yii::$app->response->data = ['code'=>500,'detail'=>'auth error'];
+        // Yii::$app->response->send();
+
+        // echo Url::to(['ViewRole']);
+
+        // redis操作
+        // $test = new Test();
+        // $test->name = 'marko';
+        // $test->age = 18;
+        // $test->phone = 13888888888;
+        // $test->status = 1;
+        // $test->save();
+        // echo $test->id;
+
+        // // 使用 AR 查询
+        // $test = Test::findOne($test->id);
+        // $test = Test::find()->where(['status' => 1])->all();
+        // print_r($test);
+
+        // mongo
+        // $test = new User();
+        // $test->name = 'ttt';
+        // $test->age = 'age';
+        // $test->save();
+        // $test = Test::findOne($test->id);
+
     }
 
 

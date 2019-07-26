@@ -65,6 +65,35 @@ return [
             ], // Redis connection component or its config
             'channel' => 'queue', // Queue channel key
         ],
+        'memcached' => [
+            'class' => 'yii\caching\MemCache',
+            /*'servers' => [
+                [
+                    'host' => 'localhost',
+                    'port' => 11211,
+                    'weight' => 100,
+                ],
+                [
+                    'host' => 'localhost',
+                    'port' => 11211,
+                    'weight' => 50,
+                ],
+            ],*/
+            'useMemcached' => true ,
+        ],
+        'crawler_detect' => [
+            'class' => 'alikdex\crawlerdetect\CrawlerDetect',
+            'setParams' => true, // optional, bootstrap initialize requred
+        ],
+
+        'mongodb' => [
+            'class' => '\yii\mongodb\Connection',
+            'dsn' => 'mongodb://@localhost:27017/spider',
+            'options' => [
+                "username" => "tyy",
+                "password" => "123456"
+            ]
+        ],
     ],
     'params' => $params,
 ];
