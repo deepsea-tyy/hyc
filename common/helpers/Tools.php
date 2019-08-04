@@ -197,19 +197,40 @@ class Tools extends \yii\helpers\BaseIpHelper
 	    return $arr;
 	}
 
+
 	/**
 	 * 读取所有目录
 	 */
-	public static function read_all_dir ( $dir ){
+	public static function read_all_dir ( $path, $deep=0 ){
+		$result = [];
+	    $handle = opendir($path);//读资源
+	    if ($handle){
+	        $file = readdir($handle);
+	        while (($file = readdir($handle)) !== false ){
+	            if ($file != '.' && $file != '..' && !is_file($file)){
+	                $cur_path = $path . DIRECTORY_SEPARATOR . $file;
+	                
+                    $result[] = $cur_path;
+	            }
+	        }
+	        closedir($handle);
+	    }
+	    return $result;
+	}
+
+	/**
+	 * 读取所有文件
+	 */
+	public static function read_all_file ( $path ){
 	    $result = [];
-	    $handle = opendir($dir);//读资源
+	    $handle = opendir($path);//读资源
 	    if ($handle){
 	        $file = readdir($handle);
 	        while (($file = readdir($handle)) !== false ){
 	            if ($file != '.' && $file != '..'){
-	                $cur_path = $dir . DIRECTORY_SEPARATOR . $file;
+	                $cur_path = $path . DIRECTORY_SEPARATOR . $file;
 	                if (is_dir($cur_path )){//判断是否为目录，递归读取文件
-	                    $result = array_merge($result, $this->read_all_dir($cur_path ));
+	                    $result = array_merge($result, self::read_all_dir($cur_path ));
 	                }else{
 	                    $result[] = $cur_path;
 	                }
@@ -253,6 +274,46 @@ class Tools extends \yii\helpers\BaseIpHelper
      */
     public static function make_dir( $dir ){  
 	   return  is_dir ( $dir ) or self::make_dir(dirname( $dir )) and  mkdir ( $dir , 0777);
+	}
+
+
+	/**
+	 * tcp 通信
+	 * @param  string $host 地址
+	 * @param  string $cmd  [description]
+	 * @param  [type] $data [description]
+	 * @param  array  $ext  [description]
+	 * @param  string $eof  结束标记
+	 * @return [type]       [description]
+	 */
+	public static function srequest(string $host, string $cmd, $data, $ext = [], $eof = "\r\n\r\n") {
+	    $fp = stream_socket_client($host, $errno, $errstr);
+	    if (!$fp) {
+	        throw new Exception("stream_socket_client fail errno={$errno} errstr={$errstr}");
+	    }
+
+	    $req = [
+	        'cmd'  => $cmd,
+	        'data' => $data,
+	        'ext' => $ext,
+	    ];
+	    $data = json_encode($req) . $eof;
+	    fwrite($fp, $data);
+
+	    $result = '';
+	    while (!feof($fp)) {
+	        $tmp = stream_socket_recvfrom($fp, 1024);
+	        $pos = strpos($tmp, $eof);
+	        if ($pos !== false) {
+	            $result .= substr($tmp, 0, $pos);
+	            break;
+	        } else {
+	            $result .= $tmp;
+	        }
+	    }
+
+	    fclose($fp);
+	    return json_decode($result, true);
 	}
 
 
