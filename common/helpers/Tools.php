@@ -297,6 +297,12 @@ class Tools extends \yii\helpers\BaseIpHelper
 	        'data' => $data,
 	        'ext' => $ext,
 	    ];
+	    // $req = [
+	    //     'method'  => $cmd,
+	    //     'params' => $data,
+	    //     'ext' => $ext,
+	    // ];
+
 	    $data = json_encode($req) . $eof;
 	    fwrite($fp, $data);
 
