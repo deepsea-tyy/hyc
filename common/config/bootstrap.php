@@ -11,3 +11,5 @@ Yii::setAlias('@xcx', dirname(dirname(dirname(__DIR__))) . '/integrated-shop/pub
 Yii::setAlias('@logpath', dirname(dirname(__DIR__)) . '/frontend/runtime/logs' );
 Yii::setAlias('@rootpath', dirname(dirname(__DIR__)));
 Yii::setAlias('@files', dirname(dirname(__DIR__)) . '/files');
+Yii::setAlias('@tyy', dirname(dirname(__DIR__)) . '/tyy');
+Yii::setAlias('@mdm/admin', dirname(dirname(__DIR__)) . '/tyy/yii2-admin');
